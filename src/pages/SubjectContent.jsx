@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from "../components/ui/Button";
 import { FiUpload, FiFileText, FiBook, FiHelpCircle } from 'react-icons/fi';
@@ -19,41 +20,57 @@ function FeatureCard({ title, description, buttonText, icon: Icon, onClick }) {
         </Button>
       </div>
     </div>
-  )
+  );
+}
+
+function Popup({ message, onClose }) {
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <p className="text-lg text-gray-800">{message}</p>
+        <Button className="mt-4 w-full" onClick={onClose}>
+          Close
+        </Button>
+      </div>
+    </div>
+  );
 }
 
 export default function SubjectContent() {
   const { subject } = useParams();
   const navigate = useNavigate();
+  const [popupMessage, setPopupMessage] = useState(null);
 
   const features = [
     {
       title: "Check your solution",
       description: "Send your solution in pdf format to our toppers; they will provide scores along with detailed feedback.",
       buttonText: "Upload",
-      icon: FiUpload
+      icon: FiUpload,
+      onClick: () => setPopupMessage("Coming soon on 1st Jan"),
     },
     {
-      title: "PQY",
-      description: "Previous year papers obviously",
+      title: "PYQ",
+      description: "Previous year papers",
       buttonText: "Solve",
       icon: FiFileText,
-      onClick: () => navigate(`/subject/${subject}/pyq`)
+      onClick: () => navigate(`/subject/${subject}/pyq`),
     },
     {
       title: "Chapter-wise Solution",
       description: "Topic-wise question and answers",
       buttonText: "Solve",
       icon: FiBook,
-      onClick: () => navigate(`/subject/${subject}/chapters`)
+      onClick: () => navigate(`/subject/${subject}/chapters`),
     },
     {
       title: "Mock Papers",
       description: "Old competence level question with latest format.",
       buttonText: "Solve",
-      icon: FiHelpCircle
-    }
-  ]
+      icon: FiHelpCircle,
+      onClick: () => setPopupMessage("Coming soon on 1st Jan"),
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-[#F6F8FC] p-8 flex flex-col items-center">
@@ -68,13 +85,16 @@ export default function SubjectContent() {
       <div className="w-full max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature) => (
-            <FeatureCard
-              key={feature.title}
-              {...feature}
-            />
+            <FeatureCard key={feature.title} {...feature} />
           ))}
         </div>
       </div>
+      {popupMessage && (
+        <Popup
+          message={popupMessage}
+          onClose={() => setPopupMessage(null)}
+        />
+      )}
     </div>
-  )
+  );
 }

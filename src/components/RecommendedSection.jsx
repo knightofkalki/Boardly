@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 const TopicCard = ({ title, subject }) => {
@@ -13,12 +14,35 @@ const TopicCard = ({ title, subject }) => {
 };
 
 export const RecommendedSection = () => {
+  const [activeTab, setActiveTab] = useState('practice'); // Default tab is "Practice"
+
   const topics = [
     { title: 'Electric Charges and Fields', subject: 'Physics' },
     { title: 'Electromagnetic Waves', subject: 'Physics' },
     { title: 'Probability and Statistics', subject: 'Mathematics' },
     { title: 'Thermodynamics', subject: 'Chemistry' }
   ];
+
+  const mockTestContent = (
+    <div className="text-gray-600 text-sm">
+      <p>No mock tests are available at the moment. Please check back later.</p>
+    </div>
+  );
+
+  const practiceContent = (
+    <div className="space-y-3">
+      {topics.map((topic, index) => (
+        <motion.div
+          key={topic.title}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: index * 0.1, duration: 0.3 }}
+        >
+          <TopicCard {...topic} />
+        </motion.div>
+      ))}
+    </div>
+  );
 
   return (
     <motion.div 
@@ -31,26 +55,29 @@ export const RecommendedSection = () => {
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-800">Recommended For You</h2>
           <div className="space-x-2">
-            <button className="px-4 py-1.5 bg-orange-500 text-white rounded-full text-sm hover:bg-orange-600 transition-colors">
+            <button
+              className={`px-4 py-1.5 rounded-full text-sm transition-colors ${
+                activeTab === 'practice'
+                  ? 'bg-orange-500 text-white hover:bg-orange-600'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+              onClick={() => setActiveTab('practice')}
+            >
               Practice
             </button>
-            <button className="px-4 py-1.5 bg-gray-100 text-gray-600 rounded-full text-sm hover:bg-gray-200 transition-colors">
+            <button
+              className={`px-4 py-1.5 rounded-full text-sm transition-colors ${
+                activeTab === 'mockTest'
+                  ? 'bg-orange-500 text-white hover:bg-orange-600'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+              onClick={() => setActiveTab('mockTest')}
+            >
               Mock Test
             </button>
           </div>
         </div>
-        <div className="space-y-3">
-          {topics.map((topic, index) => (
-            <motion.div
-              key={topic.title}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.3 }}
-            >
-              <TopicCard {...topic} />
-            </motion.div>
-          ))}
-        </div>
+        {activeTab === 'practice' ? practiceContent : mockTestContent}
       </div>
     </motion.div>
   );

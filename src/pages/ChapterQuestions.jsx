@@ -42,7 +42,7 @@ const chapterData = {
   }
 };
 
-const QuestionCard = ({ question, onStatusChange, isActive, onClick }) => {
+const QuestionCard = ({ question, onStatusChange, isActive, onClick, onSolutionToggle }) => {
   return (
     <motion.div
       className={`mb-6 rounded-lg border ${
@@ -57,28 +57,49 @@ const QuestionCard = ({ question, onStatusChange, isActive, onClick }) => {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onStatusChange(question.id, "answered");
+            onStatusChange(question.id, question.status, "answered");
           }}
-          className="rounded border border-green-500 px-3 py-1 text-green-500 transition-colors hover:bg-green-50"
+          className={`rounded border px-3 py-1 transition-colors ${
+            question.status === "answered"
+              ? "bg-green-500 text-white hover:bg-green-600"
+              : "border-green-500 text-green-500 hover:bg-green-50"
+          }`}
         >
-          Mark as Done
-        </button>
-        <button className="rounded border border-blue-500 px-3 py-1 text-blue-500 transition-colors hover:bg-blue-50">
-          View Solution
+          {question.status === "answered" ? "Unmark as Done" : "Mark as Done"}
         </button>
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onStatusChange(question.id, "flagged");
+            onSolutionToggle(question.id);
           }}
-          className="rounded border border-red-500 px-3 py-1 text-red-500 transition-colors hover:bg-red-50"
+          className="rounded border border-blue-500 px-3 py-1 text-blue-500 transition-colors hover:bg-blue-50"
         >
-          Flag Question
+          {question.showSolution ? "Hide Solution" : "View Solution"}
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onStatusChange(question.id, question.status, "flagged");
+          }}
+          className={`rounded border px-3 py-1 transition-colors ${
+            question.status === "flagged"
+              ? "bg-red-500 text-white hover:bg-red-600"
+              : "border-red-500 text-red-500 hover:bg-red-50"
+          }`}
+        >
+          {question.status === "flagged" ? "Unflag" : "Flag Question"}
         </button>
       </div>
+      {question.showSolution && (
+        <div className="mt-4 p-4 rounded-lg bg-gray-100 text-gray-700">
+          <p>Solution for this question will go here.</p>
+        </div>
+      )}
     </motion.div>
   );
 };
+
+
 
 const CircleCard = ({ questions, activeQuestion, onQuestionClick }) => {
   return (
@@ -132,17 +153,35 @@ export default function ChapterQuestions() {
   const [questions, setQuestions] = useState(chapterInfo?.questions || []);
   const [activeQuestion, setActiveQuestion] = useState(1);
 
-  const handleStatusChange = (id, newStatus) => {
-    setQuestions((prevQuestions) =>
-      prevQuestions.map((q) =>
-        q.id === id ? { ...q, status: newStatus } : q
-      )
-    );
-  };
+  const handleStatusChange = (id, currentStatus, targetStatus) => {
+		setQuestions((prevQuestions) =>
+			prevQuestions.map((q) =>
+				q.id === id
+					? {
+							...q,
+							status:
+								currentStatus === targetStatus
+									? "unanswered"
+									: targetStatus,
+						}
+					: q
+			)
+		);
+	};
+	
 
   const handleQuestionClick = (id) => {
     setActiveQuestion(id);
   };
+
+	const handleSolutionToggle = (id) => {
+		setQuestions((prevQuestions) =>
+			prevQuestions.map((q) =>
+				q.id === id ? { ...q, showSolution: !q.showSolution } : q
+			)
+		);
+	};
+	
 
   return (
     <div className="container mx-auto p-4">
@@ -156,15 +195,17 @@ export default function ChapterQuestions() {
       </div>
       <div className="grid gap-6 lg:grid-cols-[1fr,300px]">
         <div className="space-y-6">
-          {questions.map((question) => (
-            <QuestionCard
-              key={question.id}
-              question={question}
-              onStatusChange={handleStatusChange}
-              isActive={activeQuestion === question.id}
-              onClick={() => handleQuestionClick(question.id)}
-            />
-          ))}
+				{questions.map((question) => (
+  <QuestionCard
+    key={question.id}
+    question={question}
+    onStatusChange={handleStatusChange}
+    onSolutionToggle={handleSolutionToggle}
+    isActive={activeQuestion === question.id}
+    onClick={() => handleQuestionClick(question.id)}
+  />
+))}
+
         </div>
         <CircleCard
           questions={questions}

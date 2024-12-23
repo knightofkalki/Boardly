@@ -1,25 +1,31 @@
 import { motion } from "framer-motion"
 import { Calendar, BookOpen, FileText } from 'lucide-react'
+import { p, path } from "motion/react-client";
+import { useNavigate} from 'react-router-dom';
 
 const cards = [
   {
     title: "Schedule A Session",
     description: "Schedule a class to get help from our experts",
     icon: Calendar,
+		path: '/schedule'
   },
   {
     title: "Continue Learning",
     description: "Your Progress is waiting for you",
     icon: BookOpen,
+		path: '/'
   },
   {
     title: "Previous Year Papers",
     description: "Explore more previous year papers",
     icon: FileText,
+		path: '/'
   },
 ]
 
 export function ActionCards() {
+	const navigate = useNavigate();
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {cards.map((card, index) => (

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Clock, Calendar as CalendarIcon } from 'lucide-react';
 
@@ -5,7 +6,7 @@ const EventCard = ({ title, date, time }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.01 }}
-      className="p-4 rounded-lg flex flex-col gap-2 cursor-pointer bg-white/50 backdrop-blur-sm hover:bg-orange-50/50 transition-colors border-b border-gray-100 last:border-b-0"
+      className="p-4 rounded-lg flex flex-col gap-2 cursor-pointer bg-white/50  hover:bg-orange-50/50 transition-colors border-b border-gray-100 last:border-b-0"
     >
       <h3 className="font-medium text-gray-800">{title}</h3>
       <div className="flex items-center gap-4 text-sm text-gray-500">
@@ -23,23 +24,20 @@ const EventCard = ({ title, date, time }) => {
 };
 
 export const UpcomingEvents = () => {
+  const [showAll, setShowAll] = useState(false);
+
   const events = [
-    {
-      title: "Physics Live Session",
-      date: "Oct 15",
-      time: "10:00 AM"
-    },
-    {
-      title: "Mock Test: Chemistry",
-      date: "Oct 16",
-      time: "2:30 PM"
-    },
-    {
-      title: "Doubt Clearing Session",
-      date: "Oct 17",
-      time: "4:00 PM"
-    }
+    { title: "Physics Live Session", date: "Oct 15", time: "10:00 AM" },
+    { title: "Mock Test: Chemistry", date: "Oct 16", time: "2:30 PM" },
+    { title: "Doubt Clearing Session", date: "Oct 17", time: "4:00 PM" },
+    { title: "Mathematics Workshop", date: "Oct 18", time: "11:00 AM" },
+    { title: "Special Guest Lecture", date: "Oct 19", time: "3:00 PM" },
+    { title: "Weekly Recap Webinar", date: "Oct 20", time: "6:00 PM" },
+    { title: "Physics Q&A Session", date: "Oct 21", time: "5:00 PM" },
+    { title: "Group Study Meetup", date: "Oct 22", time: "7:00 PM" },
   ];
+
+  const visibleEvents = showAll ? events : events.slice(0, 3);
 
   return (
     <motion.div 
@@ -51,10 +49,15 @@ export const UpcomingEvents = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-800">Upcoming Events</h2>
-          <button className="text-sm text-orange-500 hover:text-orange-600">View All</button>
+          <button
+            onClick={() => setShowAll(!showAll)}
+            className="text-sm text-orange-500 hover:text-orange-600"
+          >
+            {showAll ? "Show Less" : "View All"}
+          </button>
         </div>
         <div className="space-y-2">
-          {events.map((event, index) => (
+          {visibleEvents.map((event, index) => (
             <motion.div
               key={event.title}
               initial={{ opacity: 0, x: -20 }}

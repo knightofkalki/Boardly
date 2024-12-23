@@ -9,6 +9,7 @@ export default function MentorBooking() {
   const [searchQuery, setSearchQuery] = useState("")
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [bookingDetails, setBookingDetails] = useState(null)
+  const [showSlots, setShowSlots] = useState(false)
 
   const mentors = [
     {
@@ -68,7 +69,7 @@ export default function MentorBooking() {
       { time: "10:00 AM", available: false },
       { time: "10:30 AM", available: true },
       { time: "11:00 AM", available: true },
-    ];
+    ]
   }
 
   const filteredMentors = mentors.filter(mentor =>
@@ -77,22 +78,22 @@ export default function MentorBooking() {
   )
 
   const handleBook = () => {
-    if (selectedMentor !== null && selectedSlot !== null) {
-      const selectedMentorData = mentors.find(m => m.id === selectedMentor)
+    if (selectedSlot !== null) {
+      const selectedMentorData = mentors.find(m => m.id === selectedMentor) || { name: "Any Mentor" }
+
       const [day, time] = selectedSlot.split(' ')
-      
       setBookingDetails({
         mentor: {
           name: selectedMentorData.name,
-          image: selectedMentorData.image,
-          specialization: selectedMentorData.specialization
+          image: selectedMentorData.image || "",
+          specialization: selectedMentorData.specialization || "Any"
         },
         date: day,
         time: time
       })
       setShowConfirmation(true)
     } else {
-      alert("Please select both a mentor and a time slot")
+      alert("Please select a time slot")
     }
   }
 
@@ -166,53 +167,70 @@ export default function MentorBooking() {
           </div>
         </div>
 
-        {/* Available Slots */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-900">Available Slots</h2>
-          <div className="overflow-x-auto">
-            <div className="min-w-[800px]">
-              <div className="grid grid-cols-7 gap-4">
-                {days.map((day, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="text-center">
-                      <p className="font-medium">{day.name}</p>
-                      <p className="text-sm text-gray-500">{day.date}</p>
+        {/* Any Mentor Button */}
+        <div className="flex justify-center">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => {
+              setSelectedMentor(null)
+              setShowSlots(true)
+            }}
+            className="rounded-lg bg-orange-500 px-4 py-2 text-white hover:bg-orange-600"
+          >
+            Any Mentor
+          </motion.button>
+        </div>
+
+        {/* Slots Section */}
+        {showSlots && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-gray-900">Available Slots</h2>
+            <div className="overflow-x-auto">
+              <div className="min-w-[800px]">
+                <div className="grid grid-cols-7 gap-4">
+                  {days.map((day, index) => (
+                    <div key={index} className="space-y-2">
+                      <div className="text-center">
+                        <p className="font-medium">{day.name}</p>
+                        <p className="text-sm text-gray-500">{day.date}</p>
+                      </div>
+                      <div className="space-y-2">
+                        {day.slots.map((slot, slotIndex) => (
+                          <motion.button
+                            key={slotIndex}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => slot.available && setSelectedSlot(`${day.name} ${slot.time}`)}
+                            disabled={!slot.available}
+                            className={`w-full rounded-lg px-2 py-1 text-sm ${
+                              selectedSlot === `${day.name} ${slot.time}`
+                                ? "bg-orange-500 text-white"
+                                : slot.available
+                                ? "bg-orange-100 text-orange-600"
+                                : "cursor-not-allowed bg-gray-100 text-gray-400"
+                            }`}
+                          >
+                            {slot.time}
+                          </motion.button>
+                        ))}
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      {day.slots.map((slot, slotIndex) => (
-                        <motion.button
-                          key={slotIndex}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => slot.available && setSelectedSlot(`${day.name} ${slot.time}`)}
-                          disabled={!slot.available}
-                          className={`w-full rounded-lg px-2 py-1 text-sm ${
-                            selectedSlot === `${day.name} ${slot.time}`
-                              ? "bg-orange-500 text-white"
-                              : slot.available
-                              ? "bg-orange-100 text-orange-600"
-                              : "cursor-not-allowed bg-gray-100 text-gray-400"
-                          }`}
-                        >
-                          {slot.time}
-                        </motion.button>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Book Button */}
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleBook}
-          disabled={selectedMentor === null || selectedSlot === null}
+          disabled={selectedSlot === null}
           className={`w-full rounded-lg py-3 text-center font-medium ${
-            selectedMentor !== null && selectedSlot !== null
+            selectedSlot !== null
               ? "bg-orange-500 text-white hover:bg-orange-600"
               : "cursor-not-allowed bg-gray-200 text-gray-500"
           }`}

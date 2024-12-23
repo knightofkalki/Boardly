@@ -3,7 +3,7 @@ import studyImage from '../../assets/landingCTA.svg'
 
 export default function CTA() {
   return (
-    <div className="min-h-screen bg-white flex items-center">
+    <div className="min-h-screen bg-gray-50 flex items-center">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 grid lg:grid-cols-2 gap-12 items-center">
         <motion.div
           initial={{ opacity: 0, x: -50 }}

@@ -10,20 +10,21 @@ export default function Footer() {
   return (
     <footer className="relative bg-gray-100">
       <div className="absolute top-0 left-0 w-full overflow-hidden hidden md:block" style={{ transform: 'translateY(-98%)' }}>
-        <svg
+			<svg
           viewBox="0 0 1440 120"
           preserveAspectRatio="none"
           className="relative block w-full h-[100px]"
           fill="rgb(243 244 246)"
         >
           <path 
-            d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"
+            d="M0,60L80,80C160,100,240,100,320,80C400,60,480,40,560,60C640,80,720,100,800,80C880,60,960,40,1040,60C1120,80,1200,100,1280,80C1360,60,1440,40,1440,60L1440,120L0,120Z"
           />
         </svg>
+
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:pt-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -35,7 +36,7 @@ export default function Footer() {
               <MapPin className="w-5 h-5 mt-1 flex-shrink-0 text-gray-600" />
               <div>
                 <h3 className="font-medium">Address:</h3>
-                <p className="text-gray-600 text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p className="text-gray-600 text-sm">Tiruvalam road vellore, 632014 ,Tamil Nadu</p>
               </div>
             </div>
 
@@ -43,7 +44,7 @@ export default function Footer() {
               <Phone className="w-5 h-5 mt-1 flex-shrink-0 text-gray-600" />
               <div>
                 <h3 className="font-medium">Tel:</h3>
-                <p className="text-gray-600 text-sm">7010983891</p>
+                <p className="text-gray-600 text-sm">+91-8868878843</p>
               </div>
             </div>
 
@@ -63,29 +64,7 @@ export default function Footer() {
               </div>
             </div>
           </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="md:pl-8"
-          >
-            <h2 className="text-lg font-semibold mb-6">Useful Links</h2>
-            <ul className="space-y-3">
-              {['CBSE CLASS 10', 'CBSE CLASS 12', 'Mentorship', 'Evaluation'].map((link) => (
-                <li key={link}>
-                  <motion.a
-                    href="#"
-                    className="text-gray-600 hover:text-[#FF5533] transition-colors text-sm inline-block"
-                    whileHover={{ x: 5 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
-                  >
-                    {link}
-                  </motion.a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+          
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -116,7 +95,7 @@ export default function Footer() {
             viewport={{ once: true }}
             className="lg:pl-8"
           >
-            <h2 className="text-lg font-semibold mb-6">Sign up for Our NewsLetter</h2>
+            <h2 className="text-lg font-semibold mb-6">For Business Enquiry:</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
                 type="email"

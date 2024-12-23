@@ -107,9 +107,10 @@ export default function PYQList() {
     navigate(`/subject/${subject}/pyq/${year}/topper-solution`);
   };
 
-  const handleVideoClick = (videoUrl) => {
-    setCurrentVideoUrl(videoUrl);
-    setShowVideo(true);
+  const handleVideoClick = (year) => {
+    // setCurrentVideoUrl(videoUrl);
+    // setShowVideo(true);
+    navigate(`/subject/${subject}/pyq/${year}/topper-solution`);
   };
 
   const filteredData = pyqData.filter(item => {
@@ -211,7 +212,7 @@ export default function PYQList() {
               <div className="hidden md:flex justify-center">
                 {item.hasVideoSolution && (
                   <button
-                    onClick={() => handleVideoClick(item.videoUrl)}
+                    onClick={() => handleVideoClick(item.id)}
                     className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                     title="Watch Video Solution"
                   >

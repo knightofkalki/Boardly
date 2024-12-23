@@ -24,7 +24,7 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <div className="py-20 overflow-hidden bg-white">
+    <div className="py-20 overflow-hidden bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 mb-12">
         <h2 className="text-4xl font-bold text-center text-[#FF5533]">
           Hear From Our Students

@@ -9,9 +9,9 @@ const partners = [
 
 export function Partners() {
   return (
-    <div className="mt-12 mb-8 py-8 bg-gray-50">
-      <h2 className="text-3xl font-semibold mb-8 text-center">Our Partners</h2>
-      <div className="flex justify-center gap-12">
+    <div className="mt-12 mb-8 py-8 bg-gray-50 text-[#FF5533]">
+      <h2 className="text-4xl font-semibold mb-8 text-center">Our Partners</h2>
+      <div className="flex justify-center gap-12 animate-marquee-reverse">
         {partners.map((partner, index) => (
           <motion.div
             key={index}

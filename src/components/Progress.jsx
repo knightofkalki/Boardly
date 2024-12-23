@@ -27,8 +27,8 @@ const Progress = () => {
 
   return (
     <div className="bg-white rounded-xl p-6 shadow-[0_0_20px_rgba(0,0,0,0.1)] h-full">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
+      <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+        {/* <div>
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold">{month}</h3>
           </div>
@@ -55,7 +55,7 @@ const Progress = () => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
         <div>
           <h3 className="text-lg font-semibold mb-4">Progress</h3>
           <div className="flex flex-wrap gap-4 justify-center">

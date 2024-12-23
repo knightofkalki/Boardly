@@ -11,6 +11,39 @@ const TopperSolution = () => {
   const { subject, year } = useParams();
   const navigate = useNavigate();
 
+	const questions = [
+    {
+      id: '01',
+      question: 'What is the capital of France?',
+      answer: 'The capital of France is Paris.',
+      steps: [
+        'Paris is located in northern France.',
+        'It is the largest city in France.',
+        'Paris is known as the "City of Light".'
+      ],
+      hasVideoSolution: true,
+      videoUrl:'https://youtu.be/dQw4w9WgXcQ?feature=shared'
+    },
+    {
+      id: '02',
+      question: 'Who wrote "Romeo and Juliet"?',
+      answer: 'William Shakespeare wrote "Romeo and Juliet".',
+      steps: [
+        'Shakespeare was an English playwright.',
+        'He wrote "Romeo and Juliet" in the late 16th century.',
+        'It is one of his most famous tragedies.'
+      ],
+      hasVideoSolution: false
+    }
+  ];
+
+	useEffect(() => {
+    if (questions.length > 0) {
+      setExpandedId(questions[0].id);
+    }
+  }, [questions]);
+
+
   const isMobile = () => {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   };
@@ -38,31 +71,7 @@ const TopperSolution = () => {
     }
   };
 
-  const questions = [
-    {
-      id: '01',
-      question: 'What is the capital of France?',
-      answer: 'The capital of France is Paris.',
-      steps: [
-        'Paris is located in northern France.',
-        'It is the largest city in France.',
-        'Paris is known as the "City of Light".'
-      ],
-      hasVideoSolution: true,
-      videoUrl:'https://youtu.be/dQw4w9WgXcQ?feature=shared'
-    },
-    {
-      id: '02',
-      question: 'Who wrote "Romeo and Juliet"?',
-      answer: 'William Shakespeare wrote "Romeo and Juliet".',
-      steps: [
-        'Shakespeare was an English playwright.',
-        'He wrote "Romeo and Juliet" in the late 16th century.',
-        'It is one of his most famous tragedies.'
-      ],
-      hasVideoSolution: false
-    }
-  ];
+  
 
   const getEmbedUrl = (url) => {
     try {
