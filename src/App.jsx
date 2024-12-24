@@ -13,6 +13,7 @@ import LandingPage from "./pages/LandingPage";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Attempt from "./pages/Attempt"; 
 import ChapterQuestions from "./pages/ChapterQuestions";
+import Upload from "./pages/Upload";
 
 const ProtectedRoute = ({ children, hideSidebar = false }) => {
   const { isAuthenticated } = useAuth();
@@ -85,6 +86,11 @@ export default function App() {
             <Route path="/subject/:subject/pyq/:year/attempt" element={
               <ProtectedRoute hideSidebar={true}>
                 <Attempt />
+              </ProtectedRoute>
+            } />
+            <Route path="/subject/:subject/upload" element={
+              <ProtectedRoute hideSidebar={true}>
+                <Upload />
               </ProtectedRoute>
             } />
             <Route path="*" element={<Navigate to="/landing" replace />} />
