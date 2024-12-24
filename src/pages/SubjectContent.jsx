@@ -47,7 +47,7 @@ export default function SubjectContent() {
       description: "Send your solution in pdf format to our toppers; they will provide scores along with detailed feedback.",
       buttonText: "Upload",
       icon: FiUpload,
-      onClick: () => setPopupMessage("Coming soon on 1st Jan"),
+      onClick: () => navigate(`/subject/${subject}/upload`),
     },
     {
       title: "PYQ",
