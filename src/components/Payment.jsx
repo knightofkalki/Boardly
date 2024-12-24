@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { API_URL } from "../shared/api";
+import plans from "../data/plans.json";
 
 const getAuthToken = () => `Bearer ${localStorage.getItem('token')}`;
 
@@ -7,8 +8,6 @@ const SubscriptionComponent = () => {
     const [subscription, setSubscription] = useState(null);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
-    const [selectedPlan, setSelectedPlan] = useState('');
-    const plans = ['PLAN1', 'PLAN2', 'PLAN3']; // Available plans
 
     const showMessage = (type, text) => {
         setMessage({ type, text });
@@ -72,12 +71,7 @@ const SubscriptionComponent = () => {
         }
     };
 
-    const handlePayment = async () => {
-        if (!selectedPlan) {
-            showMessage('error', 'Please select a plan.');
-            return;
-        }
-
+    const handlePayment = async (planId, planPrice) => {
         try {
             const response = await fetch(`${API_URL}/payment/create-order`, {
                 method: 'POST',
@@ -85,7 +79,7 @@ const SubscriptionComponent = () => {
                     'Content-Type': 'application/json',
                     'Authorization': getAuthToken(),
                 },
-                body: JSON.stringify({ planType: selectedPlan }),
+                body: JSON.stringify({ planType: planId }),
             });
 
             const orderData = await response.json();
@@ -93,12 +87,14 @@ const SubscriptionComponent = () => {
             if (response.ok) {
                 const options = {
                     key: "rzp_test_uMTEc94d3O7Ez6",
-                    amount: orderData.amount,
-                    currency: orderData.currency,
+                    amount: planPrice * 100,
+                    currency: "INR",
                     name: "Your Company Name",
-                    description: `Payment for ${selectedPlan}`,
+                    description: `Payment for ${planId}`,
                     order_id: orderData.orderId,
-                    handler: handlePaymentSuccess,
+                    handler: async (response) => {
+                        await handlePaymentSuccess(response);
+                    },
                     prefill: {
                         name: orderData.customerName,
                         email: orderData.customerEmail,
@@ -137,43 +133,59 @@ const SubscriptionComponent = () => {
     }, []);
 
     return (
-        <div className="subscription-component">
+        <div className="subscription-component p-8 bg-gray-50 min-h-screen">
             {loading ? (
-                <div className="loading">Loading...</div>
+                <div className="text-center text-xl font-semibold text-gray-700">Loading...</div>
             ) : (
-                <>
+                <div className="max-w-5xl mx-auto">
                     {subscription && (
-                        <div className="subscription-info">
-                            <p>
-                                Current Plan: <strong>{subscription.currentPlan || 'Free'}</strong>
+                        <div className="subscription-info mb-8 bg-white p-6 rounded-lg shadow-md">
+                            <p className="text-lg font-medium text-gray-700">
+                                Current Plan: <span className="font-bold">{subscription.currentPlan || 'Free'}</span>
                             </p>
                             {subscription.isActive ? (
-                                <p>Expires on: {new Date(subscription.expiryDate).toLocaleDateString()}</p>
+                                <p className="text-gray-600">
+                                    Expires on: {new Date(subscription.expiryDate).toLocaleDateString()}
+                                </p>
                             ) : (
-                                <p>Your subscription has expired.</p>
+                                <p className="text-red-500">Your subscription has expired.</p>
                             )}
                         </div>
                     )}
-                    <div className="plan-selection">
-                        <label>Select Plan:</label>
-                        <select
-                            value={selectedPlan}
-                            onChange={(e) => setSelectedPlan(e.target.value)}
-                        >
-                            <option value="">Select a plan</option>
-                            {plans.map((plan) => (
-                                <option key={plan} value={plan}>
-                                    {plan}
-                                </option>
-                            ))}
-                        </select>
-                        <button onClick={handlePayment} disabled={!selectedPlan}>
-                            Pay Now
-                        </button>
+                    <div className="plans grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {plans.map(plan => (
+                            <div
+                                key={plan.id}
+                                className="plan-card p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+                            >
+                                <h2 className="plan-name text-xl font-semibold mb-4 text-gray-800">{plan.name}</h2>
+                                <div className="price text-2xl font-bold text-indigo-600 mb-4">
+                                    ₹{plan.price} <span className="text-sm font-normal">/month</span>
+                                </div>
+                                <ul className="features mb-4 space-y-2 text-gray-600">
+                                    {plan.features.map((feature, index) => (
+                                        <li key={index}>- {feature}</li>
+                                    ))}
+                                </ul>
+                                <button
+                                    className="btn w-full py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors"
+                                    onClick={() => handlePayment(plan.id, plan.price)}
+                                >
+                                    Subscribe Now
+                                </button>
+                            </div>
+                        ))}
                     </div>
-                </>
+                    {message.text && (
+                        <div
+                            className={`message mt-6 p-4 rounded-md text-center font-medium ${message.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                }`}
+                        >
+                            {message.text}
+                        </div>
+                    )}
+                </div>
             )}
-            {message.text && <div className={`message ${message.type}`}>{message.text}</div>}
         </div>
     );
 };
