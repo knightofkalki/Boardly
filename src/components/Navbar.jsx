@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Bell } from 'lucide-react';
 import ProfileIcon from '../assets/profile.svg';
+import { useAuth } from '../context/AuthContext';
 
 export function Navbar() {
     const [isNotificationOpen, setNotificationOpen] = useState(false);
     const [isProfileOpen, setProfileOpen] = useState(false);
+    const { currentUser } = useAuth();
 
     const toggleNotification = () => {
         setNotificationOpen((prev) => !prev);
@@ -26,7 +28,10 @@ export function Navbar() {
             <div className="mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 relative">
                     <div className="flex-shrink-0 flex items-center">
-                        <span className="text-[#F14A16] mooli-regular text-[42px] w-[291px] h-[93px] font-normal leading-[64px] flex items-center text-center z-50 ml-8">
+                        <span
+                            className="text-[#F14A16] mooli-regular text-[42px] w-[291px] h-[93px] font-normal leading-[64px] flex items-center text-center z-50 ml-8"
+                            style={{ cursor: 'default' }}
+                        >
                             Boardly.in
                         </span>
                     </div>
@@ -48,7 +53,9 @@ export function Navbar() {
                         )}
 
                         <button
-                            onClick={toggleProfile}
+                            onClick={() => {
+                                toggleProfile();
+                            }}
                             className="ml-3 p-2 rounded-full text-gray-400 hover:text-gray-600 relative"
                         >
                             <span className="sr-only">View profile</span>
@@ -57,30 +64,30 @@ export function Navbar() {
                         {isProfileOpen && (
                             <div className="absolute top-12 right-0 bg-white shadow-lg rounded-lg w-64 p-4">
                                 <div className="mb-4">
-                                    <h3 className="font-semibold text-lg text-gray-900">John Doe</h3>
-                                    <p className="text-sm text-gray-600">johndoe@example.com</p>
+                                    <h3 className="font-semibold text-lg text-gray-900">{currentUser.name}</h3>
+                                    <p className="text-sm text-gray-600">{currentUser.email}</p>
                                 </div>
                                 <div className="border-t border-gray-200 pt-2">
-																		<div>
-                                    <button className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
-                                        Class: 12th
-                                    </button>
-																		</div>
-																		<div>
-                                    <button className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
-                                        Coaching: XYZ Coaching
-                                    </button>
-																		</div>
-																		<div>
-                                    <button className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
-                                        Settings
-                                    </button>
-																		</div>
-																		<div>
-                                    <button className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
-                                        Sign Out
-                                    </button>
-																		</div>
+                                    <div>
+                                        <button className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
+                                            Class: {currentUser.userClass}
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
+                                            Institute: {currentUser.institute}
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
+                                            Settings
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
+                                            Sign Out
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         )}
