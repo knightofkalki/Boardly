@@ -36,22 +36,29 @@ const SubscriptionComponent = () => {
         }
     };
 
-    const handlePaymentSuccess = async (paymentResponse) => {
+    const handlePaymentSuccess = async (response) => {
+        const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
+
+        if (!razorpay_payment_id || !razorpay_order_id || !razorpay_signature) {
+            showMessage('error', 'Invalid payment response. Please contact support.');
+            return;
+        }
+
         try {
-            const response = await fetch(`${API_URL}/payment/verify-payment`, {
+            const verifyResponse = await fetch(`${API_URL}/payment/verify-payment`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': getAuthToken(),
                 },
-                body: JSON.stringify(paymentResponse),
+                body: JSON.stringify({ razorpay_payment_id, razorpay_order_id, razorpay_signature }),
             });
 
-            const verifyData = await response.json();
+            const verifyData = await verifyResponse.json();
 
-            if (response.ok) {
+            if (verifyResponse.ok) {
                 showMessage('success', 'Payment successful and subscription updated!');
-                fetchSubscriptionStatus(); // Refresh subscription info
+                await fetchSubscriptionStatus(); // Refresh subscription info
             } else {
                 throw new Error(verifyData.error || 'Payment verification failed');
             }
@@ -81,7 +88,7 @@ const SubscriptionComponent = () => {
 
             if (response.ok) {
                 const options = {
-                    key: "rzp_test_uMTEc94d3O7Ez6", // Replace with your Razorpay key
+                    key: "rzp_test_uMTEc94d3O7Ez6",
                     amount: orderData.amount,
                     currency: orderData.currency,
                     name: "Your Company Name",
@@ -121,6 +128,10 @@ const SubscriptionComponent = () => {
         script.src = 'https://checkout.razorpay.com/v1/checkout.js';
         script.async = true;
         document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
+        };
     }, []);
 
     return (
