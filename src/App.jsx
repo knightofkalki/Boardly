@@ -5,15 +5,16 @@ import { Home } from "./pages/Home";
 import Subjects from "./pages/Subjects";
 import SubjectContent from "./pages/SubjectContent";
 import PYQList from "./pages/PYQList";
-import ChapterList from "./pages/ChapterList";  
+import ChapterList from "./pages/ChapterList";
 import TopperSolution from "./pages/TopperSolution";
 import Communities from "./pages/Communities";
 import MentorBooking from "./components/MentorBooking";
 import LandingPage from "./pages/LandingPage";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import Attempt from "./pages/Attempt"; 
+import Attempt from "./pages/Attempt";
 import ChapterQuestions from "./pages/ChapterQuestions";
 import Upload from "./pages/Upload";
+import Payments from "./pages/Payments";
 
 const ProtectedRoute = ({ children, hideSidebar = false }) => {
   const { isAuthenticated } = useAuth();
@@ -56,6 +57,11 @@ export default function App() {
             <Route path="/mentorship" element={
               <ProtectedRoute>
                 <MentorBooking />
+              </ProtectedRoute>
+            } />
+            <Route path="/payments" element={
+              <ProtectedRoute>
+                <Payments />
               </ProtectedRoute>
             } />
             <Route path="/subject/:subject" element={
