@@ -153,7 +153,9 @@ export default function MentorBooking() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setSelectedMentor(mentor.id)}
+                  onClick={() => {setSelectedMentor(mentor.id)
+										setShowSlots(true)
+									}}
                   className={`mt-4 w-full rounded-full px-4 py-2 text-sm font-medium ${
                     selectedMentor === mentor.id
                       ? "bg-orange-500 text-white"
