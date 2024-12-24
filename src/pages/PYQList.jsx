@@ -7,35 +7,6 @@ import axios from "axios";
 import { OutlineButton } from "../components/ui/OutlineButton"
 import { API_URL } from "../shared/api";
 
-// const pyqData = [
-//   {
-//     id: "2024",
-//     status: "pending",
-//     title: "CBSE 2024 PYQ",
-//     difficulty: "Easy",
-//     hasTopperSolution: true,
-//     hasVideoSolution: true,
-//     videoUrl: 'https://youtu.be/dQw4w9WgXcQ?feature=shared' 
-//   },
-//   {
-//     id: "2023",
-//     status: "completed",
-//     title: "CBSE 2023 PYQ",
-//     difficulty: "Medium",
-//     hasTopperSolution: true,
-//     hasVideoSolution: true,
-//     videoUrl: 'https://youtu.be/dQw4w9WgXcQ?feature=shared' 
-//   },
-//   {
-//     id: "2022",
-//     status: "pending",
-//     title: "CBSE 2022 PYQ",
-//     difficulty: "Hard",
-//     hasTopperSolution: true,
-//     hasVideoSolution: true,
-//     videoUrl: 'https://youtu.be/dQw4w9WgXcQ?feature=shared' 
-//   }
-// ]
 
 const difficultyColors = {
   Easy: "text-green-600",
@@ -104,6 +75,7 @@ export default function PYQList() {
   const navigate = useNavigate()
   const { subject } = useParams()
   const [pyqData, setPyqData] = useState([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -112,13 +84,13 @@ export default function PYQList() {
         const user = JSON.parse(localStorage.getItem('currentUser'))
         const userClass = user.userClass
         console.log("class", user.userClass)
+        setLoading(true)
         const response = await axios.get(`${API_URL}/solve/yearwise/${userClass}/list`, {
           headers: {
             Authorization: `Bearer ${token}`, 
             'Content-Type': 'application/json',
           },
         });
-
         const data = response.data;
 
         const mappedData = data.questionPapers.map((paper) => ({
@@ -134,6 +106,8 @@ export default function PYQList() {
         setPyqData(mappedData);
       } catch (error) {
         console.error("Error fetching data:", error);
+      }finally{
+        setLoading(false)
       }
     };
 
@@ -206,7 +180,11 @@ export default function PYQList() {
       </div>
 
       <div className="space-y-2 mt-2">
-        {filteredData.map((item) => (
+        {loading? (
+        <div className="text-center py-6">
+          <span className="text-gray-500">Loading...</span>
+        </div> 
+        ) : ( filteredData.map((item) => (
           <div key={item.id} className="bg-white rounded-lg shadow-sm">
             <div className="grid grid-cols-7 md:grid-cols-7 gap-4 items-center px-4 py-3">
               <div className="flex items-center">
@@ -259,7 +237,8 @@ export default function PYQList() {
               </div>
             </div>
           </div>
-        ))}
+        ))
+      )}
       </div>
 
       <AnimatePresence>
