@@ -10,6 +10,8 @@ const Search = (props) => {
             <input 
               type="text" 
               placeholder={props.placeholdertext} 
+              value={props.value}
+              onChange={props.onChange}
               className="bg-white p-2 pl-12 rounded-xl border border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400"
             />
     </div>

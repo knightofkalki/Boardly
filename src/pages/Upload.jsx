@@ -18,6 +18,7 @@ function Upload() {
   const navigate = useNavigate()
   const [statuses, setStatuses] = useState(papers.map(() => ""));
   const [token, setToken] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleStatusChange = (index, newStatus) => {
     const updatedStatuses = [...statuses];
@@ -55,6 +56,10 @@ function Upload() {
     }
   };
 
+  const filteredPapers = papers.filter((paper) =>
+    paper.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="flex justify-center min-h-screen">
       <div className="w-full lg:w-[90%]">
@@ -73,7 +78,10 @@ function Upload() {
           </div>
           
           <div className="w-4/5 mt-10 flex justify-between">
-            <Search placeholdertext="Search by year" />
+            <Search placeholdertext="Search by year"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+             />
           </div>
           <div className="w-4/5 mt-10">
             <table className="w-full">
@@ -92,7 +100,7 @@ function Upload() {
                 </tr>
               </thead>
               <tbody>
-                {papers.map((paper, index) => (
+                {filteredPapers.map((paper, index) => (
                   <tr key={paper.id} className="bg-white shadow-md">
                     <td className="p-6">{paper.title}</td>
                     <td>
