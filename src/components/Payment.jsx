@@ -5,10 +5,10 @@ const getAuthToken = () => `Bearer ${localStorage.getItem('token')}`;
 
 const SubscriptionComponent = () => {
     const [subscription, setSubscription] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
     const [selectedPlan, setSelectedPlan] = useState('');
-    const [plans] = useState(['PLAN1', 'PLAN2', 'PLAN3']); // Available plans
+    const plans = ['PLAN1', 'PLAN2', 'PLAN3']; // Available plans
 
     const showMessage = (type, text) => {
         setMessage({ type, text });
@@ -16,6 +16,7 @@ const SubscriptionComponent = () => {
     };
 
     const fetchSubscriptionStatus = async () => {
+        setLoading(true);
         try {
             const response = await fetch(`${API_URL}/payment/subscription-status`, {
                 headers: {
@@ -23,6 +24,7 @@ const SubscriptionComponent = () => {
                     'Authorization': getAuthToken(),
                 },
             });
+
             const subscriptionData = await response.json();
 
             if (response.ok) {
@@ -33,6 +35,8 @@ const SubscriptionComponent = () => {
         } catch (error) {
             showMessage('error', 'Failed to retrieve subscription status. Please try again later.');
             console.error('Subscription status error:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -58,7 +62,7 @@ const SubscriptionComponent = () => {
 
             if (verifyResponse.ok) {
                 showMessage('success', 'Payment successful and subscription updated!');
-                await fetchSubscriptionStatus(); // Refresh subscription info
+                await fetchSubscriptionStatus();
             } else {
                 throw new Error(verifyData.error || 'Payment verification failed');
             }
@@ -117,13 +121,11 @@ const SubscriptionComponent = () => {
 
     useEffect(() => {
         const initialize = async () => {
-            setLoading(true);
             await fetchSubscriptionStatus();
-            setLoading(false);
         };
+
         initialize();
 
-        // Load Razorpay script
         const script = document.createElement('script');
         script.src = 'https://checkout.razorpay.com/v1/checkout.js';
         script.async = true;
@@ -136,35 +138,42 @@ const SubscriptionComponent = () => {
 
     return (
         <div className="subscription-component">
-            {loading && <div className="loading">Loading...</div>}
-
-            {!loading && subscription && (
-                <div className="subscription-info">
-                    <p>
-                        Current Plan: <strong>{subscription.planName || 'Free'}</strong>
-                    </p>
-                </div>
+            {loading ? (
+                <div className="loading">Loading...</div>
+            ) : (
+                <>
+                    {subscription && (
+                        <div className="subscription-info">
+                            <p>
+                                Current Plan: <strong>{subscription.currentPlan || 'Free'}</strong>
+                            </p>
+                            {subscription.isActive ? (
+                                <p>Expires on: {new Date(subscription.expiryDate).toLocaleDateString()}</p>
+                            ) : (
+                                <p>Your subscription has expired.</p>
+                            )}
+                        </div>
+                    )}
+                    <div className="plan-selection">
+                        <label>Select Plan:</label>
+                        <select
+                            value={selectedPlan}
+                            onChange={(e) => setSelectedPlan(e.target.value)}
+                        >
+                            <option value="">Select a plan</option>
+                            {plans.map((plan) => (
+                                <option key={plan} value={plan}>
+                                    {plan}
+                                </option>
+                            ))}
+                        </select>
+                        <button onClick={handlePayment} disabled={!selectedPlan}>
+                            Pay Now
+                        </button>
+                    </div>
+                </>
             )}
-
-            <div className="plan-selection">
-                <label>Select Plan:</label>
-                <select
-                    value={selectedPlan}
-                    onChange={(e) => setSelectedPlan(e.target.value)}
-                >
-                    <option value="">Select a plan</option>
-                    {plans.map((plan) => (
-                        <option key={plan} value={plan}>{plan}</option>
-                    ))}
-                </select>
-                <button onClick={handlePayment} disabled={!selectedPlan}>
-                    Pay Now
-                </button>
-            </div>
-
-            {message.text && (
-                <div className={`message ${message.type}`}>{message.text}</div>
-            )}
+            {message.text && <div className={`message ${message.type}`}>{message.text}</div>}
         </div>
     );
 };
