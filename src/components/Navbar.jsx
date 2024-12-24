@@ -28,7 +28,10 @@ export function Navbar() {
             <div className="mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 relative">
                     <div className="flex-shrink-0 flex items-center">
-                        <span className="text-[#F14A16] mooli-regular text-[42px] w-[291px] h-[93px] font-normal leading-[64px] flex items-center text-center z-50 ml-8">
+                        <span
+                            className="text-[#F14A16] mooli-regular text-[42px] w-[291px] h-[93px] font-normal leading-[64px] flex items-center text-center z-50 ml-8"
+                            style={{ cursor: 'default' }}
+                        >
                             Boardly.in
                         </span>
                     </div>
