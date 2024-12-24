@@ -3,11 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../../context/AuthContext'
 import HeroImage from "../../assets/hero.svg"
 import { API_URL } from "../../shared/api";
-
+import { useNavigate } from 'react-router-dom';
 function Counter({ value, label }) {
 	const [count, setCount] = useState(0);
 	const [hasAnimated, setHasAnimated] = useState(false); // Prevent re-triggering animation
-
 	const startAnimation = useCallback(() => {
 		if (hasAnimated) return; // Avoid multiple triggers
 		setHasAnimated(true);
@@ -66,7 +65,7 @@ function Counter({ value, label }) {
 export default function Hero() {
 	const [isLogin, setIsLogin] = useState(false);
 	const { login } = useAuth();
-
+	const navigate = useNavigate();
 	const [formData, setFormData] = useState({
 		fullName: '',
 		email: '',
@@ -85,6 +84,7 @@ export default function Hero() {
 				const loginSuccessful = await login(formData.email, formData.password);
 				if (loginSuccessful) {
 					alert('Logged in successfully!');
+					navigate('/')
 				} else {
 					alert('Invalid credentials. Please try again.');
 				}

@@ -8,7 +8,11 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
+
+  const [currentUser, setCurrentUser] = useState(() => {
+    const storedUser = localStorage.getItem('currentUser');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
   const login = async (email, password) => {
     try {
@@ -24,6 +28,7 @@ export const AuthProvider = ({ children }) => {
         const data = await response.json();
         setCurrentUser(data.user);
         localStorage.setItem('token', data.token);
+        localStorage.setItem('currentUser', JSON.stringify(data.user));
         return true;
       } else {
         const error = await response.json();
