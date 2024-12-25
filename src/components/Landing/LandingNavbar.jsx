@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Banner from "../../assets/banner.svg";
 
 export function LandingNavbar() {
 
@@ -29,7 +30,7 @@ export function LandingNavbar() {
 								className="text-[#F14A16] mooli-regular text-[42px] w-[291px] h-[93px] font-normal leading-[64px] flex items-center text-center z-50 ml-8"
 								style={{ cursor: 'default' }}
 							>
-								Boardly.in
+								<img src={Banner} alt="Boardly" />
 							</span>
 						</div>
 						<div className="flex items-center space-x-4">
