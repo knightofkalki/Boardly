@@ -1,15 +1,41 @@
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { Search, Star } from 'lucide-react'
-import BookingConfirmationCard from './BookingConfirmationCard'
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Search, Star } from "lucide-react";
+import BookingConfirmationCard from "./BookingConfirmationCard";
+import { useAuth } from '../context/AuthContext';
 
 export default function MentorBooking() {
-  const [selectedMentor, setSelectedMentor] = useState(null)
-  const [selectedSlot, setSelectedSlot] = useState(null)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [showConfirmation, setShowConfirmation] = useState(false)
-  const [bookingDetails, setBookingDetails] = useState(null)
-  const [showSlots, setShowSlots] = useState(false)
+  const [selectedMentor, setSelectedMentor] = useState(null);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [bookingDetails, setBookingDetails] = useState(null);
+  const [showSlots, setShowSlots] = useState(false);
+  const [slots, setSlots] = useState([]);
+  const { currentUser } = useAuth();
+
+  const getNextSevenDays = () => {
+    const dates = [];
+    for (let i = 0; i < 7; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() + i);
+      dates.push(date);
+    }
+    return dates;
+  };
+
+  const formatDate = (date) => {
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    return {
+      dayName: days[date.getDay()],
+      dayMonth: `${date.getDate()} ${months[date.getMonth()]}`,
+      fullDate: date
+    };
+  };
+
+  const nextSevenDays = getNextSevenDays();
 
   const mentors = [
     {
@@ -19,7 +45,7 @@ export default function MentorBooking() {
       rating: 3,
       specialization: "Mathematics",
       successRate: "98% to board",
-      subject: "Specialist"
+      subject: "Specialist",
     },
     {
       id: 2,
@@ -28,7 +54,7 @@ export default function MentorBooking() {
       rating: 4,
       specialization: "Mathematics",
       successRate: "98% to board",
-      subject: "Specialist"
+      subject: "Specialist",
     },
     {
       id: 3,
@@ -37,7 +63,7 @@ export default function MentorBooking() {
       rating: 3,
       specialization: "Biology",
       successRate: "97.5% to board",
-      subject: "Specialist"
+      subject: "Specialist",
     },
     {
       id: 4,
@@ -46,61 +72,91 @@ export default function MentorBooking() {
       rating: 4,
       specialization: "Mathematics",
       successRate: "94.32% to board",
-      subject: "Specialist"
+      subject: "Specialist",
     },
-  ]
+  ];
 
-  const days = [
-    { name: "Monday", date: "Aug 28", slots: generateTimeSlots() },
-    { name: "Tuesday", date: "Sept 1", slots: generateTimeSlots() },
-    { name: "Wednesday", date: "Sept 2", slots: generateTimeSlots() },
-    { name: "Thursday", date: "Sept 3", slots: generateTimeSlots() },
-    { name: "Friday", date: "Sept 4", slots: generateTimeSlots() },
-    { name: "Saturday", date: "Sept 5", slots: generateTimeSlots() },
-    { name: "Sunday", date: "Sept 6", slots: generateTimeSlots() },
-  ]
+  const getUniqueTimeSlots = (slots) => {
+    const times = new Set();
+    slots.forEach(slot => times.add(slot.slotTiming));
+    return Array.from(times).sort();
+  };
 
-  function generateTimeSlots() {
-    return [
-      { time: "08:00 AM", available: true },
-      { time: "08:30 AM", available: false },
-      { time: "09:00 AM", available: true },
-      { time: "09:30 AM", available: true },
-      { time: "10:00 AM", available: false },
-      { time: "10:30 AM", available: true },
-      { time: "11:00 AM", available: true },
-    ]
-  }
+  const findSlot = (date, time) => {
+    return slots.find(slot => {
+      const slotDate = new Date(slot.slotDate);
+      return slotDate.toDateString() === date.toDateString() &&
+        slot.slotTiming === time;
+    });
+  };
 
-  const filteredMentors = mentors.filter(mentor =>
-    mentor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    mentor.specialization.toLowerCase().includes(searchQuery.toLowerCase())
-  )
-
-  const handleBook = () => {
-    if (selectedSlot !== null) {
-      const selectedMentorData = mentors.find(m => m.id === selectedMentor) || { name: "Any Mentor" }
-
-      const [day, time] = selectedSlot.split(' ')
-      setBookingDetails({
-        mentor: {
-          name: selectedMentorData.name,
-          image: selectedMentorData.image || "",
-          specialization: selectedMentorData.specialization || "Any"
-        },
-        date: day,
-        time: time
-      })
-      setShowConfirmation(true)
-    } else {
-      alert("Please select a time slot")
+  useEffect(() => {
+    async function fetchSlots() {
+      const response = await fetch("https://boardly-be.vercel.app/slot/");
+      const data = await response.json();
+      setSlots(data);
     }
-  }
+    fetchSlots();
+  }, []);
+
+  const filteredMentors = mentors.filter(
+    (mentor) =>
+      mentor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      mentor.specialization.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleBook = async () => {
+    if (selectedSlot !== null) {
+      const selectedMentorData =
+        mentors.find((m) => m.id === selectedMentor) || { name: "Any Mentor" };
+
+      const slotData = slots.find((slot) => slot._id === selectedSlot);
+
+      if (slotData) {
+        const slotId = slotData._id;
+        const userEmail = currentUser.email;
+
+        const formData = new URLSearchParams();
+        formData.append("userEmail", userEmail);
+        formData.append("slotId", slotId);
+
+        try {
+          const response = await fetch("https://boardly-be.vercel.app/slot/book", {
+            method: "POST",
+            body: formData,
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          });
+
+          if (response.ok) {
+            const bookingResponse = await response.json();
+            setBookingDetails({
+              mentor: {
+                name: selectedMentorData.name,
+                image: selectedMentorData.image || "",
+                specialization: selectedMentorData.specialization || "Any",
+              },
+              date: slotData.slotDate,
+              time: slotData.slotTiming,
+            });
+            setShowConfirmation(true);
+          } else {
+            alert("Failed to book the slot");
+          }
+        } catch (error) {
+          alert("Error occurred while booking the slot");
+        }
+      }
+    } else {
+      alert("Please select a time slot");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <div className="mx-auto max-w-6xl space-y-8">
-        {/* Header and Search */}
+      <div className="mx-auto max-w-7xl space-y-8">
+
         <div className="space-y-4">
           <h1 className="text-2xl font-bold text-gray-900">Choose mentor</h1>
           <div className="relative">
@@ -115,7 +171,6 @@ export default function MentorBooking() {
           </div>
         </div>
 
-        {/* Mentors List */}
         <div className="relative">
           <div className="flex space-x-4 overflow-x-auto pb-4">
             {filteredMentors.map((mentor) => (
@@ -124,11 +179,8 @@ export default function MentorBooking() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 whileHover={{ y: -5 }}
-                className={`flex min-w-[240px] flex-col items-center rounded-lg border p-4 ${
-                  selectedMentor === mentor.id
-                    ? "border-orange-500 bg-orange-50"
-                    : "border-gray-200 bg-white"
-                }`}
+                className={`flex min-w-[240px] flex-col items-center rounded-lg border p-4 ${selectedMentor === mentor.id ? "border-orange-500 bg-orange-50" : "border-gray-200 bg-white"
+                  }`}
               >
                 <motion.img
                   whileHover={{ scale: 1.1 }}
@@ -139,12 +191,7 @@ export default function MentorBooking() {
                 <h3 className="mt-2 font-semibold">{mentor.name}</h3>
                 <div className="flex space-x-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`h-4 w-4 ${
-                        i < mentor.rating ? "fill-orange-400 text-orange-400" : "text-gray-300"
-                      }`}
-                    />
+                    <Star key={i} className={`h-4 w-4 ${i < mentor.rating ? "fill-orange-400 text-orange-400" : "text-gray-300"}`} />
                   ))}
                 </div>
                 <p className="text-sm text-gray-600">{mentor.specialization}</p>
@@ -153,14 +200,9 @@ export default function MentorBooking() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => {setSelectedMentor(mentor.id)
-										setShowSlots(true)
-									}}
-                  className={`mt-4 w-full rounded-full px-4 py-2 text-sm font-medium ${
-                    selectedMentor === mentor.id
-                      ? "bg-orange-500 text-white"
-                      : "bg-orange-100 text-orange-600"
-                  }`}
+                  onClick={() => { setSelectedMentor(mentor.id); setShowSlots(true); }}
+                  className={`mt-4 w-full rounded-full px-4 py-2 text-sm font-medium ${selectedMentor === mentor.id ? "bg-orange-500 text-white" : "bg-orange-100 text-orange-600"
+                    }`}
                 >
                   Select
                 </motion.button>
@@ -169,55 +211,59 @@ export default function MentorBooking() {
           </div>
         </div>
 
-        {/* Any Mentor Button */}
+
         <div className="flex justify-center">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => {
-              setSelectedMentor(null)
-              setShowSlots(true)
-            }}
+            onClick={() => { setSelectedMentor(null); setShowSlots(true); }}
             className="rounded-lg bg-orange-500 px-4 py-2 text-white hover:bg-orange-600"
           >
             Any Mentor
           </motion.button>
         </div>
 
-        {/* Slots Section */}
         {showSlots && (
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-gray-900">Available Slots</h2>
             <div className="overflow-x-auto">
-              <div className="min-w-[800px]">
-                <div className="grid grid-cols-7 gap-4">
-                  {days.map((day, index) => (
-                    <div key={index} className="space-y-2">
-                      <div className="text-center">
-                        <p className="font-medium">{day.name}</p>
-                        <p className="text-sm text-gray-500">{day.date}</p>
+              <div className="min-w-full">
+                <div className="grid grid-cols-7 gap-2">
+
+                  {nextSevenDays.map((date) => {
+                    const formattedDate = formatDate(date);
+                    return (
+                      <div key={date.toISOString()} className="font-semibold p-2 bg-gray-100 rounded-lg">
+                        <div className="text-sm text-gray-600">{formattedDate.dayName}</div>
+                        <div className="text-xs">{formattedDate.dayMonth}</div>
                       </div>
-                      <div className="space-y-2">
-                        {day.slots.map((slot, slotIndex) => (
-                          <motion.button
-                            key={slotIndex}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => slot.available && setSelectedSlot(`${day.name} ${slot.time}`)}
-                            disabled={!slot.available}
-                            className={`w-full rounded-lg px-2 py-1 text-sm ${
-                              selectedSlot === `${day.name} ${slot.time}`
-                                ? "bg-orange-500 text-white"
-                                : slot.available
-                                ? "bg-orange-100 text-orange-600"
-                                : "cursor-not-allowed bg-gray-100 text-gray-400"
+                    );
+                  })}
+
+                  {getUniqueTimeSlots(slots).map((time) => (
+                    nextSevenDays.map((date) => {
+                      const slot = findSlot(date, time);
+                      return (
+                        <motion.button
+                          key={`${date.toISOString()}-${time}`}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => slot?.available && setSelectedSlot(slot._id)}
+                          disabled={!slot?.available}
+                          className={`p-1 rounded-lg text-sm flex flex-col items-center justify-center min-h-[40px] ${selectedSlot === slot?._id
+                            ? "bg-orange-500 text-white"
+                            : slot?.available
+                              ? "bg-orange-100 text-orange-600"
+                              : "bg-gray-100 text-gray-400 cursor-not-allowed"
                             }`}
-                          >
-                            {slot.time}
-                          </motion.button>
-                        ))}
-                      </div>
-                    </div>
+                        >
+                          <span className="font-medium">{time}</span>
+                          <span className="text-xs mt-1">
+                            {slot?.available ? "Available" : "Unavailable"}
+                          </span>
+                        </motion.button>
+                      );
+                    })
                   ))}
                 </div>
               </div>
@@ -225,28 +271,23 @@ export default function MentorBooking() {
           </div>
         )}
 
-        {/* Book Button */}
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleBook}
           disabled={selectedSlot === null}
-          className={`w-full rounded-lg py-3 text-center font-medium ${
-            selectedSlot !== null
-              ? "bg-orange-500 text-white hover:bg-orange-600"
-              : "cursor-not-allowed bg-gray-200 text-gray-500"
-          }`}
+          className={`w-full rounded-lg py-3 text-center font-medium ${selectedSlot !== null
+            ? "bg-orange-500 text-white hover:bg-orange-600"
+            : "cursor-not-allowed bg-gray-200 text-gray-500"
+            }`}
         >
           Book
         </motion.button>
+
+        {showConfirmation && (
+          <BookingConfirmationCard booking={bookingDetails} onClose={() => setShowConfirmation(false)} />
+        )}
       </div>
-      
-      {showConfirmation && (
-        <BookingConfirmationCard
-          booking={bookingDetails}
-          onClose={() => setShowConfirmation(false)}
-        />
-      )}
     </div>
-  )
+  );
 }
