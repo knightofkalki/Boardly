@@ -19,11 +19,37 @@ function Upload() {
     setStatus(newStatus);
   };
 
+  const [pyqData, setPyqData] = useState([])
+  const [loading, setLoading] = useState(false)
+
   useEffect(() => {
-    const savedToken = localStorage.getItem('token');
-    if (savedToken) {
-      setToken(savedToken); 
-    }
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('token'); 
+        setToken(token)
+        const user = JSON.parse(localStorage.getItem('currentUser'))
+        const userClass = user.userClass
+        console.log("class", user.userClass)
+        setLoading(true)
+        const response = await axios.get(`${API_URL}/solve/yearwise/${userClass}/list`, {
+          headers: {
+            Authorization: `Bearer ${token}`, 
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = response.data;
+        const mappedData = data.questionPapers.map((paper) => ({
+          title: paper.title,
+        }));
+        setPyqData(mappedData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }finally{
+        setLoading(false)
+      }
+    };
+
+    fetchData();
   }, []);
 
   const uploadFile = async (file) => {
@@ -66,7 +92,11 @@ function Upload() {
                 Choose your paper for evaluation
             </h2>
           </div>
-          
+          {loading ? (
+            <div className="flex justify-center items-center mt-12">
+              <div className="animate-spin mt-12 rounded-full h-16 w-16 border-t-4 border-gray-300 border-solid"></div>
+            </div>
+          ) : (
           <div className="mt-12 bg-white rounded-lg shadow-md">
           <table className="w-full  rounded-lg ">
             <thead className="bg-gray-100 shadow-sm border-b border-b-gray-200 text-gray-800 rounded-t-lg">
@@ -80,8 +110,11 @@ function Upload() {
               <tr className="hover:bg-blue-50">
                 <td className="p-10">
                   <select className="w-full p-6 rounded-lg">
-                    <option>PYQ2022SIADJAOISDISADIISAFNISFNA</option>
-                    <option>PYQ2021</option>
+                    {pyqData.map((paper, index) => (
+                      <option key={index} value={paper.title}>
+                        {paper.title}
+                      </option>
+                    ))}
                   </select>
                 </td>
                 <td className="p-10 capitalize font-semibold">
@@ -110,6 +143,7 @@ function Upload() {
             </tbody>
           </table>
         </div>
+          )}
         </div>
       </div>
     </div>
