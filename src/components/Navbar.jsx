@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 export function Navbar() {
     const [isNotificationOpen, setNotificationOpen] = useState(false);
     const [isProfileOpen, setProfileOpen] = useState(false);
-    const { currentUser } = useAuth();
+    const { currentUser, signOut } = useAuth();
 
     const toggleNotification = () => {
         setNotificationOpen((prev) => !prev);
@@ -28,10 +28,7 @@ export function Navbar() {
             <div className="mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 relative">
                     <div className="flex-shrink-0 flex items-center">
-                        <span
-                            className="text-[#F14A16] mooli-regular text-[42px] w-[291px] h-[93px] font-normal leading-[64px] flex items-center text-center z-50 ml-8"
-                            style={{ cursor: 'default' }}
-                        >
+                        <span className="text-[#F14A16] mooli-regular text-[42px] w-[291px] h-[93px] font-normal leading-[64px] flex items-center text-center z-50 ml-8" style={{ cursor: 'default' }}>
                             Boardly.in
                         </span>
                     </div>
@@ -84,12 +81,16 @@ export function Navbar() {
                                         </button>
                                     </div>
                                     <div>
-                                        <button className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
+                                        <button
+                                            className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer"
+                                            onClick={signOut}
+                                        >
                                             Sign Out
                                         </button>
                                     </div>
                                 </div>
                             </div>
+
                         )}
                     </div>
                 </div>

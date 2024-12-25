@@ -41,10 +41,17 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const signout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('currentUser');
+  };
+
   const value = {
     currentUser,
     isAuthenticated: !!currentUser,
     login,
+    signout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
