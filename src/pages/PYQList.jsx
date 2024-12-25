@@ -1,40 +1,11 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { FiArrowLeft, FiCheck, FiCircle, FiEye, FiSearch } from 'react-icons/fi'
 import { FaCirclePlay } from "react-icons/fa6";
 import { motion, AnimatePresence } from "framer-motion"
-
+import axios from "axios";
 import { OutlineButton } from "../components/ui/OutlineButton"
-
-const pyqData = [
-  {
-    id: "2024",
-    status: "pending",
-    title: "CBSE 2024 PYQ",
-    difficulty: "Easy",
-    hasTopperSolution: true,
-    hasVideoSolution: true,
-    videoUrl: 'https://youtu.be/dQw4w9WgXcQ?feature=shared'
-  },
-  {
-    id: "2023",
-    status: "completed",
-    title: "CBSE 2023 PYQ",
-    difficulty: "Medium",
-    hasTopperSolution: true,
-    hasVideoSolution: true,
-    videoUrl: 'https://youtu.be/dQw4w9WgXcQ?feature=shared'
-  },
-  {
-    id: "2022",
-    status: "pending",
-    title: "CBSE 2022 PYQ",
-    difficulty: "Hard",
-    hasTopperSolution: true,
-    hasVideoSolution: true,
-    videoUrl: 'https://youtu.be/dQw4w9WgXcQ?feature=shared'
-  }
-]
+import { API_URL } from "../shared/api";
 
 const difficultyColors = {
   Easy: "text-green-600",
@@ -103,6 +74,45 @@ export default function PYQList() {
   const [selectedPYQ, setSelectedPYQ] = useState(null);
   const navigate = useNavigate()
   const { subject } = useParams()
+  const [pyqData, setPyqData] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('token'); 
+        const user = JSON.parse(localStorage.getItem('currentUser'))
+        const userClass = user.userClass
+        console.log("class", user.userClass)
+        setLoading(true)
+        const response = await axios.get(`${API_URL}/solve/yearwise/${userClass}/list`, {
+          headers: {
+            Authorization: `Bearer ${token}`, 
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = response.data;
+
+        const mappedData = data.questionPapers.map((paper) => ({
+          id: paper.year,
+          status: paper.status ? "completed" : "pending",
+          title: paper.title,
+          difficulty: paper.difficulty.charAt(0).toUpperCase() + paper.difficulty.slice(1),
+          hasTopperSolution: Boolean(paper.topperSolution),
+          hasVideoSolution: Boolean(paper.videoSolution),
+          videoUrl: paper.videoSolution || null,
+        }));
+
+        setPyqData(mappedData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }finally{
+        setLoading(false)
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleTopperSolutionClick = (year) => {
     navigate(`/subject/${subject}/pyq/${year}/topper-solution`);
@@ -225,7 +235,8 @@ export default function PYQList() {
               </div>
             )}
           </div>
-        ))}
+        ))
+      )}
       </div>
 
       <AnimatePresence>

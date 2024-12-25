@@ -73,7 +73,7 @@ export default function SubjectContent() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F6F8FC] p-8 flex flex-col items-center">
+    <div className=" bg-[#F6F8FC] p-8 flex flex-col items-center">
       <div className="w-full max-w-7xl mx-auto mb-12">
         <h1 className="text-4xl font-bold bg-gradient-to-r from-[#F85B2C] to-[#e54e22] bg-clip-text text-center mb-4">
           {subject.charAt(0).toUpperCase() + subject.slice(1)}
