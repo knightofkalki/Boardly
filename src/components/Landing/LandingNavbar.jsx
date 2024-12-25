@@ -48,9 +48,9 @@ export function LandingNavbar() {
 									<button className="px-4 py-2 text-gray-600 hover:text-gray-800">
 										About Us
 									</button>
-									<button className="px-4 py-2 text-gray-600 hover:text-gray-800">
+									<a href="/contact" className="px-4 py-2 text-gray-600 hover:text-gray-800">
 										Contact Us
-									</button>
+									</a>
 								</>
 							)}
 						</div>
@@ -60,4 +60,3 @@ export function LandingNavbar() {
 		</div>
 	);
 }
-
