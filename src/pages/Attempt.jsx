@@ -97,7 +97,7 @@ export default function Attempt() {
   }
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex  bg-white">
       <div className="absolute right-4 top-4 text-2xl font-bold text-red-500">
         {formatTime(timeLeft)}
       </div>
@@ -120,7 +120,7 @@ export default function Attempt() {
         ))}
       </nav>
 
-      <main className="flex-1 p-6">
+      <main className="flex-1 flex-grow-[1] p-6 overflow-y-auto max-h-[90vh]">
         <div className="mx-auto max-w-2xl space-y-6">
           {quizSections
             .find((s) => s.id === currentSection)

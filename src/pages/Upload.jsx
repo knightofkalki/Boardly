@@ -77,7 +77,7 @@ function Upload() {
 
 
   return (
-    <div className="flex justify-center min-h-screen">
+    <div className="flex justify-center">
       <div className="w-full lg:w-[90%]">
         <div className="p-6 w-full flex items-center justify-center flex-col">
             

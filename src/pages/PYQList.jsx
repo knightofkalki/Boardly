@@ -179,7 +179,7 @@ export default function PYQList() {
         <div>Video Solution</div>
       </div>
 
-      <div className="space-y-2 mt-2">
+      <div className="space-y-2 overflow-y-auto max-h-96 mt-2">
         {loading? (
         <div className="text-center py-6">
           <span className="text-gray-500">Loading...</span>
