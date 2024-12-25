@@ -88,7 +88,7 @@ export default function ChapterList() {
         ) : error ? (
           <p className="text-center text-red-500">{error}</p>
         ) : chapters.length > 0 ? (
-          <div className="space-y-3">
+          <div className="space-y-3 max-h-[75vh] overflow-y-auto">
             {chapters.map((chapter) => (
               <div
                 key={chapter.id}
