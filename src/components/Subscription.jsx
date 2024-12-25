@@ -142,7 +142,7 @@ const SubscriptionComponent = () => {
     }, []);
 
     return (
-        <div className="subscription-component p-8 bg-gray-50 ">
+        <div className="subscription-component p-8 bg-gray-50 min-h-[75vh]">
             {loading ? (
                 <div className="flex justify-center items-center mt-12">
                 <div className="animate-spin mt-12 rounded-full h-20 w-20 border-t-4 border-orange-500 border-solid"></div>
