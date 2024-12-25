@@ -9,21 +9,14 @@ import axios from 'axios';
 import { API_URL } from '../shared/api';
 
 function Upload() {
-  const papers = [
-    { id: 1, title: 'CBSE 2024 PYQ' },
-    { id: 2, title: 'ICSE 2023 PYQ'},
-    { id: 3, title: 'CBSE 2022 PYQ'},
-  ];
+
   const { subject } = useParams()
   const navigate = useNavigate()
-  const [statuses, setStatuses] = useState(papers.map(() => ""));
+  const [status, setStatus] = useState("");
   const [token, setToken] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
 
-  const handleStatusChange = (index, newStatus) => {
-    const updatedStatuses = [...statuses];
-    updatedStatuses[index] = newStatus;
-    setStatuses(updatedStatuses);
+  const handleStatusChange = (newStatus) => {
+    setStatus(newStatus);
   };
 
   useEffect(() => {
@@ -33,7 +26,7 @@ function Upload() {
     }
   }, []);
 
-  const uploadFile = async (file,title, index) => {
+  const uploadFile = async (file) => {
     if (!file) {
       alert("Please select a PDF file first!");
       return;
@@ -56,20 +49,17 @@ function Upload() {
     }
   };
 
-  const filteredPapers = papers.filter((paper) =>
-    paper.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <div className="flex justify-center min-h-screen">
       <div className="w-full lg:w-[90%]">
-        <div className="p-8 w-full flex items-center justify-center flex-col">
+        <div className="p-6 w-full flex items-center justify-center flex-col">
             
           <div className="w-4/5 flex justify-between">
             <h2 className="font-bold text-3xl text-gray-600">
                 <button 
                     onClick={() => navigate(`/subject/${subject}`)}
-                    className="p-2 hover:bg-gray-100 rounded-full"
+                    className="p-6 hover:bg-gray-100 rounded-full"
                     >
                     <FiArrowLeft className="h-7 w-7" />
                 </button>
@@ -77,60 +67,49 @@ function Upload() {
             </h2>
           </div>
           
-          <div className="w-4/5 mt-10 flex justify-between">
-            <Search placeholdertext="Search by year"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-             />
-          </div>
-          <div className="w-4/5 mt-10">
-            <table className="w-full">
-              <colgroup>
-                <col span="1" className="w-[60%]" />
-                <col span="1" />
-                <col span="1" className="w-[10%]" />
-                <col span="1" className="w-[10%]" />
-              </colgroup>
-              <thead className="text-left">
-                <tr>
-                  <th>Title</th>
-                  <th></th>
-                  <th>Status</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredPapers.map((paper, index) => (
-                  <tr key={paper.id} className="bg-white shadow-md">
-                    <td className="p-6">{paper.title}</td>
-                    <td>
-                      <BsEye size={25} />
-                    </td>
-                    <td className="capitalize font-semibold">{statuses[index]}</td>
-                    <td>
-                      <label htmlFor={`file-input-${index}`} className="cursor-pointer">
-                        <PaperButton
-                          status={statuses[index]}
-                          onClick={() => document.getElementById(`file-input-${index}`).click()}
-                        />
-                      </label>
-                      <input
-                        type="file"
-                        id={`file-input-${index}`}
-                        style={{ display: 'none' }}
-                        disabled={statuses[index] === 'completed'}
-                        accept=".pdf"
-                        onChange={(e) => {
-                          const file = e.target.files[0];
-                          uploadFile(file, paper.title, index);
-                        }}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <div className="mt-12 bg-white rounded-lg shadow-md">
+          <table className="w-full  rounded-lg ">
+            <thead className="bg-gray-100 shadow-sm border-b border-b-gray-200 text-gray-800 rounded-t-lg">
+              <tr>
+                <th className="p-10 text-xl text-left ">Title</th>
+                <th className="p-10 text-xl text-left ">Status</th>
+                <th className="p-10 text-xl text-left ">Action</th>
+              </tr>
+            </thead>
+            <tbody className='rounded-b-lg'>
+              <tr className="hover:bg-blue-50">
+                <td className="p-10">
+                  <select className="w-full p-6 rounded-lg">
+                    <option>PYQ2022SIADJAOISDISADIISAFNISFNA</option>
+                    <option>PYQ2021</option>
+                  </select>
+                </td>
+                <td className="p-10 capitalize font-semibold">
+                  {status || "Not Started"}
+                </td>
+                <td className="p-10">
+                  <label
+                    htmlFor="file-input"
+                    className="cursor-pointer px-6 py-3 rounded-lg"
+                  >
+                    <PaperButton status={status} onClick={() => document.getElementById(file-input).click()} />
+                  </label>
+                  <input
+                    type="file"
+                    id="file-input"
+                    style={{ display: "none" }}
+                    disabled={status === "completed"}
+                    accept=".pdf"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      uploadFile(file);
+                    }}
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         </div>
       </div>
     </div>
