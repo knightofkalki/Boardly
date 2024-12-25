@@ -10,12 +10,11 @@ const SidebarItem = ({ icon: Icon, label, isActive, onClick }) => {
             onClick={onClick}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            className={`relative group p-3 rounded-lg cursor-pointer ${isActive ? 'bg-orange-100 text-orange-500' : 'text-gray-500 hover:bg-gray-100'
-                }`}
+            className={`relative group flex flex-col items-center justify-center p-2 rounded-lg cursor-pointer ${isActive ? 'text-orange-500' : 'text-gray-500 hover:text-gray-700'}`}
         >
             <Icon size={24} />
-            <span
-                className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 text-sm bg-gray-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap shadow-lg" >
+						<span
+                className="hidden md:flex absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 text-sm bg-gray-800 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap shadow-lg" >
                 {label}
             </span>
         </motion.div>
@@ -35,9 +34,9 @@ export const Sidebar = () => {
     ];
 
     return (
-        <div>
-            <div className='h-16 top-0 fixed bg-white left-0 w-16 md-hidden z-50'></div>
-            <div className="fixed left-0 top-16 h-[calc(100%-4rem)] w-16 bg-white shadow-lg flex flex-col items-center py-4 space-y-6">
+        <>
+            {/* Sidebar for larger screens */}
+            <div className="hidden md:flex fixed left-0 top-16 h-[calc(100%-4rem)] w-16 bg-white shadow-lg flex-col items-center py-4 space-y-6">
                 {menuItems.map((item, index) => (
                     <SidebarItem
                         key={index}
@@ -48,6 +47,19 @@ export const Sidebar = () => {
                     />
                 ))}
             </div>
-        </div>
+
+            {/* Bottom bar for mobile screens */}
+            <div className="fixed bottom-0 left-0 w-full bg-white shadow-lg flex justify-around items-center py-2 md:hidden z-40">
+                {menuItems.map((item, index) => (
+                    <SidebarItem
+                        key={index}
+                        icon={item.icon}
+                        label={item.label}
+                        isActive={location.pathname === item.path}
+                        onClick={() => navigate(item.path)}
+                    />
+                ))}
+            </div>
+        </>
     );
 };

@@ -24,7 +24,7 @@ const ProtectedRoute = ({ children, hideSidebar = false }) => {
   return (
     <>
       <Navbar />
-      <div className={hideSidebar ? "" : "ml-16"}>
+      <div className={hideSidebar ? "" : "md:ml-16"}>
         {!hideSidebar && <Sidebar />}
         {children}
       </div>
