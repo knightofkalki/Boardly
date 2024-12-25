@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { API_URL } from "../shared/api";
 import plans from "../data/plans.json";
+import Loader from "./Loader";
 
 const getAuthToken = () => `Bearer ${localStorage.getItem('token')}`;
 
@@ -47,6 +48,7 @@ const SubscriptionComponent = () => {
             return;
         }
 
+        setLoading(true);
         try {
             const verifyResponse = await fetch(`${API_URL}/payment/verify-payment`, {
                 method: 'POST',
@@ -68,10 +70,13 @@ const SubscriptionComponent = () => {
         } catch (error) {
             showMessage('error', 'Payment verification failed. Please contact support.');
             console.error('Payment verification error:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
     const handlePayment = async (planId, planPrice) => {
+        setLoading(true);
         try {
             const response = await fetch(`${API_URL}/payment/create-order`, {
                 method: 'POST',
@@ -89,7 +94,7 @@ const SubscriptionComponent = () => {
                     key: "rzp_test_uMTEc94d3O7Ez6",
                     amount: planPrice * 100,
                     currency: "INR",
-                    name: "Your Company Name",
+                    name: "Boardly.in",
                     description: `Payment for ${planId}`,
                     order_id: orderData.orderId,
                     handler: async (response) => {
@@ -112,6 +117,8 @@ const SubscriptionComponent = () => {
         } catch (error) {
             showMessage('error', 'Failed to initiate payment. Please try again later.');
             console.error('Payment initiation error:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -135,7 +142,7 @@ const SubscriptionComponent = () => {
     return (
         <div className="subscription-component p-8 bg-gray-50 min-h-screen">
             {loading ? (
-                <div className="text-center text-xl font-semibold text-gray-700">Loading...</div>
+                <div className="text-center text-xl font-semibold text-gray-700"><Loader /></div>
             ) : (
                 <div className="max-w-5xl mx-auto">
                     {subscription && (
@@ -148,7 +155,7 @@ const SubscriptionComponent = () => {
                                     Expires on: {new Date(subscription.expiryDate).toLocaleDateString()}
                                 </p>
                             ) : (
-                                <p className="text-red-500">Your subscription has expired.</p>
+                                <p className="text-red-500">No active subscription!</p>
                             )}
                         </div>
                     )}
