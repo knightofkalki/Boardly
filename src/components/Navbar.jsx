@@ -6,7 +6,8 @@ import { useAuth } from '../context/AuthContext';
 export function Navbar() {
     const [isNotificationOpen, setNotificationOpen] = useState(false);
     const [isProfileOpen, setProfileOpen] = useState(false);
-    const { currentUser, signOut } = useAuth();
+    const { currentUser } = useAuth();
+    const { signout } = useAuth();
 
     const toggleNotification = () => {
         setNotificationOpen((prev) => !prev);
@@ -21,6 +22,14 @@ export function Navbar() {
     const closeMenus = () => {
         setNotificationOpen(false);
         setProfileOpen(false);
+    };
+
+    const navigateToSettings = () => {
+        window.location.href = '/settings';
+    };
+
+    const handleSignout = () => {
+        signout();
     };
 
     return (
@@ -50,16 +59,14 @@ export function Navbar() {
                         )}
 
                         <button
-                            onClick={() => {
-                                toggleProfile();
-                            }}
+                            onClick={toggleProfile}
                             className="ml-3 p-2 rounded-full text-gray-400 hover:text-gray-600 relative"
                         >
                             <span className="sr-only">View profile</span>
                             <img src={ProfileIcon} alt="Profile" className="h-6 w-6" />
                         </button>
                         {isProfileOpen && (
-                            <div className="absolute top-12 right-0 bg-white shadow-lg rounded-lg w-64 p-4">
+                            <div className="absolute top-12 right-0 bg-white shadow-lg rounded-lg w-64 p-4 z-50">
                                 <div className="mb-4">
                                     <h3 className="font-semibold text-lg text-gray-900">{currentUser.name}</h3>
                                     <p className="text-sm text-gray-600">{currentUser.email}</p>
@@ -75,26 +82,29 @@ export function Navbar() {
                                             Institute: {currentUser.institute}
                                         </button>
                                     </div>
-                                    <div>
-                                        <button className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
-                                            Settings
-                                        </button>
-                                    </div>
-                                    <div>
-                                        <button
-                                            className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer"
-                                            onClick={signOut}
-                                        >
-                                            Sign Out
-                                        </button>
-                                    </div>
+                                </div>
+                                <div>
+                                    <button
+                                        onClick={navigateToSettings}
+                                        className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer"
+                                    >
+                                        Settings
+                                    </button>
+                                </div>
+                                <div>
+                                    <button
+                                        onClick={handleSignout}
+                                        className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer"
+                                    >
+                                        Sign Out
+                                    </button>
                                 </div>
                             </div>
-
                         )}
                     </div>
                 </div>
             </div>
+
             {(isNotificationOpen || isProfileOpen) && (
                 <div
                     className="fixed inset-0 bg-transparent z-40"
