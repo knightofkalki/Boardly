@@ -1,48 +1,10 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-const chapterData = {
-  physics: {
-    "1": {
-      title: "Electric Charges and Fields",
-      questions: [
-        { id: 1, content: "What is Coulomb's law and how is it mathematically expressed?", status: "unanswered" },
-        { id: 2, content: "Explain the principle of superposition of electric forces.", status: "unanswered" },
-        { id: 3, content: "Define electric field intensity and give its SI unit.", status: "unanswered" }
-      ]
-    },
-    "2": {
-      title: "Electrostatic Potential and Capacitance",
-      questions: [
-        { id: 1, content: "What is electric potential? How is it related to electric field?", status: "unanswered" },
-        { id: 2, content: "Define capacitance and explain its unit.", status: "unanswered" },
-        { id: 3, content: "Derive an expression for the energy stored in a capacitor.", status: "unanswered" }
-      ]
-    },
-    "3": {
-      title: "Current Electricity",
-      questions: [
-        { id: 1, content: "State and explain Ohm's law.", status: "unanswered" },
-        { id: 2, content: "What is electrical resistivity? How does it vary with temperature?", status: "unanswered" },
-        { id: 3, content: "Explain the concept of EMF and terminal potential difference.", status: "unanswered" }
-      ]
-    }
-  },
-  chemistry: {
-    "1": {
-      title: "Some Basic Concepts of Chemistry",
-      questions: [
-        { id: 1, content: "Define mole concept and explain its significance.", status: "unanswered" },
-        { id: 2, content: "What are significant figures? Why are they important?", status: "unanswered" },
-        { id: 3, content: "Explain the law of conservation of mass.", status: "unanswered" }
-      ]
-    }
-   
-  }
-};
 
-const QuestionCard = ({ question, onStatusChange, isActive, onClick, onSolutionToggle }) => {
+const QuestionCard = ({ question, onStatusChange, isActive, onClick, onSolutionToggle, onFlagChange, handleMarkUndone }) => {
   return (
     <motion.div
       className={`mb-6 rounded-lg border ${
@@ -51,54 +13,65 @@ const QuestionCard = ({ question, onStatusChange, isActive, onClick, onSolutionT
       whileHover={{ scale: 1.02 }}
       onClick={onClick}
     >
-      <h3 className="mb-2 text-lg font-semibold">Question {question.id}</h3>
-      <p className="mb-4 text-gray-600">{question.content}</p>
+      <h3 className="mb-2 text-lg font-semibold">Question {question.questionNumber}</h3>
+      <p className="mb-4 text-gray-600">{question.title}</p>
       <div className="flex space-x-2">
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onStatusChange(question.id, question.status, "answered");
+            onStatusChange(question.questionNumber);
           }}
           className={`rounded border px-3 py-1 transition-colors ${
-            question.status === "answered"
+            question.markasdone
               ? "bg-green-500 text-white hover:bg-green-600"
               : "border-green-500 text-green-500 hover:bg-green-50"
           }`}
         >
-          {question.status === "answered" ? "Unmark as Done" : "Mark as Done"}
+          {question.markasdone ? "Mark as Undone" : "Mark as Done"}
         </button>
+        {/* View Solution Button */}
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onSolutionToggle(question.id);
+            onSolutionToggle(question.questionNumber);
           }}
           className="rounded border border-blue-500 px-3 py-1 text-blue-500 transition-colors hover:bg-blue-50"
         >
-          {question.showSolution ? "Hide Solution" : "View Solution"}
+          {question.viewSolutionVisible ? "Hide Solution" : "View Solution"}
         </button>
+        {/* Flag Question Button */}
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onStatusChange(question.id, question.status, "flagged");
+            onFlagChange(question.questionNumber);
           }}
           className={`rounded border px-3 py-1 transition-colors ${
-            question.status === "flagged"
+            question.isFlagged
               ? "bg-red-500 text-white hover:bg-red-600"
               : "border-red-500 text-red-500 hover:bg-red-50"
           }`}
         >
-          {question.status === "flagged" ? "Unflag" : "Flag Question"}
+          {question.isFlagged ? "Unflag" : "Flag Question"}
         </button>
       </div>
-      {question.showSolution && (
+      {question.viewSolutionVisible && (
         <div className="mt-4 p-4 rounded-lg bg-gray-100 text-gray-700">
-          <p>Solution for this question will go here.</p>
+          <p>{question.viewSolution}</p>
+          {question.videoSolution && (
+            <a
+              href={question.videoSolution}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-block text-blue-500 hover:underline"
+            >
+              Watch Video Solution
+            </a>
+          )}
         </div>
       )}
     </motion.div>
   );
 };
-
 
 
 const CircleCard = ({ questions, activeQuestion, onQuestionClick }) => {
@@ -108,23 +81,23 @@ const CircleCard = ({ questions, activeQuestion, onQuestionClick }) => {
       <div className="grid grid-cols-6 gap-2">
         {questions.map((question) => (
           <motion.button
-            key={question.id}
+            key={question.questionNumber}
             className={`flex h-8 w-8 items-center justify-center rounded-full text-sm ${
-              question.status === "unanswered"
-                ? "bg-gray-200"
-                : question.status === "answered"
+              question.markasdone
                 ? "bg-green-500 text-white"
-                : "bg-red-500 text-white"
+                : question.isFlagged
+                ? "bg-red-500 text-white"
+                : "bg-gray-200"
             } ${
-              activeQuestion === question.id
+              activeQuestion === question.questionNumber
                 ? "ring-2 ring-blue-500 ring-offset-2"
                 : ""
             }`}
-            onClick={() => onQuestionClick(question.id)}
+            onClick={() => onQuestionClick(question.questionNumber)}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >
-            {question.id}
+            {question.questionNumber}
           </motion.button>
         ))}
       </div>
@@ -148,71 +121,200 @@ const CircleCard = ({ questions, activeQuestion, onQuestionClick }) => {
 
 export default function ChapterQuestions() {
   const { subject, chapterId } = useParams();
-  const chapterInfo = chapterData[subject?.toLowerCase()]?.[chapterId];
-  
-  const [questions, setQuestions] = useState(chapterInfo?.questions || []);
+  const { currentUser } = useAuth();
+  const [questions, setQuestions] = useState([]);
   const [activeQuestion, setActiveQuestion] = useState(1);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [chapter, setChapter] = useState("");
+  const [oid, setOid] = useState("");
 
-  const handleStatusChange = (id, currentStatus, targetStatus) => {
-		setQuestions((prevQuestions) =>
-			prevQuestions.map((q) =>
-				q.id === id
-					? {
-							...q,
-							status:
-								currentStatus === targetStatus
-									? "unanswered"
-									: targetStatus,
-						}
-					: q
-			)
-		);
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("User token is missing.");
+
+        const response = await fetch(
+          `https://boardly-be.vercel.app/solve/chapters/${currentUser.userClass}/${subject}/${chapterId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.message || "Failed to fetch questions.");
+        }
+
+        const data = await response.json();
+        setQuestions(
+          data.questions.map((q) => ({
+            ...q,
+            viewSolutionVisible: false,
+            isFlagged: false,
+          }))
+        );
+        setChapter(data.chapterName);
+        setOid(data._id);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, [subject, chapterId, currentUser.userClass]);
+
+  const handleStatusChange = async (id) => {
+		try {
+			const token = localStorage.getItem("token");
+			if (!token) throw new Error("User token is missing.");
+	
+			const questionIndex = questions.findIndex((q) => q.questionNumber === id);
+	
+			const response = await fetch(
+				`https://boardly-be.vercel.app/solve/markQuestionDone`,
+				{
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						oid: oid,
+						questionIndex: questionIndex,
+					}),
+				}
+			);
+	
+			if (!response.ok) {
+				const data = await response.json();
+				throw new Error(data.message || "Failed to mark question.");
+			}
+	
+			setQuestions((prevQuestions) =>
+				prevQuestions.map((q) =>
+					q.questionNumber === id
+						? { ...q, markasdone: !q.markasdone }
+						: q
+				)
+			);
+		} catch (err) {
+			console.error(err);
+		}
 	};
 	
+
+  const handleMarkUndone = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("User token is missing.");
+
+      const questionIndex = questions.findIndex((q) => q.questionNumber === id);
+
+      console.log(oid);
+      console.log(questionIndex + 1);
+
+      const response = await fetch(
+        `https://boardly-be.vercel.app/solve/markQuestionUndone`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            oid: oid,
+            questionIndex: questionIndex,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Failed to mark question as undone.");
+      }
+
+      setQuestions((prevQuestions) =>
+        prevQuestions.map((q) =>
+          q.questionNumber === id
+            ? {
+                ...q,
+                markasdone: false,
+              }
+            : q
+        )
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handleQuestionClick = (id) => {
     setActiveQuestion(id);
   };
 
-	const handleSolutionToggle = (id) => {
-		setQuestions((prevQuestions) =>
-			prevQuestions.map((q) =>
-				q.id === id ? { ...q, showSolution: !q.showSolution } : q
-			)
-		);
-	};
-	
+  const handleSolutionToggle = (id) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((q) =>
+        q.questionNumber === id
+          ? { ...q, viewSolutionVisible: !q.viewSolutionVisible }
+          : q
+      )
+    );
+  };
+
+  const handleFlagChange = (id) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((q) =>
+        q.questionNumber === id
+          ? { ...q, isFlagged: !q.isFlagged }
+          : q
+      )
+    );
+  };
 
   return (
     <div className="container mx-auto p-4">
       <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
-        <h1 className="text-4xl font-bold text-gray-800 mb-2">
-          {chapterInfo?.title || "Chapter Content"}
-        </h1>
+        <h1 className="text-4xl font-bold text-gray-800 mb-2">{chapter}</h1>
         <p className="text-gray-600 text-lg">
           {subject?.charAt(0).toUpperCase() + subject?.slice(1)} • Chapter {chapterId}
         </p>
       </div>
-      <div className="grid gap-6 lg:grid-cols-[1fr,300px]">
-        <div className="space-y-6">
-				{questions.map((question) => (
-  <QuestionCard
-    key={question.id}
-    question={question}
-    onStatusChange={handleStatusChange}
-    onSolutionToggle={handleSolutionToggle}
-    isActive={activeQuestion === question.id}
-    onClick={() => handleQuestionClick(question.id)}
-  />
-))}
-
+      {loading ? (
+        <p className="text-center text-gray-500">Loading questions...</p>
+      ) : error ? (
+        <p className="text-center text-red-500">{error}</p>
+      ) : (
+        <div className="grid gap-6 lg:grid-cols-[1fr,300px]">
+          <div className="space-y-6">
+            {questions.map((question) => (
+              <QuestionCard
+                key={question.questionNumber}
+                question={question}
+                onStatusChange={handleStatusChange}
+                onSolutionToggle={handleSolutionToggle}
+                onFlagChange={handleFlagChange}
+                isActive={activeQuestion === question.questionNumber}
+                onClick={() => handleQuestionClick(question.questionNumber)}
+                handleMarkUndone={handleMarkUndone}
+              />
+            ))}
+          </div>
+          <CircleCard
+            questions={questions}
+            activeQuestion={activeQuestion}
+            onQuestionClick={handleQuestionClick}
+          />
         </div>
-        <CircleCard
-          questions={questions}
-          activeQuestion={activeQuestion}
-          onQuestionClick={handleQuestionClick}
-        />
-      </div>
+      )}
     </div>
   );
 }

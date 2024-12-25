@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Check } from 'lucide-react'
+import { Check, X } from 'lucide-react'
 
 const pricingTiers = [
   {
@@ -7,11 +7,11 @@ const pricingTiers = [
     price: 0,
     description: "Try Boardly For Free",
     features: [
-      { text: "Sample Paper", value: "5" },
-      { text: "Topic Wise Questions", value: "" },
-      { text: "Toppers Solution", value: "" },
-      { text: "Mentorship Session", value: "" },
-      { text: "Paper Evaluation", value: "" },
+      { text: "Sample Paper", value: "5", available: true },
+      { text: "Topic Wise Questions", value: "", available: false },
+      { text: "Toppers Solution", value: "", available: false },
+      { text: "Mentorship Session", value: "", available: false },
+      { text: "Paper Evaluation", value: "", available: false },
     ]
   },
   {
@@ -19,11 +19,11 @@ const pricingTiers = [
     price: 149,
     description: "Try Our Basic Plan",
     features: [
-      { text: "Sample Paper", value: "50" },
-      { text: "Topic Wise Questions", value: "" },
-      { text: "Toppers Solution", value: "" },
-      { text: "Mentorship Session", value: "1" },
-      { text: "Paper Evaluation", value: "" },
+      { text: "Sample Paper", value: "50", available: true },
+      { text: "Topic Wise Questions", value: "", available: true },
+      { text: "Toppers Solution", value: "", available: true },
+      { text: "Mentorship Session", value: "1", available: true },
+      { text: "Paper Evaluation", value: "", available: false },
     ]
   },
   {
@@ -31,11 +31,11 @@ const pricingTiers = [
     price: 249,
     description: "Try Gold and get",
     features: [
-      { text: "Sample Paper", value: "50" },
-      { text: "Topic Wise Questions", value: "" },
-      { text: "Toppers Solution", value: "" },
-      { text: "Mentorship Session", value: "5" },
-      { text: "Paper Evaluation", value: "1" },
+      { text: "Sample Paper", value: "50", available: true },
+      { text: "Topic Wise Questions", value: "", available: true },
+      { text: "Toppers Solution", value: "", available: true },
+      { text: "Mentorship Session", value: "5", available: true },
+      { text: "Paper Evaluation", value: "1", available: true },
     ],
     isRecommended: true
   },
@@ -44,11 +44,11 @@ const pricingTiers = [
     price: 499,
     description: "Try Platinum and Get",
     features: [
-      { text: "Sample Paper", value: "50" },
-      { text: "Topic Wise Questions", value: "" },
-      { text: "Toppers Solution", value: "" },
-      { text: "Mentorship Session", value: "5" },
-      { text: "Paper Evaluation", value: "10" },
+      { text: "Sample Paper", value: "50", available: true },
+      { text: "Topic Wise Questions", value: "", available: true },
+      { text: "Toppers Solution", value: "", available: true },
+      { text: "Mentorship Session", value: "5", available: true },
+      { text: "Paper Evaluation", value: "10", available: true },
     ]
   }
 ]
@@ -65,8 +65,8 @@ const containerVariants = {
 
 const cardVariants = {
   hidden: { opacity: 0, y: 50 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: {
       type: "spring",
@@ -77,10 +77,14 @@ const cardVariants = {
 }
 
 export default function Pricing() {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
       <div className="max-w-7xl mx-auto">
-        <motion.h2 
+        <motion.h2
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -91,7 +95,7 @@ export default function Pricing() {
           Extraordinary Results
         </motion.h2>
 
-        <motion.div 
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -101,7 +105,7 @@ export default function Pricing() {
             <motion.div
               key={tier.name}
               variants={cardVariants}
-              whileHover={{ 
+              whileHover={{
                 scale: 1.03,
                 transition: { duration: 0.2 }
               }}
@@ -112,7 +116,7 @@ export default function Pricing() {
                   Recommended
                 </div>
               )}
-              
+
               <div className="text-center mb-6">
                 <h3 className="text-2xl font-semibold text-gray-900 mb-2">
                   {tier.name}
@@ -127,7 +131,11 @@ export default function Pricing() {
               <ul className="space-y-4 mb-8">
                 {tier.features.map((feature, index) => (
                   <li key={index} className="flex items-center gap-3">
-                    <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    {feature.available ? (
+                      <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    ) : (
+                      <X className="h-5 w-5 text-red-500 flex-shrink-0" />
+                    )}
                     <span className="text-gray-600">
                       {feature.value && `${feature.value} `}{feature.text}
                     </span>
@@ -138,6 +146,7 @@ export default function Pricing() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={scrollToTop}
                 className="w-full bg-black text-white rounded-lg py-3 font-medium hover:bg-gray-800 transition-colors"
               >
                 GO

@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { Bell } from 'lucide-react';
 import ProfileIcon from '../assets/profile.svg';
+import { useAuth } from '../context/AuthContext';
+import Banner from '../assets/banner.svg';
 
 export function Navbar() {
     const [isNotificationOpen, setNotificationOpen] = useState(false);
     const [isProfileOpen, setProfileOpen] = useState(false);
+    const { currentUser, signOut } = useAuth();
+		const { signout } = useAuth();
 
     const toggleNotification = () => {
         setNotificationOpen((prev) => !prev);
@@ -21,14 +25,21 @@ export function Navbar() {
         setProfileOpen(false);
     };
 
+		const navigateToSettings = () => {
+				window.location.href = '/settings';
+		};
+
+		const handleSignout = () => {
+				signout();
+		};
+
     return (
-        <nav className="bg-white shadow-lg h-16 sticky top-0 z-50">
+			<div className='pb-16'>
+        <nav className="bg-white shadow-lg fixed top-0 w-full z-50">
             <div className="mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 relative">
                     <div className="flex-shrink-0 flex items-center">
-                        <span className="text-[#F14A16] mooli-regular text-[42px] w-[291px] h-[93px] font-normal leading-[64px] flex items-center text-center z-50 ml-8">
-                            Boardly.in
-                        </span>
+                        <img className='w-50 mb-2' src={Banner} alt="logo" />
                     </div>
                     <div className="flex items-center relative">
                         <button
@@ -48,7 +59,9 @@ export function Navbar() {
                         )}
 
                         <button
-                            onClick={toggleProfile}
+                            onClick={() => {
+                                toggleProfile();
+                            }}
                             className="ml-3 p-2 rounded-full text-gray-400 hover:text-gray-600 relative"
                         >
                             <span className="sr-only">View profile</span>
@@ -57,32 +70,36 @@ export function Navbar() {
                         {isProfileOpen && (
                             <div className="absolute top-12 right-0 bg-white shadow-lg rounded-lg w-64 p-4">
                                 <div className="mb-4">
-                                    <h3 className="font-semibold text-lg text-gray-900">John Doe</h3>
-                                    <p className="text-sm text-gray-600">johndoe@example.com</p>
+                                    <h3 className="font-semibold text-lg text-gray-900">{currentUser.name}</h3>
+                                    <p className="text-sm text-gray-600">{currentUser.email}</p>
                                 </div>
                                 <div className="border-t border-gray-200 pt-2">
-																		<div>
-                                    <button className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
-                                        Class: 12th
-                                    </button>
-																		</div>
-																		<div>
-                                    <button className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
-                                        Coaching: XYZ Coaching
-                                    </button>
-																		</div>
-																		<div>
-                                    <button className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
-                                        Settings
-                                    </button>
-																		</div>
-																		<div>
-                                    <button className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
-                                        Sign Out
-                                    </button>
-																		</div>
+                                    <div>
+                                        <button className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
+                                            Class: {currentUser.userClass}
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
+                                            Institute: {currentUser.institute}
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button onClick={navigateToSettings} className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
+                                            Settings
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button
+                                            className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer"
+                                            onClick={handleSignout}
+                                        >
+                                            Sign Out
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
+
                         )}
                     </div>
                 </div>
@@ -94,5 +111,6 @@ export function Navbar() {
                 />
             )}
         </nav>
+				</div>
     );
 }

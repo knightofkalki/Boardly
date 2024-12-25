@@ -83,10 +83,10 @@ export default function Hero() {
 			try {
 				const loginSuccessful = await login(formData.email, formData.password);
 				if (loginSuccessful) {
-					alert('Logged in successfully!');
+					console.log('Logged in successfully!');
 					navigate('/')
 				} else {
-					alert('Invalid credentials. Please try again.');
+					console('Invalid credentials. Please try again.');
 				}
 			} catch (error) {
 				console.error('Error during login:', error);
@@ -118,7 +118,7 @@ export default function Hero() {
 				if (response.ok) {
 					const result = await response.json();
 					console.log('Signup successful:', result);
-					alert('Signup successful! Please log in.');
+					console.log('Signup successful! Please log in.');
 					setIsLogin(true);
 				} else {
 					const error = await response.json();
