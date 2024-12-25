@@ -14,7 +14,7 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import Attempt from "./pages/Attempt";
 import ChapterQuestions from "./pages/ChapterQuestions";
 import Upload from "./pages/Upload";
-import Payments from "./pages/Payments";
+import Subscriptions from "./pages/Subscriptions";
 
 const ProtectedRoute = ({ children, hideSidebar = false }) => {
   const { isAuthenticated } = useAuth();
@@ -59,9 +59,9 @@ export default function App() {
                 <MentorBooking />
               </ProtectedRoute>
             } />
-            <Route path="/payments" element={
+            <Route path="/subscriptions" element={
               <ProtectedRoute>
-                <Payments />
+                <Subscriptions />
               </ProtectedRoute>
             } />
             <Route path="/subject/:subject" element={
