@@ -1,6 +1,12 @@
 import { motion } from "framer-motion"
 import { Calendar, Clock } from 'lucide-react'
 
+function formatDate(dateString) {
+  const date = new Date(dateString)
+  const options = { year: 'numeric', month: '2-digit', day: '2-digit' }
+  return new Intl.DateTimeFormat('en-US', options).format(date)
+}
+
 export default function BookingConfirmationCard({ booking, onClose }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -23,7 +29,7 @@ export default function BookingConfirmationCard({ booking, onClose }) {
           <div className="flex items-center space-x-4 rounded-full bg-gray-100 px-4 py-2">
             <div className="flex items-center space-x-2">
               <Calendar className="h-5 w-5 text-gray-500" />
-              <span>{booking.date}</span>
+              <span>{formatDate(booking.date)}</span>
             </div>
             <div className="flex items-center space-x-2">
               <Clock className="h-5 w-5 text-gray-500" />

@@ -4,6 +4,7 @@ import { Search, Star } from "lucide-react";
 import BookingConfirmationCard from "./BookingConfirmationCard";
 import { useAuth } from '../context/AuthContext';
 import { IoPersonSharp } from "react-icons/io5";
+import { API_URL } from "../shared/api";
 
 export default function MentorBooking() {
   const [selectedMentor, setSelectedMentor] = useState(null);
@@ -58,16 +59,17 @@ export default function MentorBooking() {
 
   useEffect(() => {
     async function fetchSlots() {
-      const response = await fetch("https://boardly-be.vercel.app/slot/");
+      const response = await fetch(`${API_URL}/slot/`);
       const data = await response.json();
       setSlots(data);
     }
 
     async function fetchMentors() {
       try {
-        const response = await fetch("https://boardly-be.vercel.app/slot/mentors/allmentors", {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_URL}/slot/mentors/allmentors`, {
           headers: {
-            Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NmE2NzljZTQ3YWNlMjgzOTNiNjM4OCIsImVtYWlsIjoiYWRqYUBhc2thZC5jb20iLCJ1c2VyQ2xhc3MiOiIxMCIsImlhdCI6MTczNTEzNjA1MiwiZXhwIjoxNzM1MjIyNDUyfQ.1z4F6tlYmPWZlyhFxRnhvdQY0-_JOQqiTwbRmZnINKc"
+            Authorization: token
           }
         });
         const mentorsData = await response.json();
@@ -103,7 +105,7 @@ export default function MentorBooking() {
         formData.append("slotId", slotId);
 
         try {
-          const response = await fetch("https://boardly-be.vercel.app/slot/book", {
+          const response = await fetch(`${API_URL}/slot/book`, {
             method: "POST",
             body: formData,
             headers: {
