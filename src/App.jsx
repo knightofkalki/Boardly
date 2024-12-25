@@ -15,6 +15,7 @@ import Attempt from "./pages/Attempt";
 import ChapterQuestions from "./pages/ChapterQuestions";
 import Upload from "./pages/Upload";
 import Subscriptions from "./pages/Subscriptions";
+import Contact from "./pages/Contact";
 
 const ProtectedRoute = ({ children, hideSidebar = false }) => {
   const { isAuthenticated } = useAuth();
@@ -39,6 +40,12 @@ export default function App() {
         <div className="min-h-screen">
           <Routes>
             <Route path="/landing" element={<LandingPage />} />
+            <Route path="/contact" element={
+              <>
+                <Navbar />
+                <Contact />
+              </>
+            } />
             <Route path="/" element={
               <ProtectedRoute>
                 <Home />
