@@ -89,7 +89,7 @@ export default function App() {
               </ProtectedRoute>
             } />
             <Route path="/subject/:subject/upload" element={
-              <ProtectedRoute hideSidebar={true}>
+              <ProtectedRoute>
                 <Upload />
               </ProtectedRoute>
             } />
