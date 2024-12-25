@@ -9,30 +9,50 @@ import axios from 'axios';
 import { API_URL } from '../shared/api';
 
 function Upload() {
-  const papers = [
-    { id: 1, title: 'CBSE 2024 PYQ' },
-    { id: 2, title: 'ICSE 2023 PYQ'},
-    { id: 3, title: 'CBSE 2022 PYQ'},
-  ];
+
   const { subject } = useParams()
   const navigate = useNavigate()
-  const [statuses, setStatuses] = useState(papers.map(() => ""));
+  const [status, setStatus] = useState("");
   const [token, setToken] = useState(null);
 
-  const handleStatusChange = (index, newStatus) => {
-    const updatedStatuses = [...statuses];
-    updatedStatuses[index] = newStatus;
-    setStatuses(updatedStatuses);
+  const handleStatusChange = (newStatus) => {
+    setStatus(newStatus);
   };
 
+  const [pyqData, setPyqData] = useState([])
+  const [loading, setLoading] = useState(false)
+
   useEffect(() => {
-    const savedToken = localStorage.getItem('token');
-    if (savedToken) {
-      setToken(savedToken); 
-    }
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('token'); 
+        setToken(token)
+        const user = JSON.parse(localStorage.getItem('currentUser'))
+        const userClass = user.userClass
+        console.log("class", user.userClass)
+        setLoading(true)
+        const response = await axios.get(`${API_URL}/solve/yearwise/${userClass}/list`, {
+          headers: {
+            Authorization: `Bearer ${token}`, 
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = response.data;
+        const mappedData = data.questionPapers.map((paper) => ({
+          title: paper.title,
+        }));
+        setPyqData(mappedData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }finally{
+        setLoading(false)
+      }
+    };
+
+    fetchData();
   }, []);
 
-  const uploadFile = async (file,title, index) => {
+  const uploadFile = async (file) => {
     if (!file) {
       alert("Please select a PDF file first!");
       return;
@@ -55,74 +75,83 @@ function Upload() {
     }
   };
 
+
   return (
     <div className="flex justify-center min-h-screen">
       <div className="w-full lg:w-[90%]">
-        <div className="p-8 w-full flex items-center justify-center flex-col">
+        <div className="p-6 w-full flex items-center justify-center flex-col">
             
           <div className="w-4/5 flex justify-between">
             <h2 className="font-bold text-3xl text-gray-600">
                 <button 
                     onClick={() => navigate(`/subject/${subject}`)}
-                    className="p-2 hover:bg-gray-100 rounded-full"
+                    className="p-6 hover:bg-gray-100 rounded-full"
                     >
                     <FiArrowLeft className="h-7 w-7" />
                 </button>
                 Choose your paper for evaluation
             </h2>
           </div>
-          
-          <div className="w-4/5 mt-10 flex justify-between">
-            <Search placeholdertext="Search by year" />
-          </div>
-          <div className="w-4/5 mt-10">
-            <table className="w-full">
-              <colgroup>
-                <col span="1" className="w-[60%]" />
-                <col span="1" />
-                <col span="1" className="w-[10%]" />
-                <col span="1" className="w-[10%]" />
-              </colgroup>
-              <thead className="text-left">
-                <tr>
-                  <th>Title</th>
-                  <th></th>
-                  <th>Status</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {papers.map((paper, index) => (
-                  <tr key={paper.id} className="bg-white shadow-md">
-                    <td className="p-6">{paper.title}</td>
-                    <td>
-                      <BsEye size={25} />
-                    </td>
-                    <td className="capitalize font-semibold">{statuses[index]}</td>
-                    <td>
-                      <label htmlFor={`file-input-${index}`} className="cursor-pointer">
-                        <PaperButton
-                          status={statuses[index]}
-                          onClick={() => document.getElementById(`file-input-${index}`).click()}
-                        />
-                      </label>
-                      <input
-                        type="file"
-                        id={`file-input-${index}`}
-                        style={{ display: 'none' }}
-                        disabled={statuses[index] === 'completed'}
-                        accept=".pdf"
-                        onChange={(e) => {
-                          const file = e.target.files[0];
-                          uploadFile(file, paper.title, index);
-                        }}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          {loading ? (
+            <div className="flex justify-center items-center mt-12">
+              <div className="animate-spin mt-12 rounded-full h-16 w-16 border-t-4 border-gray-300 border-solid"></div>
+            </div>
+          ) : (
+          <div className="mt-12 bg-white rounded-lg shadow-md">
+          <table className="w-full  rounded-lg ">
+            <thead className="bg-gray-100 shadow-sm border-b border-b-gray-200 text-gray-800 rounded-t-lg">
+              <tr>
+                <th className="p-10 text-xl text-left ">Title</th>
+                <th className="p-10 text-xl text-left ">Status</th>
+                <th className="p-10 text-xl text-left ">Action</th>
+              </tr>
+            </thead>
+            <tbody className='rounded-b-lg'>
+              <tr className="hover:bg-blue-50">
+                <td className="p-10">
+                <div className="relative">
+                  <select
+                    className="w-full p-4 rounded-lg border border-gray-300 bg-white shadow-sm focus:ring-2 focus:ring-orange-500 text-lg text-gray-700"
+                  >
+                    {pyqData.map((paper, index) => (
+                      <option
+                        key={index}
+                        value={paper.title}
+                        className="bg-white hover:bg-gray-100 text-gray-800"
+                      >
+                        {paper.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                </td>
+                <td className="p-10 capitalize text-lg font-semibold">
+                  {status || "Not Started"}
+                </td>
+                <td className="p-10 text-lg">
+                  <label
+                    htmlFor="file-input"
+                    className="cursor-pointer px-6 py-3 rounded-lg"
+                  >
+                    <PaperButton status={status} onClick={() => document.getElementById('file-input').click()} />
+                  </label>
+                  <input
+                    type="file"
+                    id="file-input"
+                    style={{ display: "none" }}
+                    disabled={status === "completed"}
+                    accept=".pdf"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      uploadFile(file);
+                    }}
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+          )}
         </div>
       </div>
     </div>
