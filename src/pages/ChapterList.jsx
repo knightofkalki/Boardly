@@ -59,7 +59,7 @@ export default function ChapterList() {
   }, [subject, currentUser.userClass, token]);
 
   return (
-    <div className=" bg-[#F6F8FC]">
+    <div className=" bg-[#F6F8FC] min-h-[90vh]">
       <div className="max-w-5xl mx-auto p-4 sm:p-6">
         <div className="flex items-center mb-6">
           <button

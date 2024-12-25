@@ -143,7 +143,7 @@ const TopperSolution = () => {
       </div>
 
       {showQuestions && (
-        <div className="space-y-4">
+        <div className="space-y-4 overflow-y-auto max-h-96">
           {questions.map((item) => (
             <div key={item.id} className="border rounded-lg overflow-hidden shadow-sm">
               <button
