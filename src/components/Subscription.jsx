@@ -49,6 +49,7 @@ const SubscriptionComponent = () => {
         }
 
         setLoading(true);
+        showMessage('info', 'Verifying payment, please wait...');
         try {
             const verifyResponse = await fetch(`${API_URL}/payment/verify-payment`, {
                 method: 'POST',
@@ -77,6 +78,7 @@ const SubscriptionComponent = () => {
 
     const handlePayment = async (planId, planPrice) => {
         setLoading(true);
+        showMessage('info', 'Processing payment, please do not press back or refresh...');
         try {
             const response = await fetch(`${API_URL}/payment/create-order`, {
                 method: 'POST',
@@ -185,7 +187,7 @@ const SubscriptionComponent = () => {
                     </div>
                     {message.text && (
                         <div
-                            className={`message mt-6 p-4 rounded-md text-center font-medium ${message.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                            className={`message mt-6 p-4 rounded-md text-center font-medium ${message.type === 'success' ? 'bg-green-100 text-green-700' : message.type === 'info' ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'
                                 }`}
                         >
                             {message.text}

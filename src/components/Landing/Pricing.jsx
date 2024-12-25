@@ -65,8 +65,8 @@ const containerVariants = {
 
 const cardVariants = {
   hidden: { opacity: 0, y: 50 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: {
       type: "spring",
@@ -77,10 +77,14 @@ const cardVariants = {
 }
 
 export default function Pricing() {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
       <div className="max-w-7xl mx-auto">
-        <motion.h2 
+        <motion.h2
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -91,7 +95,7 @@ export default function Pricing() {
           Extraordinary Results
         </motion.h2>
 
-        <motion.div 
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -101,7 +105,7 @@ export default function Pricing() {
             <motion.div
               key={tier.name}
               variants={cardVariants}
-              whileHover={{ 
+              whileHover={{
                 scale: 1.03,
                 transition: { duration: 0.2 }
               }}
@@ -112,7 +116,7 @@ export default function Pricing() {
                   Recommended
                 </div>
               )}
-              
+
               <div className="text-center mb-6">
                 <h3 className="text-2xl font-semibold text-gray-900 mb-2">
                   {tier.name}
@@ -138,6 +142,7 @@ export default function Pricing() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={scrollToTop}
                 className="w-full bg-black text-white rounded-lg py-3 font-medium hover:bg-gray-800 transition-colors"
               >
                 GO
