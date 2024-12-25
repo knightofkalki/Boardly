@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { Search, Star } from "lucide-react";
 import BookingConfirmationCard from "./BookingConfirmationCard";
 import { useAuth } from '../context/AuthContext';
+import { IoPersonSharp } from "react-icons/io5";
+import { API_URL } from "../shared/api";
 
 export default function MentorBooking() {
   const [selectedMentor, setSelectedMentor] = useState(null);
@@ -12,6 +14,7 @@ export default function MentorBooking() {
   const [bookingDetails, setBookingDetails] = useState(null);
   const [showSlots, setShowSlots] = useState(false);
   const [slots, setSlots] = useState([]);
+  const [mentors, setMentors] = useState([]);
   const { currentUser } = useAuth();
 
   const getNextSevenDays = () => {
@@ -37,45 +40,6 @@ export default function MentorBooking() {
 
   const nextSevenDays = getNextSevenDays();
 
-  const mentors = [
-    {
-      id: 1,
-      name: "KUNAL RAI",
-      image: "",
-      rating: 3,
-      specialization: "Mathematics",
-      successRate: "98% to board",
-      subject: "Specialist",
-    },
-    {
-      id: 2,
-      name: "Joshva devdas T",
-      image: "",
-      rating: 4,
-      specialization: "Mathematics",
-      successRate: "98% to board",
-      subject: "Specialist",
-    },
-    {
-      id: 3,
-      name: "Lavanya K",
-      image: "",
-      rating: 3,
-      specialization: "Biology",
-      successRate: "97.5% to board",
-      subject: "Specialist",
-    },
-    {
-      id: 4,
-      name: "Padma Priya R",
-      image: "",
-      rating: 4,
-      specialization: "Mathematics",
-      successRate: "94.32% to board",
-      subject: "Specialist",
-    },
-  ];
-
   const getUniqueTimeSlots = (slots) => {
     const times = new Set();
     slots.forEach(slot => times.add(slot.slotTiming));
@@ -85,30 +49,50 @@ export default function MentorBooking() {
   const findSlot = (date, time) => {
     return slots.find(slot => {
       const slotDate = new Date(slot.slotDate);
-      return slotDate.toDateString() === date.toDateString() &&
-        slot.slotTiming === time;
+      return (
+        slotDate.toDateString() === date.toDateString() &&
+        slot.slotTiming === time &&
+        slot.mentorID === selectedMentor
+      );
     });
   };
 
   useEffect(() => {
     async function fetchSlots() {
-      const response = await fetch("https://boardly-be.vercel.app/slot/");
+      const response = await fetch(`${API_URL}/slot/`);
       const data = await response.json();
       setSlots(data);
     }
+
+    async function fetchMentors() {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_URL}/slot/mentors/allmentors`, {
+          headers: {
+            Authorization: token
+          }
+        });
+        const mentorsData = await response.json();
+        setMentors(mentorsData);
+      } catch (error) {
+        console.error("Error fetching mentors:", error);
+      }
+    }
+
     fetchSlots();
+    fetchMentors();
   }, []);
 
   const filteredMentors = mentors.filter(
     (mentor) =>
       mentor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      mentor.specialization.toLowerCase().includes(searchQuery.toLowerCase())
+      mentor.subjectExpert.join(", ").toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleBook = async () => {
     if (selectedSlot !== null) {
       const selectedMentorData =
-        mentors.find((m) => m.id === selectedMentor) || { name: "Any Mentor" };
+        mentors.find((m) => m._id === selectedMentor) || { name: "Any Mentor" };
 
       const slotData = slots.find((slot) => slot._id === selectedSlot);
 
@@ -121,7 +105,7 @@ export default function MentorBooking() {
         formData.append("slotId", slotId);
 
         try {
-          const response = await fetch("https://boardly-be.vercel.app/slot/book", {
+          const response = await fetch(`${API_URL}/slot/book`, {
             method: "POST",
             body: formData,
             headers: {
@@ -134,8 +118,8 @@ export default function MentorBooking() {
             setBookingDetails({
               mentor: {
                 name: selectedMentorData.name,
-                image: selectedMentorData.image || "",
-                specialization: selectedMentorData.specialization || "Any",
+                image: selectedMentorData.profilePicture || "",
+                specialization: selectedMentorData.subjectExpert?.join(", ") || "Any",
               },
               date: slotData.slotDate,
               time: slotData.slotTiming,
@@ -175,33 +159,42 @@ export default function MentorBooking() {
           <div className="flex space-x-4 overflow-x-auto pb-4">
             {filteredMentors.map((mentor) => (
               <motion.div
-                key={mentor.id}
+                key={mentor._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 whileHover={{ y: -5 }}
-                className={`flex min-w-[240px] flex-col items-center rounded-lg border p-4 ${selectedMentor === mentor.id ? "border-orange-500 bg-orange-50" : "border-gray-200 bg-white"
+                className={`flex min-w-[240px] flex-col items-center rounded-lg border p-4 ${selectedMentor === mentor._id ? "border-orange-500 bg-orange-50" : "border-gray-200 bg-white"
                   }`}
               >
-                <motion.img
-                  whileHover={{ scale: 1.1 }}
-                  src={mentor.image}
-                  alt={mentor.name}
-                  className="h-16 w-16 rounded-full object-cover"
-                />
+                {mentor.image ? (
+                  <motion.img
+                    whileHover={{ scale: 1.1 }}
+                    src={mentor.image}
+                    alt={mentor.name}
+                    className="h-16 w-16 rounded-full object-cover"
+                  />
+                ) : (
+                  <IoPersonSharp className="h-16 w-16 text-gray-400" />
+                )}
                 <h3 className="mt-2 font-semibold">{mentor.name}</h3>
                 <div className="flex space-x-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className={`h-4 w-4 ${i < mentor.rating ? "fill-orange-400 text-orange-400" : "text-gray-300"}`} />
+                    <Star
+                      key={i}
+                      className={`h-4 w-4 ${i < mentor.rating ? "fill-orange-400 text-orange-400" : "text-gray-300"
+                        }`}
+                    />
                   ))}
                 </div>
                 <p className="text-sm text-gray-600">{mentor.specialization}</p>
-                <p className="text-xs text-gray-500">{mentor.subject}</p>
-                <p className="text-xs text-gray-500">{mentor.successRate}</p>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => { setSelectedMentor(mentor.id); setShowSlots(true); }}
-                  className={`mt-4 w-full rounded-full px-4 py-2 text-sm font-medium ${selectedMentor === mentor.id ? "bg-orange-500 text-white" : "bg-orange-100 text-orange-600"
+                  onClick={() => {
+                    setSelectedMentor(mentor._id);
+                    setShowSlots(true);
+                  }}
+                  className={`mt-4 w-full rounded-full px-4 py-2 text-sm font-medium ${selectedMentor === mentor._id ? "bg-orange-500 text-white" : "bg-orange-100 text-orange-600"
                     }`}
                 >
                   Select
@@ -209,18 +202,6 @@ export default function MentorBooking() {
               </motion.div>
             ))}
           </div>
-        </div>
-
-
-        <div className="flex justify-center">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => { setSelectedMentor(null); setShowSlots(true); }}
-            className="rounded-lg bg-orange-500 px-4 py-2 text-white hover:bg-orange-600"
-          >
-            Any Mentor
-          </motion.button>
         </div>
 
         {showSlots && (

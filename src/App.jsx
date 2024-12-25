@@ -40,12 +40,7 @@ export default function App() {
         <div className="min-h-screen">
           <Routes>
             <Route path="/landing" element={<LandingPage />} />
-            <Route path="/contact" element={
-              <>
-                <Navbar />
-                <Contact />
-              </>
-            } />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/" element={
               <ProtectedRoute>
                 <Home />

@@ -7,7 +7,6 @@ import axios from "axios";
 import { OutlineButton } from "../components/ui/OutlineButton"
 import { API_URL } from "../shared/api";
 
-
 const difficultyColors = {
   Easy: "text-green-600",
   Medium: "text-orange-500",
@@ -46,7 +45,7 @@ const VideoPopup = ({ videoUrl, onClose }) => {
         className="bg-white rounded-lg p-4 w-full max-w-3xl relative"
         onClick={e => e.stopPropagation()}
       >
-        <button 
+        <button
           onClick={onClose}
           className="absolute -top-10 right-0 text-white hover:text-gray-200"
         >
@@ -72,6 +71,7 @@ export default function PYQList() {
   const [searchQuery, setSearchQuery] = useState("")
   const [showVideo, setShowVideo] = useState(false);
   const [currentVideoUrl, setCurrentVideoUrl] = useState('');
+  const [selectedPYQ, setSelectedPYQ] = useState(null);
   const navigate = useNavigate()
   const { subject } = useParams()
   const [pyqData, setPyqData] = useState([])
@@ -118,10 +118,13 @@ export default function PYQList() {
     navigate(`/subject/${subject}/pyq/${year}/topper-solution`);
   };
 
-  const handleVideoClick = (year) => {
-    // setCurrentVideoUrl(videoUrl);
-    // setShowVideo(true);
-    navigate(`/subject/${subject}/pyq/${year}/topper-solution`);
+  const handleVideoClick = (videoUrl) => {
+    setCurrentVideoUrl(videoUrl);
+    setShowVideo(true);
+  };
+
+  const handlePYQClick = (id) => {
+    setSelectedPYQ(selectedPYQ === id ? null : id);
   };
 
   const filteredData = pyqData.filter(item => {
@@ -133,7 +136,7 @@ export default function PYQList() {
   return (
     <div className="max-w-5xl mx-auto p-4 sm:p-6">
       <div className="flex items-center gap-4 mb-8">
-        <button 
+        <button
           onClick={() => navigate(`/subject/${subject}`)}
           className="p-2 hover:bg-gray-100 rounded-full"
         >
@@ -150,16 +153,16 @@ export default function PYQList() {
       <div className="flex flex-col sm:flex-row justify-between mb-6 gap-4">
         <div className="relative flex-1 max-w-sm">
           <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-600" />
-          <input 
+          <input
             type="text"
-            placeholder="Search by year" 
+            placeholder="Search by year"
             className="w-full pl-10 pr-4 py-2 border rounded-lg"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <select 
-          value={filter} 
+        <select
+          value={filter}
           onChange={(e) => setFilter(e.target.value)}
           className="w-full sm:w-32 border rounded-lg p-2"
         >
@@ -173,20 +176,16 @@ export default function PYQList() {
       <div className="hidden md:grid grid-cols-7 gap-4 px-4 py-2 text-sm font-medium text-gray-500 border-b">
         <div>Status</div>
         <div className="col-span-2">Title</div>
-        <div>Attempt</div>
-        <div>Topper Solution</div>
         <div>Difficulty</div>
-        <div>Video Solution</div>
       </div>
 
-      <div className="space-y-2 overflow-y-auto max-h-96 mt-2">
-        {loading? (
-        <div className="text-center py-6">
-          <span className="text-gray-500">Loading...</span>
-        </div> 
-        ) : ( filteredData.map((item) => (
-          <div key={item.id} className="bg-white rounded-lg shadow-sm">
-            <div className="grid grid-cols-7 md:grid-cols-7 gap-4 items-center px-4 py-3">
+      <div className="space-y-2 mt-2">
+        {filteredData.map((item) => (
+          <div key={item.id} className="w-full text-left bg-white rounded-lg shadow-sm">
+            <div
+              className="grid grid-cols-3 md:grid-cols-7 gap-4 items-center px-4 py-3 cursor-pointer"
+              onClick={() => handlePYQClick(item.id)}
+            >
               <div className="flex items-center">
                 {item.status === "completed" ? (
                   <div className="h-6 w-6 rounded-full bg-green-100 flex items-center justify-center">
@@ -202,40 +201,39 @@ export default function PYQList() {
                 </span>
                 <span className="text-gray-600"> {item.title}</span>
               </div>
-              <div className="hidden md:block">
-                <OutlineButton 
-                  variant="green"
-                  onClick={() => navigate(`/subject/${subject}/pyq/${item.id}/attempt`)}
-                >
-                  Attempt
-                </OutlineButton>
-              </div>
-              <div className="hidden md:flex justify-center">
-                <button
-                  onClick={() => handleTopperSolutionClick(item.id)}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                  title="View Topper Solution"
-                >
-                  <FiEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
-                </button>
-              </div>
+
               <div className="col-span-2 md:col-span-1 flex items-center justify-end md:justify-between">
                 <span className={`${difficultyColors[item.difficulty]} mr-2 md:mr-0`}>
                   {item.difficulty}
                 </span>
               </div>
-              <div className="hidden md:flex justify-center">
-                {item.hasVideoSolution && (
-                  <button
-                    onClick={() => handleVideoClick(item.id)}
-                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                    title="Watch Video Solution"
-                  >
-                    <FaCirclePlay className="h-5 w-5 text-orange-500 hover:text-orange-600" />
-                  </button>
-                )}
-              </div>
             </div>
+            {selectedPYQ === item.id && (
+              <div className="p-4 border-t">
+                <div className="flex flex-col md:flex-row gap-4">
+                  <button
+                    onClick={() => navigate(`/subject/${subject}/pyq/${item.id}/attempt`)}
+                    className="w-full md:w-auto bg-[#ec612a] text-white py-2 px-4 rounded-lg"
+                  >
+                    Attempt
+                  </button>
+                  <button
+                    onClick={() => handleTopperSolutionClick(item.id)}
+                    className="w-full md:w-auto bg-gray-200 text-gray-700 py-2 px-4 rounded-lg"
+                  >
+                    Topper Solution
+                  </button>
+                  {item.hasVideoSolution && (
+                    <button
+                      onClick={() => handleVideoClick(item.videoUrl)}
+                      className="w-full md:w-auto bg-gray-200 text-gray-700 py-2 px-4 rounded-lg"
+                    >
+                      Video Solution
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         ))
       )}

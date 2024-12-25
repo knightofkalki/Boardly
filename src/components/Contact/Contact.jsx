@@ -51,6 +51,11 @@ function ContactForm() {
 
             <form onSubmit={sendEmail} className="w-full md:w-1/2 max-w-md bg-white p-6 md:p-8 rounded-lg shadow-lg space-y-6">
                 <h2 className="text-2xl font-bold text-gray-800 text-center">Contact Us</h2>
+                <a
+                    href="/landing"
+                    className="text-[#3c82f6] text-end block font-semibold hover:underline"
+                >Go to Home
+                </a>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <input
                         type="text"
