@@ -109,23 +109,31 @@ function Upload() {
             <tbody className='rounded-b-lg'>
               <tr className="hover:bg-blue-50">
                 <td className="p-10">
-                  <select className="w-full p-6 rounded-lg">
+                <div className="relative">
+                  <select
+                    className="w-full p-4 rounded-lg border border-gray-300 bg-white shadow-sm focus:ring-2 focus:ring-orange-500 text-lg text-gray-700"
+                  >
                     {pyqData.map((paper, index) => (
-                      <option key={index} value={paper.title}>
+                      <option
+                        key={index}
+                        value={paper.title}
+                        className="bg-white hover:bg-gray-100 text-gray-800"
+                      >
                         {paper.title}
                       </option>
                     ))}
                   </select>
+                </div>
                 </td>
-                <td className="p-10 capitalize font-semibold">
+                <td className="p-10 capitalize text-lg font-semibold">
                   {status || "Not Started"}
                 </td>
-                <td className="p-10">
+                <td className="p-10 text-lg">
                   <label
                     htmlFor="file-input"
                     className="cursor-pointer px-6 py-3 rounded-lg"
                   >
-                    <PaperButton status={status} onClick={() => document.getElementById(file-input).click()} />
+                    <PaperButton status={status} onClick={() => document.getElementById('file-input').click()} />
                   </label>
                   <input
                     type="file"
