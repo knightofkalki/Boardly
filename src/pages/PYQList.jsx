@@ -78,40 +78,65 @@ export default function PYQList() {
   const { subject } = useParams();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const user = JSON.parse(localStorage.getItem("currentUser"));
-        const userClass = user.userClass;
-        setLoading(true);
-        const response = await axios.get(`${API_URL}/solve/yearwise/${userClass}/list`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-        const data = response.data;
+		const fetchData = async () => {
+			try {
+				const token = localStorage.getItem("token");
+				const user = JSON.parse(localStorage.getItem("currentUser"));
+				const userClass = user.userClass;
+	
+				setLoading(true);
+	
+				// Fetch PYQ data
+				const pyqResponse = await axios.get(`${API_URL}/solve/yearwise/${userClass}/list`, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+				});
+	
+				const pyqData = pyqResponse.data.questionPapers;
 
-        const mappedData = data.questionPapers.map((paper) => ({
-          id: paper.year,
-          status: paper.status ? "completed" : "pending",
-          title: paper.title,
-          difficulty: paper.difficulty.charAt(0).toUpperCase() + paper.difficulty.slice(1),
-          hasTopperSolution: Boolean(paper.topperSolution),
-          hasVideoSolution: Boolean(paper.videoSolution),
-          videoUrl: paper.videoSolution || null,
-        }));
 
-        setPyqData(mappedData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+				const userResponse = await fetch(`https://boardly-be.vercel.app/solve/markPaperDone`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+					body: JSON.stringify({
+						oid: "undefined",
+						subject: "undefined"
+					}),
+				});
 
-    fetchData();
-  }, []);
+				const userData = await userResponse.json();
+	
+				const papersAttempted = userData.userData.papersAttempted;
+
+				// console.log("papersAttempted", papersAttempted);
+	
+				// Map data and include status based on papersAttempted
+				const mappedData = pyqData.map((paper) => ({
+					id: paper.year,
+					status: papersAttempted.includes(paper.year+'-'+subject) ? "completed" : "pending",
+					title: paper.title,
+					difficulty: paper.difficulty.charAt(0).toUpperCase() + paper.difficulty.slice(1),
+					hasTopperSolution: Boolean(paper.topperSolution),
+					hasVideoSolution: Boolean(paper.videoSolution),
+					videoUrl: paper.videoSolution || null,
+				}));
+	
+				setPyqData(mappedData);
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			} finally {
+				setLoading(false);
+			}
+		};
+	
+		fetchData();
+	}, [subject]);
+	
 
   const handleTopperSolutionClick = (year) => {
     navigate(`/subject/${subject}/pyq/${year}/topper-solution`);

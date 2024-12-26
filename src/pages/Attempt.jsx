@@ -13,6 +13,8 @@ export default function Attempt() {
   const navigate = useNavigate()
   const { subject, year } = useParams()
 	const userClass = useAuth().currentUser.userClass;
+	const [oid, setOid] = useState("");
+	const [submit, setSubmit] = useState(false);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -28,6 +30,9 @@ export default function Attempt() {
           const subjectData = response.data.data.questions.subjects.find(
             (subj) => subj.subjectName.toLowerCase() === subject.toLowerCase()
           )
+
+				// console.log(response.data.data.questions._id)
+				setOid(response.data.data.questions._id)
 
           if (subjectData) {
             setQuizSections([
@@ -60,8 +65,34 @@ export default function Attempt() {
       }
     }
 
+		const submitExam = async () => {
+			try {
+				const token = localStorage.getItem('token');
+				const response = await axios.post(
+					`https://boardly-be.vercel.app/solve/markPaperDone`,
+					{
+						oid: year,
+						subject: subject,
+					},
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					}
+				);
+				console.log(response.data);
+			} catch (error) {
+				console.log(error.message);
+			}
+		};
+
+		if (submit) {
+			console.log(subject)
+			submitExam();
+		}
+
     fetchQuestions()
-  }, [subject, year, userClass]) // Add 'year' as a dependency
+  }, [subject, year, userClass, submit])
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -108,6 +139,7 @@ export default function Attempt() {
   }
 
   const handleFinalSubmit = () => {
+		setSubmit(true)
     navigate(`/subject/${subject}/pyq`)
   }
 
