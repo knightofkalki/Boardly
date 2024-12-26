@@ -25,7 +25,7 @@ export default function Attempt() {
         })
 
         if (response.data.success) {
-          const subjectData = response.data.data.subjects.find(
+          const subjectData = response.data.data.questions.subjects.find(
             (subj) => subj.subjectName.toLowerCase() === subject.toLowerCase()
           )
 
@@ -53,7 +53,8 @@ export default function Attempt() {
           }
         }
       } catch (error) {
-        if (error.code === "ERR_BAD_REQUEST") {
+				console.log(error.message);
+        if (error.message === "Request failed with status code 403") {
 					setShowPlansPopup(true);
 				}
       }
