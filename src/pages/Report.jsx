@@ -87,7 +87,7 @@ export const Report = () => {
         {questions.map((question) => (
           <div
             key={question.id}
-            className="bg-white rounded-lg w-full items-center flex flex-col justify-center shadow-sm p-4"
+            className=" rounded-lg w-full items-center flex flex-col justify-center shadow-md p-4"
           >
             <div className="grid grid-cols-4 w-3/4 md:grid-cols-5 gap-4 text-xl items-center ">
               <div className="col-span-2 md:col-span-3  flex items-center">
