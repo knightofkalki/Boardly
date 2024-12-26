@@ -16,6 +16,7 @@ import ChapterQuestions from "./pages/ChapterQuestions";
 import Upload from "./pages/Upload";
 import Subscriptions from "./pages/Subscriptions";
 import Contact from "./pages/Contact";
+import Report from "./pages/Report";
 
 const ProtectedRoute = ({ children, hideSidebar = false }) => {
   const { isAuthenticated } = useAuth();
@@ -99,6 +100,11 @@ export default function App() {
             <Route path="/subject/:subject/upload" element={
               <ProtectedRoute>
                 <Upload />
+              </ProtectedRoute>
+            } />
+            <Route path="/subject/:subject/:year/report" element={
+              <ProtectedRoute>
+                <Report />
               </ProtectedRoute>
             } />
             <Route path="*" element={<Navigate to="/landing" replace />} />
