@@ -181,14 +181,14 @@ export default function PYQList() {
         <div>Video Solution</div>
       </div>
 
-      <div className="space-y-2 overflow-y-auto max-h-96 mt-2">
+      <div className="space-y-2 overflow-y-auto max-h-[65vh] mt-2">
         {loading? (
         <div className="text-center py-6">
           <span className="text-gray-500">Loading...</span>
         </div> 
         ) : ( filteredData.map((item) => (
           <div key={item.id} className="bg-white rounded-lg shadow-sm">
-            <div className="grid grid-cols-7 md:grid-cols-7 gap-4 items-center px-4 py-3">
+            <div className="grid grid-cols-4 md:grid-cols-7 gap-4 items-center px-4 py-3">
               <div className="flex items-center">
                 {item.status === "completed" ? (
                   <div className="h-6 w-6 rounded-full bg-green-100 flex items-center justify-center">
@@ -198,13 +198,20 @@ export default function PYQList() {
                   <FiCircle className="h-6 w-6 text-gray-300" />
                 )}
               </div>
-              <div className="col-span-3 md:col-span-2">
+              <div className="col-span-2 md:col-span-2" onClick={()=>{handlePYQClick(item.id)}}>
                 <span className="font-medium text-gray-900">
                   {subject.charAt(0).toUpperCase() + subject.slice(1)}
                 </span>
                 <span className="text-gray-600"> {item.title}</span>
               </div>
-              <div className="hidden md:block">
+              <div className="col-span-1 md:col-span-1 md:hidden flex items-center justify-end md:justify-between">
+                <span className={`${difficultyColors[item.difficulty]} mr-2 md:mr-0`}>
+                  {item.difficulty}
+                </span>
+              </div>
+              {/* HIDDEN DIV TO ADJUST COLS FOR MOBILE VIEW */}
+              <div className="md:hidden"></div>
+              <div className={`md:block ${selectedPYQ===item.id? '': 'hidden'}`}>
                 <OutlineButton 
                   variant="green"
                   onClick={() => navigate(`/subject/${subject}/pyq/${item.id}/attempt`)}
@@ -212,7 +219,8 @@ export default function PYQList() {
                   Attempt
                 </OutlineButton>
               </div>
-              <div className="hidden md:flex justify-center">
+
+              <div className={`flex justify-center md:block ${selectedPYQ===item.id? '': 'hidden'} `}>
                 <button
                   onClick={() => handleTopperSolutionClick(item.id)}
                   className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -221,12 +229,13 @@ export default function PYQList() {
                   <FiEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
                 </button>
               </div>
-              <div className="col-span-2 md:col-span-1 flex items-center justify-end md:justify-between">
+            
+              <div className="col-span-2 md:col-span-1 hidden md:flex items-center justify-end md:justify-between">
                 <span className={`${difficultyColors[item.difficulty]} mr-2 md:mr-0`}>
                   {item.difficulty}
                 </span>
               </div>
-              <div className="hidden md:flex justify-center">
+              <div className={`${selectedPYQ===item.id? '': 'hidden'} md:block flex justify-center`}>
                 {item.hasVideoSolution && (
                   <button
                     onClick={() => handleVideoClick(item.id)}
