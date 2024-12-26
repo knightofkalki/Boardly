@@ -46,7 +46,7 @@ export default function App() {
                 <Home />
               </ProtectedRoute>
             } />
-            <Route path="/schedule" element={
+            <Route path="/subjects" element={
               <ProtectedRoute>
                 <Subjects />
               </ProtectedRoute>
