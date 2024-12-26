@@ -84,7 +84,7 @@ export default function Hero() {
 				const loginSuccessful = await login(formData.email, formData.password);
 				if (loginSuccessful) {
 					console.log('Logged in successfully!');
-					navigate('/')
+					navigate('/', { state: { fromLogin: true } });
 				} else {
 					console('Invalid credentials. Please try again.');
 				}
