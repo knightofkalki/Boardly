@@ -198,17 +198,30 @@ export default function PYQList() {
                   <FiCircle className="h-6 w-6 text-gray-300" />
                 )}
               </div>
-              <div className="col-span-2 md:col-span-2" onClick={()=>{handlePYQClick(item.id)}}>
+              <div className="col-span-2 md:col-span-2 md:hover:cursor-default hover:cursor-pointer" onClick={()=>{handlePYQClick(item.id)}}>
                 <span className="font-medium text-gray-900">
                   {subject.charAt(0).toUpperCase() + subject.slice(1)}
                 </span>
                 <span className="text-gray-600"> {item.title}</span>
               </div>
-              <div className="col-span-1 md:col-span-1 md:hidden flex items-center justify-end md:justify-between">
-                <span className={`${difficultyColors[item.difficulty]} mr-2 md:mr-0`}>
-                  {item.difficulty}
-                </span>
+
+             <div 
+                className="col-span-1 md:col-span-1 md:hidden flex items-center justify-end md:justify-between"
+              >
+                <div
+                  style={{
+                    width: "12px",
+                    height: "12px",
+                    borderRadius: "50%",
+                    backgroundColor: item.difficulty === "Easy" ? "green" : 
+                                    item.difficulty === "Medium" ? "orange" : 
+                                    "red",
+                    marginRight: "8px",
+                  }}
+                  title={item.difficulty} // Optional tooltip for accessibility
+                ></div>
               </div>
+
               {/* HIDDEN DIV TO ADJUST COLS FOR MOBILE VIEW */}
               <div className="md:hidden"></div>
               <div className={`md:block ${selectedPYQ===item.id? '': 'hidden'}`}>
