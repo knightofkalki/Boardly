@@ -3,11 +3,13 @@ import { motion } from 'framer-motion'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
+import PlansPopup from '../components/PlansPopup'; // Make sure to import the PlansPopup component
 
 export default function Attempt() {
   const [currentSection, setCurrentSection] = useState('A')
   const [quizSections, setQuizSections] = useState([])
   const [timeLeft, setTimeLeft] = useState(10800)
+  const [showPlansPopup, setShowPlansPopup] = useState(false); // Add state for PlansPopup
   const navigate = useNavigate()
   const { subject, year } = useParams()
 	const userClass = useAuth().currentUser.userClass;
@@ -51,7 +53,9 @@ export default function Attempt() {
           }
         }
       } catch (error) {
-        console.error('Error fetching questions:', error)
+        if (error.code === "ERR_BAD_REQUEST") {
+					setShowPlansPopup(true);
+				}
       }
     }
 
@@ -108,6 +112,9 @@ export default function Attempt() {
 
   return (
     <div className="flex  bg-white">
+      {showPlansPopup && (
+														<PlansPopup onClose={() => setShowPlansPopup(false)} />
+												)}
       <div className="absolute right-4 top-4 text-2xl font-bold text-red-500">
         {formatTime(timeLeft)}
       </div>
