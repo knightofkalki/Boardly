@@ -5,15 +5,17 @@ import { Home } from "./pages/Home";
 import Subjects from "./pages/Subjects";
 import SubjectContent from "./pages/SubjectContent";
 import PYQList from "./pages/PYQList";
-import ChapterList from "./pages/ChapterList";  
+import ChapterList from "./pages/ChapterList";
 import TopperSolution from "./pages/TopperSolution";
 import Communities from "./pages/Communities";
 import MentorBooking from "./components/MentorBooking";
 import LandingPage from "./pages/LandingPage";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import Attempt from "./pages/Attempt"; 
+import Attempt from "./pages/Attempt";
 import ChapterQuestions from "./pages/ChapterQuestions";
 import Upload from "./pages/Upload";
+import Subscriptions from "./pages/Subscriptions";
+import Contact from "./pages/Contact";
 
 const ProtectedRoute = ({ children, hideSidebar = false }) => {
   const { isAuthenticated } = useAuth();
@@ -23,7 +25,7 @@ const ProtectedRoute = ({ children, hideSidebar = false }) => {
   return (
     <>
       <Navbar />
-      <div className={hideSidebar ? "" : "ml-16"}>
+      <div className={hideSidebar ? "" : "md:ml-16"}>
         {!hideSidebar && <Sidebar />}
         {children}
       </div>
@@ -38,6 +40,7 @@ export default function App() {
         <div className="min-h-screen">
           <Routes>
             <Route path="/landing" element={<LandingPage />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/" element={
               <ProtectedRoute>
                 <Home />
@@ -56,6 +59,11 @@ export default function App() {
             <Route path="/mentorship" element={
               <ProtectedRoute>
                 <MentorBooking />
+              </ProtectedRoute>
+            } />
+            <Route path="/subscriptions" element={
+              <ProtectedRoute>
+                <Subscriptions />
               </ProtectedRoute>
             } />
             <Route path="/subject/:subject" element={
@@ -89,7 +97,7 @@ export default function App() {
               </ProtectedRoute>
             } />
             <Route path="/subject/:subject/upload" element={
-              <ProtectedRoute hideSidebar={true}>
+              <ProtectedRoute>
                 <Upload />
               </ProtectedRoute>
             } />

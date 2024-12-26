@@ -1,0 +1,32 @@
+[
+    {
+        "id": "PLAN1",
+        "name": "Plan 1",
+        "price": 149,
+        "features": [
+            "Access to 15 sample papers",
+            "Premium features",
+            "Priority access"
+        ]
+    },
+    {
+        "id": "PLAN2",
+        "name": "Plan 2",
+        "price": 249,
+        "features": [
+            "Access to 30 sample papers",
+            "Premium features",
+            "Priority support"
+        ]
+    },
+    {
+        "id": "PLAN3",
+        "name": "Plan 3",
+        "price": 499,
+        "features": [
+            "Unlimited sample papers",
+            "All premium features",
+            "24/7 Priority support"
+        ]
+    }
+]

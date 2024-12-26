@@ -30,7 +30,7 @@ export default function Communities() {
   ]
 
   return (
-    <div className="p-6 bg-[#F6F8FC] min-h-screen">
+    <div className="p-6 bg-[#F6F8FC] min-h-[90vh]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

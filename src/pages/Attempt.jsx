@@ -1,52 +1,62 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate, useParams } from 'react-router-dom'
-
-const sections = [
-  {
-    id: 'A',
-    title: 'Section A',
-    questions: Array.from({ length: 6 }, (_, i) => ({
-      id: i + 1,
-      text: 'A paisa coin is made up of Al-Mg alloy and weighs 0.75g. It has a square shape, and its diagonal measures 17 mm. It is electrically neutral and contains equal amounts of positive and negative charges. Treating the paisa coins made up of only Al, find the magnitude of the equal number of positive and negative charges. What conclusion do you draw from this magnitude?',
-      status: 'unanswered'
-    }))
-  },
-  {
-    id: 'B',
-    title: 'Section B',
-    questions: Array.from({ length: 6 }, (_, i) => ({
-      id: i + 1,
-      text: 'Sample question for Section B',
-      status: 'unanswered'
-    }))
-  },
-  {
-    id: 'C',
-    title: 'Section C',
-    questions: Array.from({ length: 6 }, (_, i) => ({
-      id: i + 1,
-      text: 'Sample question for Section C',
-      status: 'unanswered'
-    }))
-  },
-  {
-    id: 'D',
-    title: 'Section D',
-    questions: Array.from({ length: 6 }, (_, i) => ({
-      id: i + 1,
-      text: 'Sample question for Section D',
-      status: 'unanswered'
-    }))
-  }
-]
+import axios from 'axios'
+import { useAuth } from '../context/AuthContext'
 
 export default function Attempt() {
   const [currentSection, setCurrentSection] = useState('A')
-  const [quizSections, setQuizSections] = useState(sections)
+  const [quizSections, setQuizSections] = useState([])
   const [timeLeft, setTimeLeft] = useState(10800)
   const navigate = useNavigate()
-  const { subject } = useParams()
+  const { subject, year } = useParams()
+	const userClass = useAuth().currentUser.userClass;
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const token = localStorage.getItem('token')
+        const response = await axios.get(`https://boardly-be.vercel.app/solve/yearwise/${userClass}/${year}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+
+        if (response.data.success) {
+          const subjectData = response.data.data.subjects.find(
+            (subj) => subj.subjectName.toLowerCase() === subject.toLowerCase()
+          )
+
+          if (subjectData) {
+            setQuizSections([
+              {
+                id: 'A',
+                title: 'Section A',
+                questions: subjectData.questions.map((q, i) => ({
+                  id: i + 1,
+                  text: q.question,
+                  status: 'unanswered'
+                }))
+              },
+              // {
+              //   id: 'B',
+              //   title: 'Section B',
+              //   questions: subjectData.questions.slice(5, 10).map((q, i) => ({
+              //     id: i + 6,
+              //     text: q.question,
+              //     status: 'unanswered'
+              //   }))
+              // }
+            ])
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching questions:', error)
+      }
+    }
+
+    fetchQuestions()
+  }, [subject, year, userClass]) // Add 'year' as a dependency
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -86,7 +96,7 @@ export default function Attempt() {
   }
 
   const handleSubmitSection = () => {
-    const nextSection = sections[sections.findIndex(s => s.id === currentSection) + 1]
+    const nextSection = quizSections[quizSections.findIndex(s => s.id === currentSection) + 1]
     if (nextSection) {
       setCurrentSection(nextSection.id)
     }
@@ -97,13 +107,13 @@ export default function Attempt() {
   }
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex  bg-white">
       <div className="absolute right-4 top-4 text-2xl font-bold text-red-500">
         {formatTime(timeLeft)}
       </div>
 
       <nav className="flex w-48 flex-col space-y-2 p-4">
-        {sections.map((section) => (
+        {quizSections.map((section) => (
           <motion.button
             key={section.id}
             onClick={() => setCurrentSection(section.id)}
@@ -120,7 +130,7 @@ export default function Attempt() {
         ))}
       </nav>
 
-      <main className="flex-1 p-6">
+      <main className="flex-1 flex-grow-[1] p-6 overflow-y-auto max-h-[90vh]">
         <div className="mx-auto max-w-2xl space-y-6">
           {quizSections
             .find((s) => s.id === currentSection)
@@ -182,28 +192,26 @@ export default function Attempt() {
             </div>
           </div>
 
-          {sections.map((section) => (
+          {quizSections.map((section) => (
             <div key={section.id} className="mb-4">
               <h3 className="mb-2 text-sm font-medium">Section {section.id}</h3>
               <div className="grid grid-cols-8 gap-2">
-                {quizSections
-                  .find((s) => s.id === section.id)
-                  ?.questions.map((question) => (
-                    <motion.button
-                      key={question.id}
-                      onClick={() => setCurrentSection(section.id)}
-                      className={`flex h-8 w-8 items-center justify-center rounded-full border ${
-                        question.status === 'answered'
-                          ? 'border-[#00A651] bg-[#00A651] text-white'
-                          : question.status === 'marked'
-                          ? 'border-[#FF4B4B] bg-[#FF4B4B] text-white'
-                          : 'border-gray-300 text-gray-600'
-                      }`}
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      {question.id}
-                    </motion.button>
-                  ))}
+                {section.questions.map((question) => (
+                  <motion.button
+                    key={question.id}
+                    onClick={() => setCurrentSection(section.id)}
+                    className={`flex h-8 w-8 items-center justify-center rounded-full border ${
+                      question.status === 'answered'
+                        ? 'border-[#00A651] bg-[#00A651] text-white'
+                        : question.status === 'marked'
+                        ? 'border-[#FF4B4B] bg-[#FF4B4B] text-white'
+                        : 'border-gray-300 text-gray-600'
+                    }`}
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    {question.id}
+                  </motion.button>
+                ))}
               </div>
             </div>
           ))}
