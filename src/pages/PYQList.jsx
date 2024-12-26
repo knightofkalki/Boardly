@@ -233,7 +233,7 @@ export default function PYQList() {
                 </OutlineButton>
               </div>
 
-              <div className={`flex justify-center md:block ${selectedPYQ===item.id? '': 'hidden'} `}>
+              <div className={`md:flex justify-center  ${selectedPYQ===item.id? '': 'hidden'} `}>
                 <button
                   onClick={() => handleTopperSolutionClick(item.id)}
                   className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -248,7 +248,7 @@ export default function PYQList() {
                   {item.difficulty}
                 </span>
               </div>
-              <div className={`${selectedPYQ===item.id? '': 'hidden'} md:block flex justify-center`}>
+              <div className={`${selectedPYQ===item.id? '': 'hidden'} md:flex justify-center`}>
                 {item.hasVideoSolution && (
                   <button
                     onClick={() => handleVideoClick(item.id)}
