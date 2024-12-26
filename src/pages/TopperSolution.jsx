@@ -2,46 +2,54 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
-
+import axios from 'axios';
+import { API_URL } from '../shared/api';
 const TopperSolution = () => {
-  const [showQuestions, setShowQuestions] = useState(true);
+
   const [expandedId, setExpandedId] = useState(null);
   const [showVideo, setShowVideo] = useState(false);
   const [currentVideoUrl, setCurrentVideoUrl] = useState('');
   const { subject, year } = useParams();
   const navigate = useNavigate();
 
-	const questions = [
-    {
-      id: '01',
-      question: 'What is the capital of France?',
-      answer: 'The capital of France is Paris.',
-      steps: [
-        'Paris is located in northern France.',
-        'It is the largest city in France.',
-        'Paris is known as the "City of Light".'
-      ],
-      hasVideoSolution: true,
-      videoUrl:'https://youtu.be/dQw4w9WgXcQ?feature=shared'
-    },
-    {
-      id: '02',
-      question: 'Who wrote "Romeo and Juliet"?',
-      answer: 'William Shakespeare wrote "Romeo and Juliet".',
-      steps: [
-        'Shakespeare was an English playwright.',
-        'He wrote "Romeo and Juliet" in the late 16th century.',
-        'It is one of his most famous tragedies.'
-      ],
-      hasVideoSolution: false
-    }
-  ];
+  const [questions, setQuestions] = useState([])
+  const [loading, setLoading] = useState(false)
 
-	useEffect(() => {
-    if (questions.length > 0) {
-      setExpandedId(questions[0].id);
-    }
-  }, [questions]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('token'); 
+        const user = JSON.parse(localStorage.getItem('currentUser'))
+        const userClass = user.userClass
+        console.log("class", user.userClass)
+        setLoading(true)
+        const response = await axios.get(`${API_URL}/solutions/topper/${userClass}/${year}/${subject}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, 
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = response.data;
+
+        const mappedData = data.subject.questions.map((question) => ({
+          id: question.qid,
+          question: question.question,
+          answer: question.topperSolution,
+          steps: [], 
+          hasVideoSolution: Boolean(question.videoSolution),
+          videoUrl: question.videoSolution || null,
+        }));
+
+        setQuestions(mappedData)
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }finally{
+        setLoading(false)
+      }
+    };
+
+    fetchData();
+  }, []);
 
 
   const isMobile = () => {
@@ -142,8 +150,12 @@ const TopperSolution = () => {
         </div>
       </div>
 
-      {showQuestions && (
-        <div className="space-y-4 overflow-y-auto max-h-96">
+      {loading ? (
+        <div className="flex items-center justify-center">
+          <div className="animate-spin rounded-full h-16 mt-12 w-16 border-t-4 border-orange-500 border-opacity-75"></div>
+        </div>
+      ) : (
+        <div className="space-y-4">
           {questions.map((item) => (
             <div key={item.id} className="border rounded-lg overflow-hidden shadow-sm">
               <button
