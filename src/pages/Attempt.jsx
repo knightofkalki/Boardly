@@ -108,16 +108,18 @@ export default function Attempt() {
 
   return (
     <div className="flex  bg-white">
-      <div className="absolute right-4 top-4 text-2xl font-bold text-red-500">
+      {/* <div className="absolute right-4 top-4 text-2xl font-bold text-red-500">
         {formatTime(timeLeft)}
-      </div>
+      </div> */}
+      <div className='grid grid-cols-3 md:grid-cols-5'>
 
-      <nav className="flex w-48 flex-col space-y-2 p-4">
+      <nav className="order-2 md:order-1 col-span-1 flex w-48 flex-row md:flex-col space-x-2 md:space-x-0 md:space-y-2 p-4">
         {quizSections.map((section) => (
+
           <motion.button
             key={section.id}
             onClick={() => setCurrentSection(section.id)}
-            className={`w-full rounded-r-full px-6 py-3 text-left transition-colors ${
+            className={`w-full md:rounded-r-full px-6 py-3 text-left transition-colors ${
               section.id === currentSection
                 ? 'bg-[#00A651] text-white'
                 : 'border border-gray-200 text-gray-700'
@@ -130,7 +132,7 @@ export default function Attempt() {
         ))}
       </nav>
 
-      <main className="flex-1 flex-grow-[1] p-6 overflow-y-auto max-h-[90vh]">
+      <main className="order-1 md:order-2 col-span-3 flex-1 flex-grow-[1] p-6 overflow-y-auto max-h-[90vh]">
         <div className="mx-auto max-w-2xl space-y-6">
           {quizSections
             .find((s) => s.id === currentSection)
@@ -175,9 +177,9 @@ export default function Attempt() {
         </div>
       </main>
 
-      <aside className="mt-12 w-96 p-6">
+      <aside className="md:order-3 w-96 col-span-1 md:mt-12 p-6">
         <div className="rounded-lg bg-white p-4 shadow-sm">
-          <div className="mb-6 flex flex-col space-y-3">
+          <div className="mb-6 flex flex-row md:flex-col space-x-3 md:space-x-0 md:space-y-3">
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded-full bg-gray-200" />
               <span className="text-sm">Not Attempted</span>
@@ -218,7 +220,7 @@ export default function Attempt() {
 
           <motion.button
             onClick={handleSubmitSection}
-            className="mb-3 w-full rounded-md bg-[#00A651] px-4 py-2 text-sm text-white"
+            className="hidden md:block mb-3 w-full rounded-md bg-[#00A651] px-4 py-2 text-sm text-white"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
@@ -227,7 +229,7 @@ export default function Attempt() {
           
           <motion.button
             onClick={handleFinalSubmit}
-            className="w-full rounded-md bg-[#00A651] px-4 py-2 text-sm text-white"
+            className=" w-full rounded-md bg-[#00A651] px-4 py-2 text-sm text-white"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
@@ -235,6 +237,7 @@ export default function Attempt() {
           </motion.button>
         </div>
       </aside>
+      </div>
     </div>
   )
 }
