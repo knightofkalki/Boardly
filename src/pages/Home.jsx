@@ -7,6 +7,7 @@ import { ActionCards } from '../components/ActionCards';
 import { RecommendedSection } from '../components/RecommendedSection';
 import { UpcomingEvents } from '../components/UpcomingEvents';
 import { API_URL } from "../shared/api";
+import { Calendar }  from '../components/Calendar';
 
 const getAuthToken = () => `Bearer ${localStorage.getItem('token')}`;
 
@@ -50,9 +51,15 @@ export const Home = () => {
                 <PlansPopup onClose={() => setShowPopup(false)} />
             )}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                <div className="md:col-span-2">
+                <div className="md:col-span-1">
                     <Progress />
+										{/* <ContinueLearning /> */}
                 </div>
+								<div>
+									{/* <div className='h-[50vh]'> */}
+									<Calendar />
+									{/* </div> */}
+								</div>
                 <div>
                     <ContinueLearning />
                 </div>

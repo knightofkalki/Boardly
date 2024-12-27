@@ -46,10 +46,10 @@ function ContactForm() {
     return (
         <div className="flex flex-col md:flex-row items-center justify-center min-h-screen bg-gray-50 px-6 py-8">
             <div className="hidden md:block w-1/2 max-w-md">
-                <img src={Support} alt="Support" className="rounded-lg shadow-md" />
+                <img src={Support} alt="Support" className="rounded-lg" />
             </div>
 
-            <form onSubmit={sendEmail} className="w-full md:w-1/2 max-w-md bg-white p-6 md:p-8 rounded-lg shadow-lg space-y-6">
+            <form onSubmit={sendEmail} className="w-full md:w-1/2 max-w-md bg-white p-6 md:p-8 rounded-lg space-y-6">
                 <h2 className="text-2xl font-bold text-gray-800 text-center">Contact Us</h2>
                 <a
                     href="/landing"
