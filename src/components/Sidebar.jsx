@@ -1,6 +1,7 @@
-import { AiOutlineHome, AiOutlineSchedule, AiOutlineTeam, AiOutlineUser } from 'react-icons/ai';
+import { AiOutlineHome, AiOutlineTeam } from 'react-icons/ai';
 import { FaChalkboardTeacher } from "react-icons/fa";
-import { BiPackage } from "react-icons/bi";
+import { IoBookOutline } from "react-icons/io5";
+import { BsCashCoin } from "react-icons/bs";
 import { motion } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -27,10 +28,10 @@ export const Sidebar = () => {
 
     const menuItems = [
         { icon: AiOutlineHome, path: '/', label: 'Home' },
-        { icon: AiOutlineSchedule, path: '/schedule', label: 'Schedule' },
+        { icon: IoBookOutline, path: '/subjects', label: 'Subjects' },
         { icon: AiOutlineTeam, path: '/communities', label: 'Communities' },
         { icon: FaChalkboardTeacher, path: '/mentorship', label: 'Mentorship' },
-        { icon: BiPackage, path: '/subscriptions', label: 'Subscriptions' },
+        { icon: BsCashCoin, path: '/subscriptions', label: 'Subscriptions' },
     ];
 
     return (
