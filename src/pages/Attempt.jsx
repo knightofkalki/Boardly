@@ -3,14 +3,18 @@ import { motion } from 'framer-motion'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
+import PlansPopup from '../components/PlansPopup'; // Make sure to import the PlansPopup component
 
 export default function Attempt() {
   const [currentSection, setCurrentSection] = useState('A')
   const [quizSections, setQuizSections] = useState([])
   const [timeLeft, setTimeLeft] = useState(10800)
+  const [showPlansPopup, setShowPlansPopup] = useState(false); // Add state for PlansPopup
   const navigate = useNavigate()
   const { subject, year } = useParams()
 	const userClass = useAuth().currentUser.userClass;
+	const [oid, setOid] = useState("");
+	const [submit, setSubmit] = useState(false);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -23,9 +27,12 @@ export default function Attempt() {
         })
 
         if (response.data.success) {
-          const subjectData = response.data.data.subjects.find(
+          const subjectData = response.data.data.questions.subjects.find(
             (subj) => subj.subjectName.toLowerCase() === subject.toLowerCase()
           )
+
+				// console.log(response.data.data.questions._id)
+				setOid(response.data.data.questions._id)
 
           if (subjectData) {
             setQuizSections([
@@ -51,12 +58,41 @@ export default function Attempt() {
           }
         }
       } catch (error) {
-        console.error('Error fetching questions:', error)
+				console.log(error.message);
+        if (error.message === "Request failed with status code 403") {
+					setShowPlansPopup(true);
+				}
       }
     }
 
+		const submitExam = async () => {
+			try {
+				const token = localStorage.getItem('token');
+				const response = await axios.post(
+					`https://boardly-be.vercel.app/solve/markPaperDone`,
+					{
+						oid: year,
+						subject: subject,
+					},
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					}
+				);
+				console.log(response.data);
+			} catch (error) {
+				console.log(error.message);
+			}
+		};
+
+		if (submit) {
+			console.log(subject)
+			submitExam();
+		}
+
     fetchQuestions()
-  }, [subject, year, userClass]) // Add 'year' as a dependency
+  }, [subject, year, userClass, submit])
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -103,11 +139,15 @@ export default function Attempt() {
   }
 
   const handleFinalSubmit = () => {
+		setSubmit(true)
     navigate(`/subject/${subject}/pyq`)
   }
 
   return (
     <div className="flex  bg-white">
+      {showPlansPopup && (
+														<PlansPopup onClose={() => setShowPlansPopup(false)} />
+												)}
       {/* <div className="absolute right-4 top-4 text-2xl font-bold text-red-500">
         {formatTime(timeLeft)}
       </div> */}

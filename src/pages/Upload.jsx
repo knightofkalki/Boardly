@@ -4,6 +4,7 @@ import PaperButton from "../components/ui/PaperButton";
 import { FiArrowLeft } from "react-icons/fi";
 import axios from "axios";
 import { API_URL } from "../shared/api";
+import PlansPopup from "../components/PlansPopup";
 
 function Upload() {
   const { subject } = useParams();
@@ -12,6 +13,7 @@ function Upload() {
   const [pyqData, setPyqData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedPaper, setSelectedPaper] = useState("");
+	const [popup, setPopup] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,11 +91,17 @@ function Upload() {
     } catch (error) {
       console.error("Error uploading the file:", error);
       setStatus("Failed");
+			if (error.code === "ERR_BAD_REQUEST") {
+				setPopup(true);
+			}
     }
   };
 
   return (
     <div className="flex justify-center">
+			{popup && (
+														<PlansPopup onClose={() => setPopup(false)} />
+												)}
       <div className="w-full lg:w-[90%]">
         <div className="p-6 w-full flex items-center justify-center flex-col">
           <div className="w-4/5 flex justify-between">

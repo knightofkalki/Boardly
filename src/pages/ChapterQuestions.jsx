@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import PlansPopup from '../components/PlansPopup';
 
 const QuestionCard = ({ question, isActive, onClick, onStatusChange, onSolutionToggle, onFlagChange }) => (
   <motion.div
@@ -118,6 +119,7 @@ export default function ChapterQuestions() {
   const [loading, setLoading] = useState(true);
   const [chapter, setChapter] = useState("");
   const [oid, setOid] = useState("");
+  const [showPlansPopup, setShowPlansPopup] = useState(false); // Add state for PlansPopup
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -137,7 +139,7 @@ export default function ChapterQuestions() {
         }
 
         const data = await response.json();
-        const { chapterData, userData } = data;
+        const { chapterData, userData} = data;
 
         setQuestions(
           chapterData.questions.map((q, index) => ({
@@ -150,6 +152,10 @@ export default function ChapterQuestions() {
         setChapter(chapterData.chapterName);
         setOid(chapterData._id);
       } catch (err) {
+				console.log(err.message);
+				if (err.message === "Failed to fetch questions.") {
+					setShowPlansPopup(true);
+				}
         setError(err.message);
       } finally {
         setLoading(false);
@@ -213,6 +219,9 @@ export default function ChapterQuestions() {
 
   return (
     <div className="container mx-auto p-4">
+      {showPlansPopup && (
+											<PlansPopup onClose={() => setShowPlansPopup(false)} />
+									)}
       <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
         <h1 className="text-4xl font-bold text-gray-800 mb-2">{chapter}</h1>
         <p className="text-gray-600 text-lg">

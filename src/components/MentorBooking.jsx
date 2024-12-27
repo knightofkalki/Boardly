@@ -5,6 +5,7 @@ import BookingConfirmationCard from "./BookingConfirmationCard";
 import { useAuth } from '../context/AuthContext';
 import { IoPersonSharp } from "react-icons/io5";
 import { API_URL } from "../shared/api";
+import PlansPopup from "./PlansPopup";
 
 export default function MentorBooking() {
   const [selectedMentor, setSelectedMentor] = useState(null);
@@ -16,6 +17,7 @@ export default function MentorBooking() {
   const [slots, setSlots] = useState([]);
   const [mentors, setMentors] = useState([]);
   const { currentUser } = useAuth();
+	const [popup, setPopup] = useState(false);
 
   const getNextSevenDays = () => {
     const dates = [];
@@ -129,7 +131,11 @@ export default function MentorBooking() {
             alert("Failed to book the slot");
           }
         } catch (error) {
+					if (error.code == "ERR_BAD_REQUEST") {
+						setPopup(true);
+					} else {
           alert("Error occurred while booking the slot");
+					}
         }
       }
     } else {
@@ -139,6 +145,9 @@ export default function MentorBooking() {
 
   return (
     <div className=" bg-gray-50 p-6 min-h-[90vh]">
+			{popup && (
+														<PlansPopup onClose={() => setPopup(false)} />
+												)}
       <div className="mx-auto max-w-7xl space-y-8">
 
         <div className="space-y-4">
