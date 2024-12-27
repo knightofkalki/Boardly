@@ -3,6 +3,7 @@ import { Bell } from 'lucide-react';
 import ProfileIcon from '../assets/profile.svg';
 import { useAuth } from '../context/AuthContext';
 import Banner from "../assets/banner.svg";
+import { Link } from 'react-router-dom';
 
 
 export function Navbar() {
@@ -38,8 +39,10 @@ export function Navbar() {
         <nav className="bg-white shadow-lg h-16 sticky top-0 z-50">
             <div className="mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 relative">
-                    <div className="flex flex items-center">
+                    <div className="flex items-center">
+												<Link to="/">
                         <img src={Banner} alt="Boardly" />
+												</Link>
                     </div>
                     <div className="flex items-center relative">
                         <button
