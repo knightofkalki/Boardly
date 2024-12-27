@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { FiEye } from "react-icons/fi";
-export const Report = () => {
+export default function Report() {
     const questions = [
         {
           id: 1,
