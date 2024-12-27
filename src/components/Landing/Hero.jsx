@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext'
 import HeroImage from "../../assets/hero.svg"
 import { API_URL } from "../../shared/api";
 import { useNavigate } from 'react-router-dom';
+import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 function Counter({ value, label }) {
 	const [count, setCount] = useState(0);
 	const [hasAnimated, setHasAnimated] = useState(false); // Prevent re-triggering animation
@@ -79,6 +80,11 @@ export default function Hero() {
 	const [showOtp, setShowOtp] = useState(false)
 	const [showEmailVerifyBtn, setShowEmailVerifyBtn] = useState(true)
 	const [showVerificationStatus, setShowVerificationStatus] = useState(false)
+	const [passwordsMatch, setPasswordsMatch] = useState(true)
+	const [passwordVisible, setPasswordVisible] = useState(false);
+	const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+	const [showConfirmPassword, setShowConfirmPassword] = useState(true);
+
 	const handleEmailVerification = async () => {
 		if (!formData.email) return;
 
@@ -142,6 +148,12 @@ export default function Hero() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		if (formData.password !== formData.confirmPassword) {
+			setPasswordsMatch(false); 
+			return;
+		  }
+		  setPasswordsMatch(true); 
+		  setShowConfirmPassword(false)
 		setShowVerificationStatus(false)
 		if (isLogin) {
 			try {
@@ -195,6 +207,10 @@ export default function Hero() {
 		}
 	};
 
+	const goLogin = ()=>{
+		setIsLogin(false)
+		setShowConfirmPassword(true)
+	}
 	return (
 		<div className="relative min-h-screen">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -211,7 +227,7 @@ export default function Hero() {
 								{isLogin ? 'Welcome Back!' : 'Start practising, for free!'}
 							</h2>
 							<button
-								onClick={() => setIsLogin(!isLogin)}
+								onClick={() => goLogin()}
 								className="text-[#FF5533] hover:underline text-sm"
 							>
 								{isLogin ? 'New user? Sign up' : 'Already have an account? Login'}
@@ -379,23 +395,54 @@ export default function Hero() {
 									</>
 									)}
 
-									<div>
-										<label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+									<label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+										<div className="relative">
 										<input
 											id="password"
-											type="password"
-											placeholder="Enter Password"
+											type={passwordVisible ? 'text' : 'password'}
 											className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
 											value={formData.password}
 											onChange={(e) => setFormData({ ...formData, password: e.target.value })}
 											required
 										/>
+										<button
+											type="button"
+											onClick={() => setPasswordVisible(!passwordVisible)}
+											className="absolute inset-y-0 right-3 flex items-center"
+										>
+											{passwordVisible?  <FaRegEyeSlash /> : <FaRegEye />}
+										</button>
+										</div>
+									{showConfirmPassword && (
+										<div>
+										<label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm Password</label>
+										<div className="relative">
+										<input
+											id="confirmPassword"
+											type={confirmPasswordVisible ? 'text' : 'password'}
+											className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+											value={formData.confirmPassword}
+											onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+											required
+										/>
+										<button
+											type="button"
+											onClick={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
+											className="absolute inset-y-0 right-3 flex items-center"
+										>
+											{confirmPasswordVisible?  <FaRegEyeSlash /> : <FaRegEye />}
+										</button>
+										</div>
 									</div>
-
+									)}
+									
+									{!passwordsMatch && (
+										<p className="text-red-500 text-sm mt-2">Passwords do not match.</p>
+									)}
 									<button
 									type="submit"
 									className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${!isEmailVerified? 'bg-gray-400 cursor-not-allowed': 'bg-orange-500 hover:bg-orange-700 cursor-pointer'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
-									disabled={!isEmailVerified} // Disable the submit button until OTP is verified
+									disabled={!isEmailVerified}
 									>
 									{isLogin ? 'Sign In' : 'Sign Up'}
 									</button>
