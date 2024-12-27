@@ -4,6 +4,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import axios from 'axios';
 import { API_URL } from '../shared/api';
+import PlansPopup from '../components/PlansPopup';
+
+
 const TopperSolution = () => {
 
   const [expandedId, setExpandedId] = useState(null);
@@ -11,6 +14,8 @@ const TopperSolution = () => {
   const [currentVideoUrl, setCurrentVideoUrl] = useState('');
   const { subject, year } = useParams();
   const navigate = useNavigate();
+	const [showPlansPopup, setShowPlansPopup] = useState(false);
+
 
   const [questions, setQuestions] = useState([])
   const [loading, setLoading] = useState(false)
@@ -43,6 +48,9 @@ const TopperSolution = () => {
         setQuestions(mappedData)
       } catch (error) {
         console.error("Error fetching data:", error);
+				if (error.message.includes('403')) {
+          setShowPlansPopup(true);
+        }
       }finally{
         setLoading(false)
       }
@@ -135,6 +143,7 @@ const TopperSolution = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-4 space-y-6 font-sans relative">
+			      {showPlansPopup && <PlansPopup onClose={() => setShowPlansPopup(false)} />}
       <div className="flex items-start gap-4 mb-8">
         <button 
           onClick={() => navigate(`/subject/${subject}/pyq`)}

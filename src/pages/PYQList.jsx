@@ -142,9 +142,10 @@ export default function PYQList() {
     navigate(`/subject/${subject}/pyq/${year}/topper-solution`);
   };
 
-  const handleVideoClick = (videoUrl) => {
-    setCurrentVideoUrl(videoUrl);
-    setShowVideo(true);
+  const handleVideoClick = (year) => {
+    // setCurrentVideoUrl(videoUrl);
+    // setShowVideo(true);
+		navigate(`/subject/${subject}/pyq/${year}/topper-solution`);
   };
 
   const handlePYQClick = (id) => {
