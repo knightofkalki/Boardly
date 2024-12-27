@@ -211,7 +211,7 @@ export default function Hero() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		if (formData.password !== formData.confirmPassword) {
+		if (formData.password !== formData.confirmPassword && !isLogin) {
 			setPasswordsMatch(false); 
 			return;
 		  }
@@ -219,6 +219,7 @@ export default function Hero() {
 		  setShowConfirmPassword(false)
 		setShowVerificationStatus(false)
 		if (isLogin) {
+			console.log('login');
 			try {
 				const loginSuccessful = await login(formData.email, formData.password);
 				if (loginSuccessful) {
@@ -290,7 +291,8 @@ export default function Hero() {
 								{isLogin ? 'Welcome Back!' : 'Start practising, for free!'}
 							</h2>
 							<button
-								onClick={() => goLogin()}
+								onClick={() => {setIsLogin(!isLogin);
+									setShowConfirmPassword(false)}}
 								className="text-[#FF5533] hover:underline text-sm"
 							>
 								{isLogin ? 'New user? Sign up' : 'Already have an account? Login'}
@@ -415,7 +417,7 @@ export default function Hero() {
 										required
 										/>
 										{
-											showEmailVerifyBtn && (
+											showEmailVerifyBtn && !isLogin && (
 												<button
 													type="button"
 													onClick={handleEmailVerification}
@@ -503,15 +505,17 @@ export default function Hero() {
 									</>
 									)}
 									
-									{!passwordsMatch && (
+									{!passwordsMatch && !isLogin && (
 										<p className="text-red-500 text-sm mt-2">Passwords do not match.</p>
 									)}
 									<button
 									type="submit"
-									className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${!isEmailVerified? 'bg-gray-400 cursor-not-allowed': 'bg-orange-500 hover:bg-orange-700 cursor-pointer'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
-									disabled={!isEmailVerified}
+									className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${(!isEmailVerified && !isLogin)? 'bg-gray-400 cursor-not-allowed': 'bg-orange-500 hover:bg-orange-700 cursor-pointer'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
+									disabled={!isEmailVerified && !isLogin} 
+									
 									>
 									{isLogin ? 'Sign In' : 'Sign Up'}
+									
 									</button>
 								</form>
 							</motion.div>
