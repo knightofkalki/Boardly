@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { API_URL } from "../shared/api";
 import plans from "../data/plans.json";
 import Loader from "./Loader";
+import { motion } from 'framer-motion'
+import { Check, X } from 'lucide-react'
 
 const getAuthToken = () => `Bearer ${localStorage.getItem('token')}`;
 
@@ -124,6 +126,29 @@ const SubscriptionComponent = () => {
         }
     };
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: {
+            staggerChildren: 0.1
+          }
+        }
+      }
+      
+      const cardVariants = {
+        hidden: { opacity: 0, y: 50 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: {
+            type: "spring",
+            stiffness: 100,
+            damping: 15
+          }
+        }
+      }
+
     useEffect(() => {
         const initialize = async () => {
             await fetchSubscriptionStatus();
@@ -148,7 +173,7 @@ const SubscriptionComponent = () => {
                 <div className="animate-spin mt-12 rounded-full h-20 w-20 border-t-4 border-orange-500 border-solid"></div>
               </div>
             ) : (
-                <div className="max-w-5xl mx-auto">
+                <div className="w-3/4 mx-auto">
                     {subscription && (
                         <div className="subscription-info mb-8 bg-white p-6 rounded-lg shadow-md">
                             <p className="text-lg font-medium text-gray-700">
@@ -163,30 +188,69 @@ const SubscriptionComponent = () => {
                             )}
                         </div>
                     )}
-                    <div className="plans grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {plans.map(plan => (
-                            <div
-                                key={plan.id}
-                                className="plan-card p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+                    <section className="py-16 px-4 sm:px-6 lg:px-8 w-full bg-gray-50">
+                        <div className="w-full mx-auto">
+                            <motion.div
+                            variants={containerVariants}
+                            initial="hidden"
+                            animate="visible"
+                            className="grid md:grid-cols-2 2xl:grid-cols-4 gap-8"
                             >
-                                <h2 className="plan-name text-xl font-semibold mb-4 text-gray-800">{plan.name}</h2>
-                                <div className="price text-2xl font-bold text-indigo-600 mb-4">
-                                    ₹{plan.price} <span className="text-sm font-normal">/month</span>
+                            {plans.map((tier) => (
+                                <motion.div
+                                key={tier.name}
+                                variants={cardVariants}
+                                whileHover={{
+                                    scale: 1.03,
+                                    transition: { duration: 0.2 }
+                                }}
+                                className="relative bg-white rounded-2xl shadow-lg p-8 border border-gray-100"
+                                >
+                                {tier.isRecommended && (
+                                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#9AE6B4] text-green-800 px-4 py-1 rounded-full text-sm font-medium">
+                                    Recommended
+                                    </div>
+                                )}
+
+                                <div className="text-center mb-6">
+                                    <h3 className="text-2xl font-semibold text-gray-900 mb-2">
+                                    {tier.name}
+                                    </h3>
+                                    <div className="flex items-baseline justify-center gap-1">
+                                    <span className="text-lg">₹</span>
+                                    <span className="text-4xl font-bold">{tier.price}</span>
+                                    </div>
+                                    <p className="text-gray-600 mt-2">{tier.description}</p>
                                 </div>
-                                <ul className="features mb-4 space-y-2 text-gray-600">
-                                    {plan.features.map((feature, index) => (
-                                        <li key={index}>- {feature}</li>
+
+                                <ul className="space-y-4 mb-8">
+                                    {tier.features.map((feature, index) => (
+                                    <li key={index} className="flex items-center gap-3">
+                                        {feature.available ? (
+                                        <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
+                                        ) : (
+                                        <X className="h-5 w-5 text-red-500 flex-shrink-0" />
+                                        )}
+                                        <span className="text-gray-600">
+                                        {feature.value && `${feature.value} `}{feature.text}
+                                        </span>
+                                    </li>
                                     ))}
                                 </ul>
-                                <button
-                                    className="btn w-full py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors"
-                                    onClick={() => handlePayment(plan.id, plan.price)}
+
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => handlePayment(tier.id, tier.price)}
+                                    className="w-full bg-black text-white rounded-lg py-3 font-medium hover:bg-gray-800 transition-colors"
                                 >
-                                    Subscribe Now
-                                </button>
-                            </div>
-                        ))}
-                    </div>
+                                    GO
+                                </motion.button>
+                                </motion.div>
+                            ))}
+                            </motion.div>
+                        </div>
+                        </section>
                     {message.text && (
                         <div
                             className={`message mt-6 p-4 rounded-md text-center font-medium ${message.type === 'success' ? 'bg-green-100 text-green-700' : message.type === 'info' ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'
