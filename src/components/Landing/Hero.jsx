@@ -5,6 +5,69 @@ import HeroImage from "../../assets/hero.svg"
 import { API_URL } from "../../shared/api";
 import { useNavigate } from 'react-router-dom';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
+
+const passwordStrength = (password) => {
+	const criteria = [
+	  { regex: /[A-Z]/, score: 1 }, 
+	  { regex: /[a-z]/, score: 1 }, 
+	  { regex: /[0-9]/, score: 1 }, 
+	  { regex: /[!@#$%^&*(),.?":{}|<>]/, score: 1 }, 
+	  { regex: /.{8,}/, score: 1 }, 
+	];
+  
+	let score = 0;
+  
+	criteria.forEach((criterion) => {
+	  if (criterion.regex.test(password)) {
+		score += criterion.score;
+	  }
+	});
+  
+	return score;
+  };
+  
+  const PasswordStrengthMeter = ({ password }) => {
+	const [strength, setStrength] = useState(0);
+	const [strengthLabel, setStrengthLabel] = useState('');
+	const [strengthColor, setStrengthColor] = useState('');
+  
+	useEffect(() => {
+	  const strengthScore = passwordStrength(password);
+  
+	  setStrength(strengthScore);
+  
+	  if (strengthScore <= 1) {
+		setStrengthLabel('Weak');
+		setStrengthColor('red');
+	  } else if (strengthScore === 2) {
+		setStrengthLabel('Fair');
+		setStrengthColor('orange');
+	  } else if (strengthScore === 3) {
+		setStrengthLabel('Good');
+		setStrengthColor('yellow');
+	  } else if (strengthScore >= 4) {
+		setStrengthLabel('Strong');
+		setStrengthColor('green');
+	  }
+	}, [password]);
+	if(password==""){return null}
+	return (
+	  <div className="mt-2">
+		<div className="w-full bg-gray-200 rounded-full h-2.5">
+		  <div
+			className={`h-2.5 rounded-full ${strengthColor === 'red' && 'bg-red-500'} ${strengthColor === 'orange' && 'bg-orange-400'} ${strengthColor === 'yellow' && 'bg-yellow-400'} ${strengthColor === 'green' && 'bg-green-400'}`}
+			style={{ width: `${(strength / 5) * 100}%` }}
+		  ></div>
+		</div>
+		<div className="mt-1 text-sm">
+		  <span className={`font-semibold ${strengthColor === 'red' && 'text-red-500'} ${strengthColor === 'orange' && 'text-orange-500'} ${strengthColor === 'yellow' && 'text-yellow-500'} ${strengthColor === 'green' && 'text-green-500'}`}>
+			{strengthLabel}
+		  </span>
+		</div>
+	  </div>
+	);
+  };
+
 function Counter({ value, label }) {
 	const [count, setCount] = useState(0);
 	const [hasAnimated, setHasAnimated] = useState(false); // Prevent re-triggering animation
@@ -413,7 +476,10 @@ export default function Hero() {
 											{passwordVisible?  <FaRegEyeSlash /> : <FaRegEye />}
 										</button>
 										</div>
+							
 									{showConfirmPassword && (
+										<>
+										<PasswordStrengthMeter password={formData.password} />
 										<div>
 										<label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm Password</label>
 										<div className="relative">
@@ -434,6 +500,7 @@ export default function Hero() {
 										</button>
 										</div>
 									</div>
+									</>
 									)}
 									
 									{!passwordsMatch && (
