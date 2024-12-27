@@ -74,10 +74,75 @@ export default function Hero() {
 		password: '',
 		gender: '',
 	});
+	const [isEmailVerified, setIsEmailVerified] = useState(false);
+	const [isVerificationInProgress, setIsVerificationInProgress] = useState(false)
+	const [showOtp, setShowOtp] = useState(false)
+	const [showEmailVerifyBtn, setShowEmailVerifyBtn] = useState(true)
+	const [showVerificationStatus, setShowVerificationStatus] = useState(false)
+	const handleEmailVerification = async () => {
+		if (!formData.email) return;
+
+		setIsVerificationInProgress(true);
+		try {
+			
+			const response = await fetch(`${API_URL}/auth/email_verification`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ email: formData.email }),
+			});
+			console.log(response)
+			if (response.ok) {
+				console.log('OTP sent successfully');
+				setShowOtp(true)
+			} else {
+				const error = await response.json();
+				console.error('Error sending OTP:', error);
+				alert(`Error sending OTP: ${error.message}`);
+			}
+		} catch (error) {
+			console.error('Error during OTP request:', error);
+			alert('Something went wrong. Please try again.');
+		} finally {
+			setIsVerificationInProgress(false);
+		}
+	};
+
+	const handleOtpVerification = async (e) => {
+		e.preventDefault();
+		if (!formData.otp || !formData.email) return;
+
+		try {
+			const response = await fetch(`${API_URL}/auth/email_verification-otp`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ email: formData.email, otp: formData.otp }),
+			});
+
+			if (response.ok) {
+				const result = await response.json();
+				console.log('OTP verification successful:', result);
+				setIsEmailVerified(true); // Set email as verified
+				setShowOtp(false)
+				setShowEmailVerifyBtn(false)
+				setShowVerificationStatus(true)
+			} else {
+				const error = await response.json();
+				console.error('OTP verification failed:', error);
+				alert(`OTP verification failed: ${error.message}`);
+			}
+		} catch (error) {
+			console.error('Error during OTP verification:', error);
+			alert('Something went wrong during OTP verification. Please try again.');
+		}
+	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
+		setShowVerificationStatus(false)
 		if (isLogin) {
 			try {
 				const loginSuccessful = await login(formData.email, formData.password);
@@ -258,17 +323,62 @@ export default function Hero() {
 										</>
 									)}
 									<div>
-										<label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+
+									<label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+									<div className="flex items-center">
 										<input
-											id="email"
-											type="email"
-											placeholder="Enter Email"
+										id="email"
+										type="email"
+										placeholder="Enter Email"
+										className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+										value={formData.email}
+										onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+										required
+										/>
+										{
+											showEmailVerifyBtn && (
+												<button
+													type="button"
+													onClick={handleEmailVerification}
+													className="ml-2 py-2 px-4 text-sm font-medium text-white bg-orange-500 hover:bg-orange-700 rounded-md"
+													disabled={isVerificationInProgress}
+													>
+													{isVerificationInProgress ? 'Verifying...' : 'Verify'}
+												</button>
+											)
+										}
+										{
+											isEmailVerified && showVerificationStatus &&(
+												<p className='font-bold rounded-md ml-4 text-green-400 p-2'>Verified</p>
+											)
+										}
+									</div>
+									</div>
+
+									{showOtp && (
+									<>
+										<div>
+										<label htmlFor="otp" className="block text-sm font-medium text-gray-700">Enter OTP</label>
+										<input
+											id="otp"
+											type="text"
+											placeholder="Enter OTP"
 											className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-											value={formData.email}
-											onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+											value={formData.otp}
+											onChange={(e) => setFormData({ ...formData, otp: e.target.value })}
 											required
 										/>
-									</div>
+										</div>
+										<button
+										type="button"
+										onClick={handleOtpVerification}
+										className="mt-4 py-2 px-4 text-sm font-medium text-white bg-orange-500 hover:bg-orange-700 rounded-md"
+										>
+										Verify OTP
+										</button>
+									</>
+									)}
+
 									<div>
 										<label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
 										<input
@@ -283,10 +393,11 @@ export default function Hero() {
 									</div>
 
 									<button
-										type="submit"
-										className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+									type="submit"
+									className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${!isEmailVerified? 'bg-gray-400 cursor-not-allowed': 'bg-orange-500 hover:bg-orange-700 cursor-pointer'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
+									disabled={!isEmailVerified} // Disable the submit button until OTP is verified
 									>
-										{isLogin ? 'Sign In' : 'Send OTP'}
+									{isLogin ? 'Sign In' : 'Sign Up'}
 									</button>
 								</form>
 							</motion.div>
