@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import PlansPopup from '../components/PlansPopup';
+import { useAuth } from "../../context/AuthContext";
+import PlansPopup from '../../components/PlansPopup';
 
 const QuestionCard = ({ question, isActive, onClick, onStatusChange, onSolutionToggle, onFlagChange }) => (
   <motion.div
-    className={`mb-6 rounded-lg border ${
-      isActive ? "border-blue-500 ring-2 ring-blue-500" : "border-gray-200"
-    } bg-white p-4 shadow-sm transition-all`}
+    className={`mb-6 rounded-lg border ${isActive ? "border-blue-500 ring-2 ring-blue-500" : "border-gray-200"
+      } bg-white p-4 shadow-sm transition-all`}
     whileHover={{ scale: 1.02 }}
     onClick={onClick}
   >
@@ -20,11 +19,10 @@ const QuestionCard = ({ question, isActive, onClick, onStatusChange, onSolutionT
           e.stopPropagation();
           onStatusChange(question.questionNumber, !question.markasdone);
         }}
-        className={`rounded border px-3 py-1 transition-colors ${
-          question.markasdone
+        className={`rounded border px-3 py-1 transition-colors ${question.markasdone
             ? "bg-green-500 text-white hover:bg-green-600"
             : "border-green-500 text-green-500 hover:bg-green-50"
-        }`}
+          }`}
       >
         {question.markasdone ? "Mark as Undone" : "Mark as Done"}
       </button>
@@ -42,11 +40,10 @@ const QuestionCard = ({ question, isActive, onClick, onStatusChange, onSolutionT
           e.stopPropagation();
           onFlagChange(question.questionNumber);
         }}
-        className={`rounded border px-3 py-1 transition-colors ${
-          question.isFlagged
+        className={`rounded border px-3 py-1 transition-colors ${question.isFlagged
             ? "bg-red-500 text-white hover:bg-red-600"
             : "border-red-500 text-red-500 hover:bg-red-50"
-        }`}
+          }`}
       >
         {question.isFlagged ? "Unflag" : "Flag Question"}
       </button>
@@ -76,15 +73,13 @@ const CircleCard = ({ questions, activeQuestion, onQuestionClick }) => (
       {questions.map((question) => (
         <motion.button
           key={question.questionNumber}
-          className={`flex h-8 w-8 items-center justify-center rounded-full text-sm ${
-            question.markasdone
+          className={`flex h-8 w-8 items-center justify-center rounded-full text-sm ${question.markasdone
               ? "bg-green-500 text-white"
               : question.isFlagged
-              ? "bg-red-500 text-white"
-              : "bg-gray-200"
-          } ${
-            activeQuestion === question.questionNumber ? "ring-2 ring-blue-500 ring-offset-2" : ""
-          }`}
+                ? "bg-red-500 text-white"
+                : "bg-gray-200"
+            } ${activeQuestion === question.questionNumber ? "ring-2 ring-blue-500 ring-offset-2" : ""
+            }`}
           onClick={() => onQuestionClick(question.questionNumber)}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
@@ -139,7 +134,7 @@ export default function ChapterQuestions() {
         }
 
         const data = await response.json();
-        const { chapterData, userData} = data;
+        const { chapterData, userData } = data;
 
         setQuestions(
           chapterData.questions.map((q, index) => ({
@@ -152,10 +147,10 @@ export default function ChapterQuestions() {
         setChapter(chapterData.chapterName);
         setOid(chapterData._id);
       } catch (err) {
-				console.log(err.message);
-				if (err.message === "Failed to fetch questions.") {
-					setShowPlansPopup(true);
-				}
+        console.log(err.message);
+        if (err.message === "Failed to fetch questions.") {
+          setShowPlansPopup(true);
+        }
         setError(err.message);
       } finally {
         setLoading(false);
@@ -220,8 +215,8 @@ export default function ChapterQuestions() {
   return (
     <div className="container mx-auto p-4">
       {showPlansPopup && (
-											<PlansPopup onClose={() => setShowPlansPopup(false)} />
-									)}
+        <PlansPopup onClose={() => setShowPlansPopup(false)} />
+      )}
       <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
         <h1 className="text-4xl font-bold text-gray-800 mb-2">{chapter}</h1>
         <p className="text-gray-600 text-lg">

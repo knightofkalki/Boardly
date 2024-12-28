@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FiArrowLeft, FiSearch, FiChevronRight } from "react-icons/fi";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 export default function ChapterList() {
   const [searchQuery, setSearchQuery] = useState("");
