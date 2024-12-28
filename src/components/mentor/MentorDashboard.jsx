@@ -1,28 +1,48 @@
+import { API_URL } from '../../shared/api';
+import { useAuth } from '../../context/AuthContext';
+import { useState } from 'react';
+
 const MentorDashboard = () => {
+    const { currentUser } = useAuth();
+    const [slotDate, setSlotDate] = useState('');
+    const [slotTime, setSlotTime] = useState('');
+
+    const addSlot = async () => {
+        const response = await fetch(`${API_URL}/slot/add`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                mentorId: currentUser._id,
+                slotDate,
+                slotTime,
+            }),
+        });
+
+        if (response.ok) {
+            console.log('Slot added successfully');
+        } else {
+            console.error('Failed to add slot');
+        }
+    };
+
     return (
-        <div className="p-6 bg-gray-100 min-h-screen">
-            <h1 className="text-3xl font-bold mb-6">Mentor Dashboard</h1>
-            <div className="mb-6">
-                <h2 className="text-2xl font-semibold mb-4">Upcoming Sessions</h2>
-                {/* Add code to display upcoming sessions */}
-                <div className="bg-white p-4 rounded shadow">
-                    <p>No upcoming sessions</p>
-                </div>
-            </div>
-            <div className="mb-6">
-                <h2 className="text-2xl font-semibold mb-4">Messages</h2>
-                {/* Add code to display messages */}
-                <div className="bg-white p-4 rounded shadow">
-                    <p>No new messages</p>
-                </div>
-            </div>
-            <div>
-                <h2 className="text-2xl font-semibold mb-4">Profile</h2>
-                {/* Add code to display mentor profile */}
-                <div className="bg-white p-4 rounded shadow">
-                    <p>Profile information goes here</p>
-                </div>
-            </div>
+        <div>
+            <h1>Mentor Dashboard</h1>
+            <input
+                type="text"
+                placeholder="Enter date (e.g., 2023-10-15)"
+                value={slotDate}
+                onChange={(e) => setSlotDate(e.target.value)}
+            />
+            <input
+                type="text"
+                placeholder="Enter time slot (e.g., 8-9)"
+                value={slotTime}
+                onChange={(e) => setSlotTime(e.target.value)}
+            />
+            <button onClick={addSlot}>Add Slot</button>
         </div>
     );
 };
