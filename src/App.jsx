@@ -17,6 +17,7 @@ import Upload from "./pages/Upload";
 import Subscriptions from "./pages/Subscriptions";
 import Contact from "./pages/Contact";
 import Report from "./pages/Report";
+import Settings from "./pages/Settings";
 
 const ProtectedRoute = ({ children, hideSidebar = false }) => {
   const { isAuthenticated } = useAuth();
@@ -60,6 +61,11 @@ export default function App() {
             <Route path="/mentorship" element={
               <ProtectedRoute>
                 <MentorBooking />
+              </ProtectedRoute>
+            } />
+            <Route path="/settings" element={
+              <ProtectedRoute>
+                <Settings />
               </ProtectedRoute>
             } />
             <Route path="/subscriptions" element={
