@@ -1,23 +1,30 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import { Navbar } from "./components/Navbar";
 import { Sidebar } from "./components/Sidebar";
+
+// Common Routes
+import Communities from "./pages/Communities";
+import MentorBooking from "./components/MentorBooking";
+import LandingPage from "./pages/LandingPage";
+import Contact from "./pages/Contact";
+import Report from "./pages/Report";
+import Settings from "./pages/Settings";
+
+// Student Routes
 import { Home } from "./pages/Student/Home";
 import Subjects from "./pages/Student/Subjects";
 import SubjectContent from "./pages/Student/SubjectContent";
 import PYQList from "./pages/Student/PYQList";
 import ChapterList from "./pages/Student/ChapterList";
 import TopperSolution from "./pages/Student/TopperSolution";
-import Communities from "./pages/Communities";
-import MentorBooking from "./components/MentorBooking";
-import LandingPage from "./pages/LandingPage";
-import { AuthProvider, useAuth } from "./context/AuthContext";
 import Attempt from "./pages/Student/Attempt";
 import ChapterQuestions from "./pages/Student/ChapterQuestions";
 import Upload from "./pages/Student/Upload";
 import Subscriptions from "./pages/Student/Subscriptions";
-import Contact from "./pages/Contact";
-import Report from "./pages/Report";
-import Settings from "./pages/Settings";
+
+// Mentor Routes
+import MentorHome from "./pages/Mentors/Home";
 
 const ProtectedRoute = ({ children, hideSidebar = false }) => {
   const { isAuthenticated } = useAuth();
