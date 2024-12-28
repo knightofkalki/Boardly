@@ -44,7 +44,7 @@ export default function Settings() {
                         <p className="mb-2"><strong className="font-medium">Institute:</strong> {currentUser.institute}</p>
                     </div>
                     <div className={`bg-red-100 p-4 rounded-lg shadow`}>
-                        <p className="mb-2"><strong className="font-medium">Plan:</strong> {currentUser.currentPlan || 'Free'}</p>
+                        <p className="mb-2"><strong className="font-medium">Plan:</strong> {currentUser.plan}</p>
                     </div>
                 </div>
             </div>
