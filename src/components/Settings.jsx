@@ -43,11 +43,9 @@ export default function Settings() {
                     <div className="bg-green-100 p-4 rounded-lg shadow">
                         <p className="mb-2"><strong className="font-medium">Institute:</strong> {currentUser.institute}</p>
                     </div>
-                    {subscription && (
-                        <div className={`bg-red-100 p-4 rounded-lg shadow ${subscription.currentPlan === 'Premium' ? 'bg-yellow-100' : 'bg-gray-100'}`}>
-                            <p className="mb-2"><strong className="font-medium">Plan:</strong> {subscription.currentPlan || 'Free'}</p>
-                        </div>
-                    )}
+                    <div className={`bg-red-100 p-4 rounded-lg shadow`}>
+                        <p className="mb-2"><strong className="font-medium">Plan:</strong> {currentUser.currentPlan || 'Free'}</p>
+                    </div>
                 </div>
             </div>
         </div>
