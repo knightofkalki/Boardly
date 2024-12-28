@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import PlansPopup from '../../components/PlansPopup';
+import { useAuth } from "../context/AuthContext";
+import PlansPopup from '../components/PlansPopup';
 
 const QuestionCard = ({ question, isActive, onClick, onStatusChange, onSolutionToggle, onFlagChange }) => (
   <motion.div
@@ -20,8 +20,8 @@ const QuestionCard = ({ question, isActive, onClick, onStatusChange, onSolutionT
           onStatusChange(question.questionNumber, !question.markasdone);
         }}
         className={`rounded border px-3 py-1 transition-colors ${question.markasdone
-            ? "bg-green-500 text-white hover:bg-green-600"
-            : "border-green-500 text-green-500 hover:bg-green-50"
+          ? "bg-green-500 text-white hover:bg-green-600"
+          : "border-green-500 text-green-500 hover:bg-green-50"
           }`}
       >
         {question.markasdone ? "Mark as Undone" : "Mark as Done"}
@@ -41,8 +41,8 @@ const QuestionCard = ({ question, isActive, onClick, onStatusChange, onSolutionT
           onFlagChange(question.questionNumber);
         }}
         className={`rounded border px-3 py-1 transition-colors ${question.isFlagged
-            ? "bg-red-500 text-white hover:bg-red-600"
-            : "border-red-500 text-red-500 hover:bg-red-50"
+          ? "bg-red-500 text-white hover:bg-red-600"
+          : "border-red-500 text-red-500 hover:bg-red-50"
           }`}
       >
         {question.isFlagged ? "Unflag" : "Flag Question"}
@@ -74,10 +74,10 @@ const CircleCard = ({ questions, activeQuestion, onQuestionClick }) => (
         <motion.button
           key={question.questionNumber}
           className={`flex h-8 w-8 items-center justify-center rounded-full text-sm ${question.markasdone
-              ? "bg-green-500 text-white"
-              : question.isFlagged
-                ? "bg-red-500 text-white"
-                : "bg-gray-200"
+            ? "bg-green-500 text-white"
+            : question.isFlagged
+              ? "bg-red-500 text-white"
+              : "bg-gray-200"
             } ${activeQuestion === question.questionNumber ? "ring-2 ring-blue-500 ring-offset-2" : ""
             }`}
           onClick={() => onQuestionClick(question.questionNumber)}

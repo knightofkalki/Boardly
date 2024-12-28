@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from '../../context/AuthContext';
-import PlansPopup from '../../components/PlansPopup';
+import { useAuth } from '../context/AuthContext';
+import PlansPopup from '../components/PlansPopup';
 
 export default function Attempt() {
   const [currentSection, setCurrentSection] = useState('A');

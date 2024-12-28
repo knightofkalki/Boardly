@@ -3,7 +3,7 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import { Navbar } from "./components/Navbar";
 import { Sidebar } from "./components/Sidebar";
 
-// Common Routes
+// Routes
 import Communities from "./pages/Communities";
 import MentorBooking from "./components/MentorBooking";
 import LandingPage from "./pages/LandingPage";
@@ -11,20 +11,16 @@ import Contact from "./pages/Contact";
 import Report from "./pages/Report";
 import Settings from "./pages/Settings";
 
-// Student Routes
-import { Home } from "./pages/Student/Home";
-import Subjects from "./pages/Student/Subjects";
-import SubjectContent from "./pages/Student/SubjectContent";
-import PYQList from "./pages/Student/PYQList";
-import ChapterList from "./pages/Student/ChapterList";
-import TopperSolution from "./pages/Student/TopperSolution";
-import Attempt from "./pages/Student/Attempt";
-import ChapterQuestions from "./pages/Student/ChapterQuestions";
-import Upload from "./pages/Student/Upload";
-import Subscriptions from "./pages/Student/Subscriptions";
-
-// Mentor Routes
-import MentorHome from "./pages/Mentors/Home";
+import { Home } from "./pages/Home";
+import Subjects from "./pages/Subjects";
+import SubjectContent from "./pages/SubjectContent";
+import PYQList from "./pages/PYQList";
+import ChapterList from "./pages/ChapterList";
+import TopperSolution from "./pages/TopperSolution";
+import Attempt from "./pages/Attempt";
+import ChapterQuestions from "./pages/ChapterQuestions";
+import Upload from "./pages/Upload";
+import Subscriptions from "./pages/Subscriptions";
 
 const ProtectedRoute = ({ children, hideSidebar = false }) => {
   const { isAuthenticated } = useAuth();

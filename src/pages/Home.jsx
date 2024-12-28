@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import PlansPopup from '../../components/PlansPopup';
-import Progress from '../../components/Progress';
-import { ContinueLearning } from '../../components/ContinueLearning';
-import { ActionCards } from '../../components/ActionCards';
-import { RecommendedSection } from '../../components/RecommendedSection';
-import { UpcomingEvents } from '../../components/UpcomingEvents';
-import { API_URL } from "../../shared/api";
-import { Calendar } from '../../components/Calendar';
+import PlansPopup from '../components/PlansPopup';
+import Progress from '../components/Progress';
+import { ContinueLearning } from '../components/ContinueLearning';
+import { ActionCards } from '../components/ActionCards';
+import { RecommendedSection } from '../components/RecommendedSection';
+import { UpcomingEvents } from '../components/UpcomingEvents';
+import { API_URL } from "../shared/api";
+import { Calendar } from '../components/Calendar';
 
 const getAuthToken = () => `Bearer ${localStorage.getItem('token')}`;
 

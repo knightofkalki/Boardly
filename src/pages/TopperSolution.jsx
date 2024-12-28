@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import axios from 'axios';
-import { API_URL } from '../../shared/api';
-import PlansPopup from '../../components/PlansPopup';
+import { API_URL } from '../shared/api';
+import PlansPopup from '../components/PlansPopup';
 
 
 const TopperSolution = () => {

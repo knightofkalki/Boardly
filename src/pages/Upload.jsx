@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import PaperButton from "../../components/ui/PaperButton";
+import PaperButton from "../components/ui/PaperButton";
 import { FiArrowLeft } from "react-icons/fi";
 import axios from "axios";
-import { API_URL } from "../../shared/api";
-import PlansPopup from "../../components/PlansPopup";
+import { API_URL } from "../shared/api";
+import PlansPopup from "../components/PlansPopup";
 
 function Upload() {
   const { subject } = useParams();

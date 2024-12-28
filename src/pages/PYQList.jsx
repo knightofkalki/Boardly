@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FiArrowLeft, FiCheck, FiCircle, FiEye, FiSearch } from "react-icons/fi";
 import { FaCirclePlay } from "react-icons/fa6";
-import { OutlineButton } from '../../components/ui/OutlineButton'
+import { OutlineButton } from '../components/ui/OutlineButton'
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-import { API_URL } from "../../shared/api";
+import { API_URL } from "../shared/api";
 
 const difficultyColors = {
   Easy: "text-green-600",

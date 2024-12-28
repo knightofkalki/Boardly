@@ -4,7 +4,7 @@ import { API_URL } from '../shared/api';
 
 export default function Settings() {
     const { currentUser } = useAuth();
-    const [subscription, setSubscription] = useState(null);
+    const [setSubscription] = useState(null);
 
     useEffect(() => {
         const fetchUserData = async () => {
