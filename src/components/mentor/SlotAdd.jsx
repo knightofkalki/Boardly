@@ -8,6 +8,7 @@ const MentorSlotAdd = () => {
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
     const [responseMessage, setResponseMessage] = useState('');
+    const [isSuccess, setIsSuccess] = useState(false);
 
     const handleDateChange = (e) => {
         const date = new Date(e.target.value);
@@ -45,13 +46,18 @@ const MentorSlotAdd = () => {
 
         if (response.ok) {
             setResponseMessage('Slot added successfully');
+            setIsSuccess(true);
         } else {
             setResponseMessage('Failed to add slot');
+            setIsSuccess(false);
         }
     };
 
+    const isFormValid = slotDate && startTime;
+
     return (
-        <div className="max-w-md mx-auto p-4 bg-white shadow-md rounded-md">
+        <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-6">Add Mentor Slot</h2>
             <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="slotDate">
                     Select Date
@@ -59,7 +65,7 @@ const MentorSlotAdd = () => {
                 <input
                     type="date"
                     id="slotDate"
-                    className="w-full px-3 py-2 border rounded-md"
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     onChange={handleDateChange}
                 />
             </div>
@@ -70,7 +76,7 @@ const MentorSlotAdd = () => {
                 <select
                     id="startTime"
                     value={startTime}
-                    className="w-full px-3 py-2 border rounded-md"
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     onChange={(e) => setStartTime(e.target.value)}
                 >
                     <option value="">Select start time</option>
@@ -87,12 +93,17 @@ const MentorSlotAdd = () => {
             </div>
             {endTime && <p className="mb-4 text-gray-700">End Time: {endTime}</p>}
             <button
-                className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
+                className={`w-full py-2 rounded-md transition-colors duration-300 ${isFormValid ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
                 onClick={addSlot}
+                disabled={!isFormValid}
             >
                 Add Slot
             </button>
-            {responseMessage && <p className="mt-4 text-gray-700">{responseMessage}</p>}
+            {responseMessage && (
+                <p className={`mt-4 ${isSuccess ? 'text-green-500' : 'text-red-500'}`}>
+                    {responseMessage}
+                </p>
+            )}
         </div>
     );
 };

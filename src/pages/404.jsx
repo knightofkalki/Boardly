@@ -10,7 +10,7 @@ export default function NotFoundPage() {
             <Link to="/" className="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
                 Go to Home
             </Link>
-            <p className="mt-4 text-gray-600">If ythe above button does not work, click <a href="/landing">here</a></p>
+            <p className="mt-4 text-gray-600">If the above button does not work, click <a href="/landing">here</a></p>
             <p className="mt-4 text-gray-600">If you think this is a mistake, please contact the administrator.</p>
         </div>
     );
