@@ -27,20 +27,20 @@ const MentorSlotList = () => {
             {responseMessage && <p className="text-red-500 mb-4">{responseMessage}</p>}
             <h2 className="text-2xl font-semibold mb-4">Your Slots</h2>
             <div className="overflow-x-auto">
-                <table className="min-w-full bg-white">
+                <table className="min-w-full bg-white border-collapse">
                     <thead>
                         <tr>
-                            <th className="py-2 px-4 border-b">Date</th>
-                            <th className="py-2 px-4 border-b">Time</th>
-                            <th className="py-2 px-4 border-b">Available</th>
+                            <th className="py-2 px-4 border-b border-gray-200 text-center">Date</th>
+                            <th className="py-2 px-4 border-b border-gray-200 text-center">Time</th>
+                            <th className="py-2 px-4 border-b border-gray-200 text-center">Booked</th>
                         </tr>
                     </thead>
                     <tbody>
                         {slots.map(slot => (
-                            <tr key={slot._id} className={`${slot.available ? 'bg-green-100' : 'bg-orange-100'}`}>
-                                <td className="py-2 px-4 border-b">{new Date(slot.slotDate).toLocaleDateString()}</td>
-                                <td className="py-2 px-4 border-b">{slot.slotTiming}</td>
-                                <td className="py-2 px-4 border-b">{slot.available ? 'Yes' : 'No'}</td>
+                            <tr key={slot._id} className={`${slot.available ? 'bg-orange-100' : 'bg-green-100'}`}>
+                                <td className="py-2 px-4 border-b border-gray-200 text-center">{new Date(slot.slotDate).toLocaleDateString()}</td>
+                                <td className="py-2 px-4 border-b border-gray-200 text-center">{slot.slotTiming}</td>
+                                <td className="py-2 px-4 border-b border-gray-200 text-center">{slot.available ? 'No' : 'Yes'}</td>
                             </tr>
                         ))}
                     </tbody>
