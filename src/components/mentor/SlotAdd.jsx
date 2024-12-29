@@ -31,6 +31,7 @@ const MentorSlotAdd = () => {
 
     return (
         <div className="mb-4 bg-white p-4 rounded shadow-md">
+            <h2 className="text-2xl font-semibold mb-4">Add Slots</h2>
             <input
                 type="text"
                 placeholder="Enter date (e.g., 2023-10-15)"
