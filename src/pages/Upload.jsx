@@ -13,7 +13,7 @@ function Upload() {
   const [pyqData, setPyqData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedPaper, setSelectedPaper] = useState("");
-	const [popup, setPopup] = useState(false);
+  const [popup, setPopup] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,17 +91,17 @@ function Upload() {
     } catch (error) {
       console.error("Error uploading the file:", error);
       setStatus("Failed");
-			if (error.code === "ERR_BAD_REQUEST") {
-				setPopup(true);
-			}
+      if (error.code === "ERR_BAD_REQUEST") {
+        setPopup(true);
+      }
     }
   };
 
   return (
     <div className="flex justify-center">
-			{popup && (
-														<PlansPopup onClose={() => setPopup(false)} />
-												)}
+      {popup && (
+        <PlansPopup onClose={() => setPopup(false)} />
+      )}
       <div className="w-full lg:w-[90%]">
         <div className="p-6 w-full flex items-center justify-center flex-col">
           <div className="w-4/5 flex justify-between">

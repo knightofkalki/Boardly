@@ -7,13 +7,17 @@ import { ActionCards } from '../components/ActionCards';
 import { RecommendedSection } from '../components/RecommendedSection';
 import { UpcomingEvents } from '../components/UpcomingEvents';
 import { API_URL } from "../shared/api";
-import { Calendar }  from '../components/Calendar';
+import { Calendar } from '../components/Calendar';
+import { useAuth } from '../context/AuthContext';
+import MentorSlotAdd from '../components/mentor/SlotAdd';
+import MentorSlotList from '../components/mentor/SlotList';
 
 const getAuthToken = () => `Bearer ${localStorage.getItem('token')}`;
 
 export const Home = () => {
     const location = useLocation();
     const [showPopup, setShowPopup] = useState(false);
+    const { currentUser } = useAuth();
 
     const checkSubscriptionStatus = async () => {
         try {
@@ -45,36 +49,51 @@ export const Home = () => {
         }
     }, [location.state]);
 
-    return (
-        <div className="p-4 md:p-6 md:px-28">
-            {showPopup && (
-                <PlansPopup onClose={() => setShowPopup(false)} />
-            )}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                <div className="md:col-span-1">
-                    <Progress />
-										{/* <ContinueLearning /> */}
+    if (currentUser.type === 'student') {
+        return (
+            <div className="p-4 md:p-6 md:px-28">
+                {showPopup && (
+                    <PlansPopup onClose={() => setShowPopup(false)} />
+                )}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                    <div className="md:col-span-1">
+                        <Progress />
+                        {/* <ContinueLearning /> */}
+                    </div>
+                    <div>
+                        {/* <div className='h-[50vh]'> */}
+                        <Calendar />
+                        {/* </div> */}
+                    </div>
+                    <div>
+                        <ContinueLearning />
+                    </div>
                 </div>
-								<div>
-									{/* <div className='h-[50vh]'> */}
-									<Calendar />
-									{/* </div> */}
-								</div>
-                <div>
-                    <ContinueLearning />
+                <div className="mt-4 md:mt-6">
+                    <ActionCards />
+                </div>
+                <div className="mt-4 md:mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                    <div className="md:col-span-2">
+                        <RecommendedSection />
+                    </div>
+                    <div>
+                        <UpcomingEvents />
+                    </div>
                 </div>
             </div>
-            <div className="mt-4 md:mt-6">
-                <ActionCards />
-            </div>
-            <div className="mt-4 md:mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                <div className="md:col-span-2">
-                    <RecommendedSection />
+        );
+    } else if (currentUser.type === 'mentor') {
+        return (
+            <div className="p-4 md:p-6 md:px-28">
+                <div className="p-6 bg-gray-50 min-h-screen">
+                    <h1 className="text-3xl font-bold mb-4">Mentor Dashboard</h1>
+                    <MentorSlotAdd />
+                    <br />
+                    <MentorSlotList />
                 </div>
-                <div>
-                    <UpcomingEvents />
-                </div>
             </div>
-        </div>
-    );
+        );
+    }
+
+    return null;
 };

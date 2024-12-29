@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FiArrowLeft, FiCheck, FiCircle,FiEye, FiSearch } from "react-icons/fi";
+import { FiArrowLeft, FiCheck, FiCircle, FiEye, FiSearch } from "react-icons/fi";
 import { FaCirclePlay } from "react-icons/fa6";
-import {OutlineButton} from '../components/ui/OutlineButton'
+import { OutlineButton } from '../components/ui/OutlineButton'
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { API_URL } from "../shared/api";
@@ -78,65 +78,65 @@ export default function PYQList() {
   const { subject } = useParams();
 
   useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const token = localStorage.getItem("token");
-				const user = JSON.parse(localStorage.getItem("currentUser"));
-				const userClass = user.userClass;
-	
-				setLoading(true);
-	
-				// Fetch PYQ data
-				const pyqResponse = await axios.get(`${API_URL}/solve/yearwise/${userClass}/list`, {
-					headers: {
-						Authorization: `Bearer ${token}`,
-						"Content-Type": "application/json",
-					},
-				});
-	
-				const pyqData = pyqResponse.data.questionPapers;
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const user = JSON.parse(localStorage.getItem("currentUser"));
+        const userClass = user.userClass;
+
+        setLoading(true);
+
+        // Fetch PYQ data
+        const pyqResponse = await axios.get(`${API_URL}/solve/yearwise/${userClass}/list`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        const pyqData = pyqResponse.data.questionPapers;
 
 
-				const userResponse = await fetch(`https://boardly-be.vercel.app/solve/markPaperDone`, {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${token}`,
-					},
-					body: JSON.stringify({
-						oid: "undefined",
-						subject: "undefined"
-					}),
-				});
+        const userResponse = await fetch(`https://boardly-be.vercel.app/solve/markPaperDone`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            oid: "undefined",
+            subject: "undefined"
+          }),
+        });
 
-				const userData = await userResponse.json();
-	
-				const papersAttempted = userData.userData.papersAttempted;
+        const userData = await userResponse.json();
 
-				// console.log("papersAttempted", papersAttempted);
-	
-				// Map data and include status based on papersAttempted
-				const mappedData = pyqData.map((paper) => ({
-					id: paper.year,
-					status: papersAttempted.includes(paper.year+'-'+subject) ? "completed" : "pending",
-					title: paper.title,
-					difficulty: paper.difficulty.charAt(0).toUpperCase() + paper.difficulty.slice(1),
-					hasTopperSolution: Boolean(paper.topperSolution),
-					hasVideoSolution: Boolean(paper.videoSolution),
-					videoUrl: paper.videoSolution || null,
-				}));
-	
-				setPyqData(mappedData);
-			} catch (error) {
-				console.error("Error fetching data:", error);
-			} finally {
-				setLoading(false);
-			}
-		};
-	
-		fetchData();
-	}, [subject]);
-	
+        const papersAttempted = userData.userData.papersAttempted;
+
+        // console.log("papersAttempted", papersAttempted);
+
+        // Map data and include status based on papersAttempted
+        const mappedData = pyqData.map((paper) => ({
+          id: paper.year,
+          status: papersAttempted.includes(paper.year + '-' + subject) ? "completed" : "pending",
+          title: paper.title,
+          difficulty: paper.difficulty.charAt(0).toUpperCase() + paper.difficulty.slice(1),
+          hasTopperSolution: Boolean(paper.topperSolution),
+          hasVideoSolution: Boolean(paper.videoSolution),
+          videoUrl: paper.videoSolution || null,
+        }));
+
+        setPyqData(mappedData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [subject]);
+
 
   const handleTopperSolutionClick = (year) => {
     navigate(`/subject/${subject}/pyq/${year}/topper-solution`);
@@ -145,7 +145,7 @@ export default function PYQList() {
   const handleVideoClick = (year) => {
     // setCurrentVideoUrl(videoUrl);
     // setShowVideo(true);
-		navigate(`/subject/${subject}/pyq/${year}/topper-solution`);
+    navigate(`/subject/${subject}/pyq/${year}/topper-solution`);
   };
 
   const handlePYQClick = (id) => {
@@ -161,7 +161,7 @@ export default function PYQList() {
   return (
     <div className="max-w-5xl mx-auto p-4 sm:p-6">
       <div className="flex items-center gap-4 mb-8">
-        <button 
+        <button
           onClick={() => navigate(`/subject/${subject}`)}
           className="p-2 hover:bg-gray-100 rounded-full"
         >
@@ -178,16 +178,16 @@ export default function PYQList() {
       <div className="flex flex-col sm:flex-row justify-between mb-6 gap-4">
         <div className="relative flex-1 max-w-sm">
           <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-600" />
-          <input 
+          <input
             type="text"
-            placeholder="Search by year" 
+            placeholder="Search by year"
             className="w-full pl-10 pr-4 py-2 border rounded-lg"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <select 
-          value={filter} 
+        <select
+          value={filter}
           onChange={(e) => setFilter(e.target.value)}
           className="w-full sm:w-32 border rounded-lg p-2"
         >
@@ -208,11 +208,11 @@ export default function PYQList() {
       </div>
 
       <div className="space-y-2 overflow-y-auto max-h-[65vh] mt-2">
-        {loading? (
-        <div className="text-center py-6">
-          <span className="text-gray-500">Loading...</span>
-        </div> 
-        ) : ( filteredData.map((item) => (
+        {loading ? (
+          <div className="text-center py-6">
+            <span className="text-gray-500">Loading...</span>
+          </div>
+        ) : (filteredData.map((item) => (
           <div key={item.id} className="bg-white rounded-lg shadow-sm">
             <div className="grid grid-cols-4 md:grid-cols-7 gap-4 items-center px-4 py-3">
               <div className="flex items-center">
@@ -224,14 +224,14 @@ export default function PYQList() {
                   <FiCircle className="h-6 w-6 text-gray-300" />
                 )}
               </div>
-              <div className="col-span-2 md:col-span-2 md:hover:cursor-default hover:cursor-pointer" onClick={()=>{handlePYQClick(item.id)}}>
+              <div className="col-span-2 md:col-span-2 md:hover:cursor-default hover:cursor-pointer" onClick={() => { handlePYQClick(item.id) }}>
                 <span className="font-medium text-gray-900">
                   {subject.charAt(0).toUpperCase() + subject.slice(1)}
                 </span>
                 <span className="text-gray-600"> {item.title}</span>
               </div>
 
-             <div 
+              <div
                 className="col-span-1 md:col-span-1 md:hidden flex items-center justify-end md:justify-between"
               >
                 <div
@@ -239,9 +239,9 @@ export default function PYQList() {
                     width: "12px",
                     height: "12px",
                     borderRadius: "50%",
-                    backgroundColor: item.difficulty === "Easy" ? "green" : 
-                                    item.difficulty === "Medium" ? "orange" : 
-                                    "red",
+                    backgroundColor: item.difficulty === "Easy" ? "green" :
+                      item.difficulty === "Medium" ? "orange" :
+                        "red",
                     marginRight: "8px",
                   }}
                   title={item.difficulty} // Optional tooltip for accessibility
@@ -250,8 +250,8 @@ export default function PYQList() {
 
               {/* HIDDEN DIV TO ADJUST COLS FOR MOBILE VIEW */}
               <div className="md:hidden"></div>
-              <div className={`md:block ${selectedPYQ===item.id? '': 'hidden'}`}>
-                <OutlineButton 
+              <div className={`md:block ${selectedPYQ === item.id ? '' : 'hidden'}`}>
+                <OutlineButton
                   variant="green"
                   onClick={() => navigate(`/subject/${subject}/pyq/${item.id}/attempt`)}
                 >
@@ -259,7 +259,7 @@ export default function PYQList() {
                 </OutlineButton>
               </div>
 
-              <div className={`md:flex md:justify-center  ${selectedPYQ===item.id? 'flex justify-end': 'hidden'} `}>
+              <div className={`md:flex md:justify-center  ${selectedPYQ === item.id ? 'flex justify-end' : 'hidden'} `}>
                 <button
                   onClick={() => handleTopperSolutionClick(item.id)}
                   className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -268,13 +268,13 @@ export default function PYQList() {
                   <FiEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
                 </button>
               </div>
-            
+
               <div className="col-span-2 md:col-span-1 hidden md:flex items-center justify-end md:justify-between">
                 <span className={`${difficultyColors[item.difficulty]} mr-2 md:mr-0`}>
                   {item.difficulty}
                 </span>
               </div>
-              <div className={`${selectedPYQ===item.id? 'flex justify-end': 'hidden'}  md:flex md:justify-center`}>
+              <div className={`${selectedPYQ === item.id ? 'flex justify-end' : 'hidden'}  md:flex md:justify-center`}>
                 {item.hasVideoSolution && (
                   <button
                     onClick={() => handleVideoClick(item.id)}
@@ -288,7 +288,7 @@ export default function PYQList() {
             </div>
           </div>
         ))
-      )}
+        )}
       </div>
 
       <AnimatePresence>

@@ -14,7 +14,7 @@ export default function LandingPage() {
       <Hero />
       <Pricing />
       <PerksSection />
-			<Partners />
+      <Partners />
       <Testimonials />
       <CTA />
       <Footer />

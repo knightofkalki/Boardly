@@ -14,7 +14,7 @@ const TopperSolution = () => {
   const [currentVideoUrl, setCurrentVideoUrl] = useState('');
   const { subject, year } = useParams();
   const navigate = useNavigate();
-	const [showPlansPopup, setShowPlansPopup] = useState(false);
+  const [showPlansPopup, setShowPlansPopup] = useState(false);
 
 
   const [questions, setQuestions] = useState([])
@@ -23,14 +23,14 @@ const TopperSolution = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token'); 
+        const token = localStorage.getItem('token');
         const user = JSON.parse(localStorage.getItem('currentUser'))
         const userClass = user.userClass
         console.log("class", user.userClass)
         setLoading(true)
         const response = await axios.get(`${API_URL}/solutions/topper/${userClass}/${year}/${subject}`, {
           headers: {
-            Authorization: `Bearer ${token}`, 
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         });
@@ -40,7 +40,7 @@ const TopperSolution = () => {
           id: question.qid,
           question: question.question,
           answer: question.topperSolution,
-          steps: [], 
+          steps: [],
           hasVideoSolution: Boolean(question.videoSolution),
           videoUrl: question.videoSolution || null,
         }));
@@ -48,10 +48,10 @@ const TopperSolution = () => {
         setQuestions(mappedData)
       } catch (error) {
         console.error("Error fetching data:", error);
-				if (error.message.includes('403')) {
+        if (error.message.includes('403')) {
           setShowPlansPopup(true);
         }
-      }finally{
+      } finally {
         setLoading(false)
       }
     };
@@ -73,7 +73,7 @@ const TopperSolution = () => {
       window.location.href = youtubeAppUrl;
       setTimeout(() => {
         if (document.hidden) {
-          return; 
+          return;
         }
         if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
           window.location.href = youtubeAppStoreUrl;
@@ -87,7 +87,7 @@ const TopperSolution = () => {
     }
   };
 
-  
+
 
   const getEmbedUrl = (url) => {
     try {
@@ -120,7 +120,7 @@ const TopperSolution = () => {
         className="bg-white rounded-lg p-4 w-full max-w-3xl relative"
         onClick={e => e.stopPropagation()}
       >
-        <button 
+        <button
           onClick={onClose}
           className="absolute -top-10 right-0 text-white hover:text-gray-200"
         >
@@ -143,9 +143,9 @@ const TopperSolution = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-4 space-y-6 font-sans relative">
-			      {showPlansPopup && <PlansPopup onClose={() => setShowPlansPopup(false)} />}
+      {showPlansPopup && <PlansPopup onClose={() => setShowPlansPopup(false)} />}
       <div className="flex items-start gap-4 mb-8">
-        <button 
+        <button
           onClick={() => navigate(`/subject/${subject}/pyq`)}
           className="p-2 hover:bg-gray-100 rounded-full mt-1"
         >
@@ -177,9 +177,8 @@ const TopperSolution = () => {
                     <p className="text-gray-600">{item.question}</p>
                   </div>
                   <svg
-                    className={`w-5 h-5 transform transition-transform ${
-                      expandedId === item.id ? 'rotate-180' : ''
-                    }`}
+                    className={`w-5 h-5 transform transition-transform ${expandedId === item.id ? 'rotate-180' : ''
+                      }`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -216,7 +215,7 @@ const TopperSolution = () => {
                       )}
 
                       {item.hasVideoSolution && (
-                        <button 
+                        <button
                           onClick={() => handleVideoClick(item.videoUrl)}
                           className="flex items-center justify-center px-4 py-2 border 
                           border-[#F85B2C] rounded-md text-sm font-medium text-[#F85B2C] 

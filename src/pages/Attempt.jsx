@@ -28,7 +28,7 @@ export default function Attempt() {
         { oid, subject, questionIndex },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-			console.log(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error('Error marking question as done:', error.message);
     }
@@ -136,11 +136,11 @@ export default function Attempt() {
       prev.map((section) =>
         section.id === currentSection
           ? {
-              ...section,
-              questions: section.questions.map((q) =>
-                q.id === questionId ? { ...q, status } : q
-              ),
-            }
+            ...section,
+            questions: section.questions.map((q) =>
+              q.id === questionId ? { ...q, status } : q
+            ),
+          }
           : section
       )
     );
@@ -160,7 +160,7 @@ export default function Attempt() {
     localStorage.setItem(sectionsKey, JSON.stringify(updatedSections));
 
     if (status === 'answered') {
-      markQuestionAsDone(year, subject, questionId );
+      markQuestionAsDone(year, subject, questionId);
     }
   };
 
@@ -185,33 +185,44 @@ export default function Attempt() {
               animate={{ opacity: 1, y: 0 }}
             >
               <h2 className="mb-4 text-xl font-semibold">Question {question.id}</h2>
-              <p className="mb-6">{question.text}</p>
+              <div className="mb-6">
+                <p>{question.text.split(/ *\([A-D]\)/)[0]}</p>
+                <div className="mt-4 grid grid-cols-2 gap-4">
+                  {question.text
+                    .match(/\(\w\)\s[^()]+/g)
+                    ?.map((option, idx) => (
+                      <button
+                        key={idx}
+                        className="w-full text-left bg-gray-100 px-4 py-2 border rounded-md"
+                        disabled
+                      >
+                        {option.trim()}
+                      </button>
+                    ))}
+                </div>
+              </div>
               <div className="flex flex-wrap gap-4">
                 <motion.button
-                  onClick={() => {updateQuestionStatus(question.id, 'answered');
-										// markQuestionAsDone(oid, subject, question.id - 1);
-									}
-									}
-                  className={`rounded-md px-8 py-2 ${
-                    question.status === 'answered'
-                      ? 'bg-green-600 text-white'
-                      : 'border border-green-600 text-green-600'
-                  }`}
+                  onClick={() => updateQuestionStatus(question.id, 'answered')}
+                  className={`rounded-md px-8 py-2 ${question.status === 'answered'
+                    ? 'bg-green-600 text-white'
+                    : 'border border-green-600 text-green-600'
+                    }`}
                 >
                   Mark as Done
                 </motion.button>
                 <motion.button
                   onClick={() => updateQuestionStatus(question.id, 'flagged')}
-                  className={`rounded-md px-8 py-2 ${
-                    question.status === 'flagged'
-                      ? 'bg-red-600 text-white'
-                      : 'border border-red-600 text-red-600'
-                  }`}
+                  className={`rounded-md px-8 py-2 ${question.status === 'flagged'
+                    ? 'bg-red-600 text-white'
+                    : 'border border-red-600 text-red-600'
+                    }`}
                 >
                   Flag Question
                 </motion.button>
               </div>
             </motion.div>
+
           ))}
       </main>
 
@@ -232,13 +243,12 @@ export default function Attempt() {
                       .getElementById(`question-${question.id}`)
                       .scrollIntoView({ behavior: 'smooth', block: 'start' })
                   }
-                  className={`h-8 w-8 rounded-full ${
-                    question.status === 'answered'
-                      ? 'bg-green-600 text-white'
-                      : question.status === 'flagged'
+                  className={`h-8 w-8 rounded-full ${question.status === 'answered'
+                    ? 'bg-green-600 text-white'
+                    : question.status === 'flagged'
                       ? 'bg-red-600 text-white'
                       : 'bg-gray-200 text-gray-800'
-                  }`}
+                    }`}
                 >
                   {question.id}
                 </motion.button>

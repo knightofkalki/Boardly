@@ -17,7 +17,7 @@ export default function MentorBooking() {
   const [slots, setSlots] = useState([]);
   const [mentors, setMentors] = useState([]);
   const { currentUser } = useAuth();
-	const [popup, setPopup] = useState(false);
+  const [popup, setPopup] = useState(false);
 
   const getNextSevenDays = () => {
     const dates = [];
@@ -60,12 +60,6 @@ export default function MentorBooking() {
   };
 
   useEffect(() => {
-    async function fetchSlots() {
-      const response = await fetch(`${API_URL}/slot/`);
-      const data = await response.json();
-      setSlots(data);
-    }
-
     async function fetchMentors() {
       try {
         const token = localStorage.getItem('token');
@@ -74,22 +68,55 @@ export default function MentorBooking() {
             Authorization: token
           }
         });
+        if (!response.ok) {
+          throw new Error('Failed to fetch mentors');
+        }
         const mentorsData = await response.json();
+        console.log('Fetched mentors:', mentorsData); // Debug log
         setMentors(mentorsData);
       } catch (error) {
         console.error("Error fetching mentors:", error);
       }
     }
 
-    fetchSlots();
     fetchMentors();
   }, []);
+
+  useEffect(() => {
+    async function fetchSlots() {
+      if (!selectedMentor) return;
+      try {
+        const token = localStorage.getItem('token'); // Get the token from localStorage
+        const response = await fetch(`${API_URL}/slot/?mentorID=${selectedMentor}`, {
+          headers: {
+            Authorization: token // Include the token in the headers
+          }
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch slots');
+        }
+        const data = await response.json();
+        console.log('Fetched slots:', data); // Debug log
+        setSlots(data);
+      } catch (error) {
+        console.error("Error fetching slots:", error);
+      }
+    }
+
+    fetchSlots();
+  }, [selectedMentor]);
 
   const filteredMentors = mentors.filter(
     (mentor) =>
       mentor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       mentor.subjectExpert.join(", ").toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleMentorSelect = (mentorId) => {
+    setSelectedMentor(mentorId);
+    setShowSlots(true);
+    setSlots([]); // Clear previous slots
+  };
 
   const handleBook = async () => {
     if (selectedSlot !== null) {
@@ -107,11 +134,13 @@ export default function MentorBooking() {
         formData.append("slotId", slotId);
 
         try {
+          const token = localStorage.getItem('token'); // Get the token from localStorage
           const response = await fetch(`${API_URL}/slot/book`, {
             method: "POST",
             body: formData,
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
+              Authorization: token // Include the token in the headers
             },
           });
 
@@ -131,11 +160,11 @@ export default function MentorBooking() {
             alert("Failed to book the slot");
           }
         } catch (error) {
-					if (error.code == "ERR_BAD_REQUEST") {
-						setPopup(true);
-					} else {
-          alert("Error occurred while booking the slot");
-					}
+          if (error.code == "ERR_BAD_REQUEST") {
+            setPopup(true);
+          } else {
+            alert("Error occurred while booking the slot");
+          }
         }
       }
     } else {
@@ -145,9 +174,9 @@ export default function MentorBooking() {
 
   return (
     <div className=" bg-gray-50 p-6 min-h-[90vh]">
-			{popup && (
-														<PlansPopup onClose={() => setPopup(false)} />
-												)}
+      {popup && (
+        <PlansPopup onClose={() => setPopup(false)} />
+      )}
       <div className="mx-auto max-w-7xl space-y-8">
 
         <div className="space-y-4">
@@ -199,10 +228,7 @@ export default function MentorBooking() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => {
-                    setSelectedMentor(mentor._id);
-                    setShowSlots(true);
-                  }}
+                  onClick={() => handleMentorSelect(mentor._id)}
                   className={`mt-4 w-full rounded-full px-4 py-2 text-sm font-medium ${selectedMentor === mentor._id ? "bg-orange-500 text-white" : "bg-orange-100 text-orange-600"
                     }`}
                 >

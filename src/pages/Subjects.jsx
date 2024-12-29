@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 function SubjectCard({ title, imageSrc }) {
   const navigate = useNavigate();
-  
+
   return (
     <div className="bg-white rounded-3xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all hover:shadow-lg hover:-translate-y-1 hover:border-2 hover:border-[#f85c2c77] h-48">
       <div className="flex flex-col h-full">
