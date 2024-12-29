@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../shared/api';
+import { PiStudent } from "react-icons/pi";
+import { FaChalkboardTeacher } from "react-icons/fa";
 
 export default function Settings() {
     const { currentUser } = useAuth();
@@ -33,7 +35,11 @@ export default function Settings() {
     return (
         <div className="container mx-auto min-w-[70vw] p-6 rounded-lg">
             <div className="bg-white p-6 shadow-md rounded-lg">
-                <h2 className="text-2xl font-semibold mb-4">{currentUser.type.charAt(0).toUpperCase() + currentUser.type.slice(1)} Information</h2>
+                <h2 className="text-2xl font-semibold mb-4">
+                    {currentUser.type === 'mentor' ? <FaChalkboardTeacher className="inline-block ml-2" /> : currentUser.type === 'student' ? <PiStudent className="inline-block ml-2" /> : null}
+                    <span> </span>
+                    {currentUser.type.charAt(0).toUpperCase() + currentUser.type.slice(1)} Information
+                </h2>
                 <p className="mb-2"><strong className="font-medium">Name:</strong> {currentUser.name}</p>
                 <p className="mb-2"><strong className="font-medium">Email:</strong> {currentUser.email}</p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
