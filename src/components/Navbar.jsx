@@ -33,6 +33,7 @@ export function Navbar() {
 
     const handleSignout = () => {
         signout();
+        localStorage.clear();
     };
 
     return (
@@ -40,9 +41,9 @@ export function Navbar() {
             <div className="mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 relative">
                     <div className="flex items-center">
-												<Link to="/">
-                        <img src={Banner} alt="Boardly" />
-												</Link>
+                        <Link to="/">
+                            <img src={Banner} alt="Boardly" />
+                        </Link>
                     </div>
                     <div className="flex items-center relative">
                         <button
