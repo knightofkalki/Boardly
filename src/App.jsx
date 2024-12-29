@@ -10,6 +10,8 @@ import LandingPage from "./pages/LandingPage";
 import Contact from "./pages/Contact";
 import Report from "./pages/Report";
 import Settings from "./pages/Settings";
+import SlotListPage from "./pages/Slot/SlotList";
+import SlotAddPage from "./pages/Slot/SlotAdd";
 
 import { Home } from "./pages/Home";
 import Subjects from "./pages/Subjects";
@@ -114,6 +116,16 @@ export default function App() {
             <Route path="/subject/:subject/:year/report" element={
               <ProtectedRoute>
                 <Report />
+              </ProtectedRoute>
+            } />
+            <Route path="/slot/" element={
+              <ProtectedRoute>
+                <SlotListPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/slot/add" element={
+              <ProtectedRoute>
+                <SlotAddPage />
               </ProtectedRoute>
             } />
             <Route path="*" element={<Navigate to="/landing" replace />} />
