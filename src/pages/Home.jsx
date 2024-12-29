@@ -9,7 +9,8 @@ import { UpcomingEvents } from '../components/UpcomingEvents';
 import { API_URL } from "../shared/api";
 import { Calendar } from '../components/Calendar';
 import { useAuth } from '../context/AuthContext';
-import MentorDashboard from '../components/mentor/MentorDashboard';
+import MentorSlotAdd from '../components/mentor/SlotAdd';
+import MentorSlotList from '../components/mentor/SlotList';
 
 const getAuthToken = () => `Bearer ${localStorage.getItem('token')}`;
 
@@ -84,7 +85,11 @@ export const Home = () => {
     } else if (currentUser.type === 'mentor') {
         return (
             <div className="p-4 md:p-6 md:px-28">
-                <MentorDashboard />
+                <div className="p-6 bg-gray-50 min-h-screen">
+                    <h1 className="text-3xl font-bold mb-4">Mentor Dashboard</h1>
+                    <MentorSlotAdd />
+                    <MentorSlotList />
+                </div>
             </div>
         );
     }
