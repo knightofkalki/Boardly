@@ -185,14 +185,25 @@ export default function Attempt() {
               animate={{ opacity: 1, y: 0 }}
             >
               <h2 className="mb-4 text-xl font-semibold">Question {question.id}</h2>
-              <p className="mb-6">{question.text}</p>
+              <div className="mb-6">
+                <p>{question.text.split(/ *\([A-D]\)/)[0]}</p>
+                <div className="mt-4 grid grid-cols-2 gap-4">
+                  {question.text
+                    .match(/\(\w\)\s[^()]+/g)
+                    ?.map((option, idx) => (
+                      <button
+                        key={idx}
+                        className="w-full text-left bg-gray-100 px-4 py-2 border rounded-md"
+                        disabled
+                      >
+                        {option.trim()}
+                      </button>
+                    ))}
+                </div>
+              </div>
               <div className="flex flex-wrap gap-4">
                 <motion.button
-                  onClick={() => {
-                    updateQuestionStatus(question.id, 'answered');
-                    // markQuestionAsDone(oid, subject, question.id - 1);
-                  }
-                  }
+                  onClick={() => updateQuestionStatus(question.id, 'answered')}
                   className={`rounded-md px-8 py-2 ${question.status === 'answered'
                     ? 'bg-green-600 text-white'
                     : 'border border-green-600 text-green-600'
@@ -211,6 +222,7 @@ export default function Attempt() {
                 </motion.button>
               </div>
             </motion.div>
+
           ))}
       </main>
 
