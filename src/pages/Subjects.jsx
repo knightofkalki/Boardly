@@ -5,7 +5,6 @@ import mathIcon from "../assets/math.svg";
 import englishIcon from "../assets/english.svg";
 import biologyIcon from "../assets/biology.svg";
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 
 function SubjectCard({ title, imageSrc }) {
   const navigate = useNavigate();
@@ -32,7 +31,6 @@ function SubjectCard({ title, imageSrc }) {
 }
 
 export default function Subjects() {
-  const { currentUser } = useAuth();
   const subjects = [
     {
       title: "Physics",
