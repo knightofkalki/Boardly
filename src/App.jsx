@@ -12,7 +12,7 @@ import Report from "./pages/Report";
 import Settings from "./pages/Settings";
 import SlotListPage from "./pages/Slot/SlotList";
 import SlotAddPage from "./pages/Slot/SlotAdd";
-
+import NotFoundPage from "./pages/404";
 import { Home } from "./pages/Home";
 import Subjects from "./pages/Subjects";
 import SubjectContent from "./pages/SubjectContent";
@@ -48,6 +48,7 @@ export default function App() {
           <Routes>
             <Route path="/landing" element={<LandingPage />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/404" element={<NotFoundPage />} />
             <Route path="/" element={
               <ProtectedRoute>
                 <Home />
@@ -128,7 +129,7 @@ export default function App() {
                 <SlotAddPage />
               </ProtectedRoute>
             } />
-            <Route path="*" element={<Navigate to="/landing" replace />} />
+            <Route path="*" element={<Navigate to="/404" replace />} />
           </Routes>
         </div>
       </BrowserRouter>
