@@ -88,6 +88,7 @@ export const Home = () => {
                 <div className="p-6 bg-gray-50 min-h-screen">
                     <h1 className="text-3xl font-bold mb-4">Mentor Dashboard</h1>
                     <MentorSlotAdd />
+                    <br />
                     <MentorSlotList />
                 </div>
             </div>
