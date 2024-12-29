@@ -32,12 +32,6 @@ export function Navbar() {
     };
 
     const handleSignout = () => {
-        localStorage.clear();
-        document.cookie.split(";").forEach((c) => {
-            document.cookie = c
-                .replace(/^ +/, "")
-                .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-        });
         signout();
     };
 

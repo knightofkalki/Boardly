@@ -29,7 +29,7 @@ const ProtectedRoute = ({ children, hideSidebar = false, roles = [] }) => {
   const { currentUser, isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
-    return <Navigate to="/403" />;
+    return <Navigate to="/landing" />;
   }
 
   if (roles.length > 0 && !roles.includes(currentUser.type)) {
