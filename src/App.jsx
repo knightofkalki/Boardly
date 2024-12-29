@@ -13,6 +13,7 @@ import Settings from "./pages/Settings";
 import SlotListPage from "./pages/Slot/SlotList";
 import SlotAddPage from "./pages/Slot/SlotAdd";
 import NotFoundPage from "./pages/404";
+import NoAccessPage from "./pages/403";
 import { Home } from "./pages/Home";
 import Subjects from "./pages/Subjects";
 import SubjectContent from "./pages/SubjectContent";
@@ -25,6 +26,8 @@ import Upload from "./pages/Upload";
 import Subscriptions from "./pages/Subscriptions";
 
 const ProtectedRoute = ({ children, hideSidebar = false }) => {
+  const currentUser = useAuth();
+  const userType = currentUser.type; // Can be either student or mentor
   const { isAuthenticated } = useAuth();
   if (!isAuthenticated) {
     return <Navigate to="/landing" />;
@@ -48,6 +51,7 @@ export default function App() {
           <Routes>
             <Route path="/landing" element={<LandingPage />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/403" element={<NoAccessPage />} />
             <Route path="/404" element={<NotFoundPage />} />
             <Route path="/" element={
               <ProtectedRoute>

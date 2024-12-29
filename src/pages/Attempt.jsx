@@ -176,54 +176,62 @@ export default function Attempt() {
       <main className="flex-1 p-6 overflow-y-auto">
         {quizSections
           .find((s) => s.id === currentSection)
-          ?.questions.map((question) => (
-            <motion.div
-              id={`question-${question.id}`}
-              key={question.id}
-              className="rounded-lg bg-white p-6 shadow-sm mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <h2 className="mb-4 text-xl font-semibold">Question {question.id}</h2>
-              <div className="mb-6">
-                <p>{question.text.split(/ *\([A-D]\)/)[0]}</p>
-                <div className="mt-4 grid grid-cols-2 gap-4">
-                  {question.text
-                    .match(/\(\w\)\s[^()]+/g)
-                    ?.map((option, idx) => (
-                      <button
-                        key={idx}
-                        className="w-full text-left bg-gray-100 px-4 py-2 border rounded-md"
-                        disabled
-                      >
-                        {option.trim()}
-                      </button>
-                    ))}
+          ?.questions.map((question) => {
+            const parts = question.text.split(/\sor\s/i);
+            return (
+              <motion.div
+                id={`question-${question.id}`}
+                key={question.id}
+                className="rounded-lg bg-white p-6 shadow-sm mb-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <h2 className="mb-4 text-xl font-semibold">Question {question.id}</h2>
+                {parts.map((part, partIndex) => (
+                  <div key={partIndex} className="mb-6 p-4 rounded-md">
+                    <p>{part.split(/ *\([A-Da-d]\)/)[0].trim()}</p>
+                    <div className="mt-4 grid grid-cols-2 gap-4">
+                      {part
+                        .match(/\(\w\)\s[^()]+/g)
+                        ?.map((option, idx) => (
+                          <button
+                            key={`${partIndex}-${idx}`}
+                            className="w-full text-left bg-white px-4 py-2 rounded-md"
+                            disabled
+                          >
+                            {option.trim()}
+                          </button>
+                        ))}
+                    </div>
+                    {partIndex < parts.length - 1 && (
+                      <p className="text-center font-semibold mt-4">OR</p>
+                    )}
+                  </div>
+                ))}
+                <div className="flex flex-wrap gap-4">
+                  <motion.button
+                    onClick={() => updateQuestionStatus(question.id, 'answered')}
+                    className={`rounded-md px-8 py-2 ${question.status === 'answered'
+                      ? 'bg-green-600 text-white'
+                      : 'border border-green-600 text-green-600'
+                      }`}
+                  >
+                    Mark as Done
+                  </motion.button>
+                  <motion.button
+                    onClick={() => updateQuestionStatus(question.id, 'flagged')}
+                    className={`rounded-md px-8 py-2 ${question.status === 'flagged'
+                      ? 'bg-red-600 text-white'
+                      : 'border border-red-600 text-red-600'
+                      }`}
+                  >
+                    Flag Question
+                  </motion.button>
                 </div>
-              </div>
-              <div className="flex flex-wrap gap-4">
-                <motion.button
-                  onClick={() => updateQuestionStatus(question.id, 'answered')}
-                  className={`rounded-md px-8 py-2 ${question.status === 'answered'
-                    ? 'bg-green-600 text-white'
-                    : 'border border-green-600 text-green-600'
-                    }`}
-                >
-                  Mark as Done
-                </motion.button>
-                <motion.button
-                  onClick={() => updateQuestionStatus(question.id, 'flagged')}
-                  className={`rounded-md px-8 py-2 ${question.status === 'flagged'
-                    ? 'bg-red-600 text-white'
-                    : 'border border-red-600 text-red-600'
-                    }`}
-                >
-                  Flag Question
-                </motion.button>
-              </div>
-            </motion.div>
+              </motion.div>
+            );
+          })}
 
-          ))}
       </main>
 
       <aside className="w-full md:w-64 p-6 bg-gray-50 sticky top-0 md:h-screen overflow-y-auto bottom-0 text-center flex flex-col items-center">
