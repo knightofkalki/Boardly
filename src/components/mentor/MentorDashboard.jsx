@@ -47,8 +47,8 @@ const MentorDashboard = () => {
     }, []);
 
     return (
-        <div className="p-6 bg-gray-100 min-h-screen">
-            <h1 className="text-3xl font-bold text-blue-600 mb-4">Mentor Dashboard</h1>
+        <div className="p-6 bg-gray-50 min-h-screen">
+            <h1 className="text-3xl font-bold mb-4">Mentor Dashboard</h1>
             <div className="mb-4 bg-white p-4 rounded shadow-md">
                 <input
                     type="text"
@@ -66,13 +66,13 @@ const MentorDashboard = () => {
                 />
                 <button
                     onClick={addSlot}
-                    className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 w-full"
+                    className="bg-[#FF5533] text-white p-2 rounded hover:bg-[#FF5722] w-full"
                 >
                     Add Slot
                 </button>
             </div>
             {responseMessage && <p className="text-red-500 mb-4">{responseMessage}</p>}
-            <h2 className="text-2xl font-semibold text-blue-600 mb-4">Your Slots</h2>
+            <h2 className="text-2xl font-semibold mb-4">Your Slots</h2>
             <div className="overflow-x-auto">
                 <table className="min-w-full bg-white">
                     <thead>
