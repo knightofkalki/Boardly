@@ -25,7 +25,7 @@ const MentorDashboard = () => {
 
         if (response.ok) {
             setResponseMessage('Slot added successfully');
-            fetchSlots(); // Refresh slots after adding a new one
+            fetchSlots();
         } else {
             setResponseMessage('Failed to add slot');
         }
