@@ -1,9 +1,9 @@
-import { Button } from "../components/ui/Button"
-import physicsIcon from "../assets/physics.svg"
-import chemistryIcon from "../assets/chemisty.svg"
-import mathIcon from "../assets/math.svg"
-import englishIcon from "../assets/english.svg"
-import biologyIcon from "../assets/biology.svg"
+import { Button } from "../components/ui/Button";
+import physicsIcon from "../assets/physics.svg";
+import chemistryIcon from "../assets/chemisty.svg";
+import mathIcon from "../assets/math.svg";
+import englishIcon from "../assets/english.svg";
+import biologyIcon from "../assets/biology.svg";
 import { useNavigate } from 'react-router-dom';
 
 function SubjectCard({ title, imageSrc }) {

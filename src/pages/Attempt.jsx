@@ -187,27 +187,7 @@ export default function Attempt() {
                 animate={{ opacity: 1, y: 0 }}
               >
                 <h2 className="mb-4 text-xl font-semibold">Question {question.id}</h2>
-                {parts.map((part, partIndex) => (
-                  <div key={partIndex} className="mb-6 p-4 rounded-md">
-                    <p>{part.split(/ *\([A-Da-d]\)/)[0].trim()}</p>
-                    <div className="mt-4 grid grid-cols-2 gap-4">
-                      {part
-                        .match(/\(\w\)\s[^()]+/g)
-                        ?.map((option, idx) => (
-                          <button
-                            key={`${partIndex}-${idx}`}
-                            className="w-full text-left bg-white px-4 py-2 rounded-md"
-                            disabled
-                          >
-                            {option.trim()}
-                          </button>
-                        ))}
-                    </div>
-                    {partIndex < parts.length - 1 && (
-                      <p className="text-center font-semibold mt-4">OR</p>
-                    )}
-                  </div>
-                ))}
+                {question.text}
                 <div className="flex flex-wrap gap-4">
                   <motion.button
                     onClick={() => updateQuestionStatus(question.id, 'answered')}
