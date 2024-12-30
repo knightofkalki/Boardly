@@ -58,14 +58,10 @@ export default function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/403" element={<NoAccessPage />} />
             <Route path="/404" element={<NotFoundPage />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/" element={
               <ProtectedRoute roles={['student', 'mentor']}>
                 <Home />
-              </ProtectedRoute>
-            } />
-            <Route path="/forgot-password" element={
-              <ProtectedRoute roles={['student', 'mentor']}>
-                <ForgotPassword />
               </ProtectedRoute>
             } />
             <Route path="/subjects" element={
