@@ -24,6 +24,7 @@ import Attempt from "./pages/Attempt";
 import ChapterQuestions from "./pages/ChapterQuestions";
 import Upload from "./pages/Upload";
 import Subscriptions from "./pages/Subscriptions";
+import ForgotPassword from "./pages/ForgotPassword";
 
 const ProtectedRoute = ({ children, hideSidebar = false, roles = [] }) => {
   const { currentUser, isAuthenticated } = useAuth();
@@ -60,6 +61,11 @@ export default function App() {
             <Route path="/" element={
               <ProtectedRoute roles={['student', 'mentor']}>
                 <Home />
+              </ProtectedRoute>
+            } />
+            <Route path="/forgot-password" element={
+              <ProtectedRoute roles={['student', 'mentor']}>
+                <ForgotPassword />
               </ProtectedRoute>
             } />
             <Route path="/subjects" element={
