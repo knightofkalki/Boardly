@@ -6,28 +6,26 @@ import axios from 'axios';
 import { API_URL } from '../shared/api';
 import PlansPopup from '../components/PlansPopup';
 
-
 const TopperSolution = () => {
-
   const [expandedId, setExpandedId] = useState(null);
   const [showVideo, setShowVideo] = useState(false);
   const [currentVideoUrl, setCurrentVideoUrl] = useState('');
   const { subject, year } = useParams();
   const navigate = useNavigate();
   const [showPlansPopup, setShowPlansPopup] = useState(false);
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-
-  const [questions, setQuestions] = useState([])
-  const [loading, setLoading] = useState(false)
+  // const imageRegex = /(https?:\/\/[^\s]+?\.(png|jpeg|jpg))/gi;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const user = JSON.parse(localStorage.getItem('currentUser'))
-        const userClass = user.userClass
-        console.log("class", user.userClass)
-        setLoading(true)
+        const user = JSON.parse(localStorage.getItem('currentUser'));
+        const userClass = user.userClass;
+        console.log('class', user.userClass);
+        setLoading(true);
         const response = await axios.get(`${API_URL}/solutions/topper/${userClass}/${year}/${subject}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -45,20 +43,26 @@ const TopperSolution = () => {
           videoUrl: question.videoSolution || null,
         }));
 
-        setQuestions(mappedData)
+				console.log("mappedData", mappedData);
+
+        setQuestions(mappedData);
+
+        // Auto-expand the first question
+        if (mappedData.length > 0) {
+          setExpandedId(mappedData[0].id);
+        }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
         if (error.message.includes('403')) {
           setShowPlansPopup(true);
         }
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     };
 
     fetchData();
   }, []);
-
 
   const isMobile = () => {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -87,8 +91,6 @@ const TopperSolution = () => {
     }
   };
 
-
-
   const getEmbedUrl = (url) => {
     try {
       if (url.includes('youtu.be')) {
@@ -105,6 +107,16 @@ const TopperSolution = () => {
     }
   };
 
+  const renderTextWithImages = (text) => {
+		const imageRegex = /(https?:\/\/[^\s]+?\.(png|jpeg|jpg))/gi;
+		return text.replace(
+			imageRegex,
+			(url) =>
+				`<img src="${url}" alt="Embedded Image" class="my-4 max-w-full h-auto rounded-lg" />`
+		);
+	};
+	
+	
   const VideoPopup = ({ videoUrl, onClose }) => (
     <motion.div
       initial={{ opacity: 0 }}
@@ -118,7 +130,7 @@ const TopperSolution = () => {
         animate={{ scale: 1 }}
         exit={{ scale: 0.95 }}
         className="bg-white rounded-lg p-4 w-full max-w-3xl relative"
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
@@ -166,73 +178,90 @@ const TopperSolution = () => {
       ) : (
         <div className="space-y-4">
           {questions.map((item) => (
-            <div key={item.id} className="border rounded-lg overflow-hidden shadow-sm">
-              <button
-                onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
-                className="w-full text-left p-6 hover:bg-gray-50 transition-colors focus:outline-none"
-              >
-                <div className="flex justify-between items-start">
-                  <div className="space-y-2">
-                    <h3 className="text-lg font-medium">Question {item.id}</h3>
-                    <p className="text-gray-600">{item.question}</p>
-                  </div>
-                  <svg
-                    className={`w-5 h-5 transform transition-transform ${expandedId === item.id ? 'rotate-180' : ''
-                      }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </button>
+  <div key={item.id} className="border rounded-lg overflow-hidden shadow-lg">
+    <button
+      onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
+      className="w-full text-left p-6 bg-gray-50 hover:bg-gray-100 transition-colors focus:outline-none"
+    >
+      <div className="flex justify-between items-start">
+        <div className="space-y-2">
+          <h3 className="text-lg font-medium">Question {item.id}</h3>
+          <div
+            className="text-gray-800"
+            dangerouslySetInnerHTML={{
+              __html: renderTextWithImages(item.question),
+            }}
+          />
+        </div>
+        <svg
+          className={`w-5 h-5 transform transition-transform ${
+            expandedId === item.id ? 'rotate-180' : ''
+          }`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </div>
+    </button>
 
-              <AnimatePresence>
-                {expandedId === item.id && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="border-t px-6 py-4 space-y-4">
-                      <div>
-                        <h4 className="font-medium mb-2">Answer {item.id}</h4>
-                        <p className="text-gray-600">{item.answer}</p>
-                      </div>
-
-                      {item.steps && (
-                        <div className="space-y-2">
-                          {item.steps.map((step, index) => (
-                            <div key={index} className="flex items-start gap-2 text-sm text-gray-600">
-                              <div className="w-1 h-1 rounded-full bg-gray-400 mt-2" />
-                              <p>{step}</p>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {item.hasVideoSolution && (
-                        <button
-                          onClick={() => handleVideoClick(item.videoUrl)}
-                          className="flex items-center justify-center px-4 py-2 border 
-                          border-[#F85B2C] rounded-md text-sm font-medium text-[#F85B2C] 
-                          bg-white hover:bg-orange-50 focus:outline-none"
-                        >
-                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                          </svg>
-                          Video Solution
-                        </button>
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+    <AnimatePresence>
+      {expandedId === item.id && (
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="border-t px-6 py-4 bg-white space-y-4">
+            <div>
+              <h4 className="font-medium text-gray-800 mb-2">Answer</h4>
+              <div
+                className="text-gray-700"
+                dangerouslySetInnerHTML={{
+                  __html: renderTextWithImages(item.answer),
+                }}
+              />
             </div>
-          ))}
+
+            {item.hasVideoSolution && (
+              <button
+                onClick={() => handleVideoClick(item.videoUrl)}
+                className="flex items-center justify-center px-4 py-2 border 
+                border-[#F85B2C] rounded-md text-sm font-medium text-[#F85B2C] 
+                bg-white hover:bg-orange-50 focus:outline-none"
+              >
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                  />
+                </svg>
+                Video Solution
+              </button>
+            )}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  </div>
+))}
+
         </div>
       )}
 
@@ -245,10 +274,23 @@ const TopperSolution = () => {
         )}
       </AnimatePresence>
 
-      <button className="fixed top-20 right-4 p-2 rounded-full hover:bg-gray-100 focus:outline-none 
-      focus:ring-2 focus:ring-offset-2 focus:ring-[#F85B2C] bg-white shadow-md">
-        <svg className="w-6 h-6 text-[#F85B2C]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      <button
+        className="fixed top-20 right-4 p-2 rounded-full hover:bg-gray-100 focus:outline-none 
+      focus:ring-2 focus:ring-offset-2 focus:ring-[#F85B2C] bg-white shadow-md"
+      >
+        <svg
+          className="w-6 h-6 text-[#F85B2C]"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
         </svg>
       </button>
     </div>
