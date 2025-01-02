@@ -527,12 +527,13 @@ export default function Hero() {
 									{isLogin && (
 											<button
 												type="button"
-												className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${(!isEmailVerified && !isLogin)? 'bg-gray-400 cursor-not-allowed': 'bg-orange-500 hover:bg-orange-700 cursor-pointer'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
+												className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-orange-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 text-right block`}
+
 												onClick={() => {
 													navigate('/forgot-password');
 												}}
 											>
-												Forgot Password?
+												Forgotten your password?
 											</button>
 										)
 										}
