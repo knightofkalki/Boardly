@@ -189,7 +189,7 @@ export default function Attempt() {
       const imageRegex = /(https?:\/\/[^\s]+?\.(png|jpeg|jpg))/gi;
       const questionTextWithImage = question.text.replace(
         imageRegex,
-        (url) => `<img src="${url}" alt="Question Image" class="h-[50vh] w-auto my-4" />`
+        (url) => `<img src="${url}" alt="Question Image" class="my-4" />`
       );
 
       return (
@@ -247,7 +247,7 @@ export default function Attempt() {
 
       </main>
 
-      <aside className="w-full md:w-64 p-6 bg-gray-50 sticky top-0 md:h-screen overflow-y-auto bottom-0 text-center flex flex-col items-center">
+      <aside className="w-full md:w-64 p-6 bg-gray-50 md:sticky top-0 md:h-screen overflow-y-auto bottom-0 text-center flex flex-col items-center">
         <h3 className="font-semibold mb-4">Time Left:</h3>
         <div className="sticky w-min h-min z-10 rounded-full px-4 py-2 text-black font-extrabold text-2xl mb-2">
           {formatTime(timeLeft)}
