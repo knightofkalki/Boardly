@@ -38,6 +38,16 @@ const MentorSlotList = () => {
         fetchSlots();
     }, []);
 
+    const convertTo12HourFormat = (time) => {
+        const [start, end] = time.split('-').map(t => parseInt(t, 10));
+        const formatTime = (hour) => {
+            const period = hour >= 12 ? 'PM' : 'AM';
+            const adjustedHour = hour % 12 || 12;
+            return `${adjustedHour} ${period}`;
+        };
+        return `${formatTime(start)} - ${formatTime(end)}`;
+    };
+
     return (
         <div className="mb-4 bg-white p-4 rounded shadow-md">
             {responseMessage && <p className="text-red-500 mb-4">{responseMessage}</p>}
@@ -61,7 +71,7 @@ const MentorSlotList = () => {
                                 <tbody>
                                     {slots[date].map(slot => (
                                         <tr key={slot._id} className={`${slot.available ? 'bg-orange-100' : 'bg-green-100'}`}>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-center">{slot.slotTiming}</td>
+                                            <td className="py-2 px-4 border-b border-gray-200 text-center">{convertTo12HourFormat(slot.slotTiming)}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-center">{slot.available ? 'No' : 'Yes'}</td>
                                         </tr>
                                     ))}
