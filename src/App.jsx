@@ -24,8 +24,8 @@ import Attempt from "./pages/Attempt";
 import ChapterQuestions from "./pages/ChapterQuestions";
 import Upload from "./pages/Upload";
 import Subscriptions from "./pages/Subscriptions";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
+import ForgotPassword from "./components/Landing/ForgotPassword";
+import ResetPassword from "./components/Landing/ResetPassword";
 
 const ProtectedRoute = ({ children, hideSidebar = false, roles = [] }) => {
   const { currentUser, isAuthenticated } = useAuth();
@@ -56,8 +56,8 @@ export default function App() {
         <div className="min-h-screen">
           <Routes>
             <Route path="/landing" element={<LandingPage />} />
-						<Route path="/forgot-password" element={<ForgotPassword />} />
-						<Route path="/auth/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/auth/reset-password/:token" element={<ResetPassword />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/403" element={<NoAccessPage />} />
             <Route path="/404" element={<NotFoundPage />} />
