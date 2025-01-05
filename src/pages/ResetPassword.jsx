@@ -9,20 +9,28 @@ const ResetPassword = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false); // Add loading state
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setMessage('');
+        setError('');
+
         if (password !== confirmPassword) {
             setError('Passwords do not match');
             return;
         }
+
+        setLoading(true); // Set loading to true when submitting
+
         try {
             const response = await axios.post(`${API_URL}/auth/reset-password/${token}`, { password });
-            setMessage(response.data.message);
-            setError('');
+            setMessage('Password reset successfully. You can now log in.');
         } catch (err) {
-            setError(err.response.data.error);
-            setMessage('');
+            const errorMessage = err.response?.data?.error || 'Something went wrong. Please try again.';
+            setError(errorMessage);
+        } finally {
+            setLoading(false); // Reset loading to false after the request
         }
     };
 
@@ -38,6 +46,7 @@ const ResetPassword = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        placeholder="Enter new password"
                     />
                 </div>
                 <div className="mb-4">
@@ -48,14 +57,28 @@ const ResetPassword = () => {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        placeholder="Re-enter new password"
                     />
                 </div>
-                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Submit
+                <button
+                    type="submit"
+                    className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${loading ? 'opacity-50 cursor-not-allowed' : ''
+                        }`}
+                    disabled={loading} // Disable button while loading
+                >
+                    {loading ? 'Submitting...' : 'Submit'}
                 </button>
             </form>
-            {message && <p className="mt-4 text-green-500 bg-green-100 border border-green-400 px-4 py-3 rounded relative">{message}</p>}
-            {error && <p className="mt-4 text-red-500 bg-red-100 border border-red-400 px-4 py-3 rounded relative">{error}</p>}
+            {message && (
+                <p className="mt-4 text-green-500 bg-green-100 border border-green-400 px-4 py-3 rounded relative">
+                    {message}
+                </p>
+            )}
+            {error && (
+                <p className="mt-4 text-red-500 bg-red-100 border border-red-400 px-4 py-3 rounded relative">
+                    {error}
+                </p>
+            )}
         </div>
     );
 };
