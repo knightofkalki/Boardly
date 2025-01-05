@@ -1,16 +1,61 @@
-import { useState } from 'react';
-import { Bell } from 'lucide-react';
-import ProfileIcon from '../assets/profile.svg';
-import { useAuth } from '../context/AuthContext';
+import { useState, useEffect } from "react";
+import { Bell } from "lucide-react";
+import ProfileIcon from "../assets/profile.svg";
+import { useAuth } from "../context/AuthContext";
 import Banner from "../assets/banner.svg";
-import { Link } from 'react-router-dom';
-
+import { Link } from "react-router-dom";
+import { API_URL } from "../shared/api";
 
 export function Navbar() {
     const [isNotificationOpen, setNotificationOpen] = useState(false);
     const [isProfileOpen, setProfileOpen] = useState(false);
+    const [notifications, setNotifications] = useState([]);
     const { currentUser } = useAuth();
     const { signout } = useAuth();
+
+    useEffect(() => {
+        if (isNotificationOpen && currentUser?.email) {
+            fetchNotifications(currentUser.email);
+        }
+    }, [isNotificationOpen, currentUser]);
+
+    const fetchNotifications = async (email) => {
+        try {
+            const response = await fetch(`${API_URL}/notification/${email}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${currentUser.token}`,
+                },
+            });
+            const data = await response.json();
+            if (response.ok) {
+                setNotifications(data.notifications || []);
+            } else {
+                console.error(data.error || "Failed to fetch notifications");
+            }
+        } catch (error) {
+            console.error("Error fetching notifications:", error);
+        }
+    };
+
+    const clearNotifications = async () => {
+        try {
+            const response = await fetch(`https://your-api-domain/notification/${currentUser.email}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${currentUser.token}`,
+                },
+            });
+            if (response.ok) {
+                setNotifications([]);
+            } else {
+                const data = await response.json();
+                console.error(data.error || "Failed to clear notifications");
+            }
+        } catch (error) {
+            console.error("Error clearing notifications:", error);
+        }
+    };
 
     const toggleNotification = () => {
         setNotificationOpen((prev) => !prev);
@@ -28,7 +73,7 @@ export function Navbar() {
     };
 
     const navigateToSettings = () => {
-        window.location.href = '/settings';
+        window.location.href = "/settings";
     };
 
     const handleSignout = () => {
@@ -54,9 +99,25 @@ export function Navbar() {
                         </button>
                         {isNotificationOpen && (
                             <div className="absolute top-12 right-12 bg-white shadow-lg rounded-lg w-64 p-4">
-                                <h3 className="font-semibold text-lg mb-2">Notifications</h3>
-                                <ul>
-                                    <li className="py-1 text-gray-700">No new notifications</li>
+                                <div className="flex justify-between items-center">
+                                    <h3 className="font-semibold text-lg mb-2">Notifications</h3>
+                                    <button
+                                        onClick={clearNotifications}
+                                        className="text-sm text-blue-600 hover:underline"
+                                    >
+                                        Clear All
+                                    </button>
+                                </div>
+                                <ul className="divide-y divide-gray-200">
+                                    {notifications.length > 0 ? (
+                                        notifications.map((notification, index) => (
+                                            <li key={index} className="py-2 text-gray-700">
+                                                {notification}
+                                            </li>
+                                        ))
+                                    ) : (
+                                        <li className="py-2 text-gray-700">No new notifications</li>
+                                    )}
                                 </ul>
                             </div>
                         )}
