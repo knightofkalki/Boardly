@@ -56,11 +56,13 @@ export default function App() {
         <div className="min-h-screen">
           <Routes>
             <Route path="/landing" element={<LandingPage />} />
-						<Route path="/forgot-password" element={<ForgotPassword />} />
-						<Route path="/auth/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/auth/reset-password/:token" element={<ResetPassword />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/403" element={<NoAccessPage />} />
             <Route path="/404" element={<NotFoundPage />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/auth/reset-password/*" element={<ResetPassword />} />
             <Route path="/" element={
               <ProtectedRoute roles={['student', 'mentor']}>
                 <Home />

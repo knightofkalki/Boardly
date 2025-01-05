@@ -9,6 +9,7 @@ const MentorSlotAdd = () => {
     const [endTime, setEndTime] = useState('');
     const [responseMessage, setResponseMessage] = useState('');
     const [isSuccess, setIsSuccess] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleDateChange = (e) => {
         const date = new Date(e.target.value);
@@ -19,17 +20,16 @@ const MentorSlotAdd = () => {
     useEffect(() => {
         if (startTime) {
             const hour = parseInt(startTime);
-            const period = startTime.slice(-2);
-            const newHour = hour === 12 ? 1 : hour + 1;
-            const newPeriod = hour === 11 ? (period === 'AM' ? 'PM' : 'AM') : period;
-            setEndTime(`${newHour}${newPeriod}`);
+            const newHour = (hour + 1) % 24;
+            setEndTime(newHour.toString().padStart(2, '0'));
         } else {
             setEndTime('');
         }
     }, [startTime]);
 
     const addSlot = async () => {
-        const slotTime = `${startTime.replace(/AM|PM/g, '')}-${endTime.replace(/AM|PM/g, '')}`;
+        setLoading(true);
+        const slotTime = `${startTime}-${endTime}`;
 
         const response = await fetch(`${API_URL}/slot/add`, {
             method: 'POST',
@@ -51,9 +51,17 @@ const MentorSlotAdd = () => {
             setResponseMessage('Failed to add slot');
             setIsSuccess(false);
         }
+        setLoading(false);
     };
 
     const isFormValid = slotDate && startTime;
+
+    const convertTo12HourFormat = (time) => {
+        const hour = parseInt(time);
+        const period = hour >= 12 ? 'PM' : 'AM';
+        const adjustedHour = hour % 12 || 12;
+        return `${adjustedHour}:00 ${period}`;
+    };
 
     return (
         <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg">
@@ -80,24 +88,24 @@ const MentorSlotAdd = () => {
                     onChange={(e) => setStartTime(e.target.value)}
                 >
                     <option value="">Select start time</option>
-                    <option value="8AM">8AM</option>
-                    <option value="9AM">9AM</option>
-                    <option value="10AM">10AM</option>
-                    <option value="11AM">11AM</option>
-                    <option value="12AM">12AM</option>
-                    <option value="1AM">1AM</option>
-                    <option value="2AM">2AM</option>
-                    <option value="3AM">3AM</option>
-                    <option value="4AM">4AM</option>
+                    <option value="08">08:00 AM</option>
+                    <option value="09">09:00 AM</option>
+                    <option value="10">10:00 AM</option>
+                    <option value="11">11:00 AM</option>
+                    <option value="12">12:00 PM</option>
+                    <option value="13">01:00 PM</option>
+                    <option value="14">02:00 PM</option>
+                    <option value="15">03:00 PM</option>
+                    <option value="16">04:00 PM</option>
                 </select>
             </div>
-            {endTime && <p className="mb-4 text-gray-700">End Time: {endTime}</p>}
+            {endTime && <p className="mb-4 text-gray-700">End Time: {convertTo12HourFormat(endTime)}</p>}
             <button
                 className={`w-full py-2 rounded-md transition-colors duration-300 ${isFormValid ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
                 onClick={addSlot}
-                disabled={!isFormValid}
+                disabled={!isFormValid || loading}
             >
-                Add Slot
+                {loading ? 'Processing...' : 'Add Slot'}
             </button>
             {responseMessage && (
                 <p className={`mt-4 ${isSuccess ? 'text-green-500' : 'text-red-500'}`}>

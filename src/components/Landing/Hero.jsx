@@ -9,65 +9,65 @@ import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 
 const passwordStrength = (password) => {
 	const criteria = [
-	  { regex: /[A-Z]/, score: 1 }, 
-	  { regex: /[a-z]/, score: 1 }, 
-	  { regex: /[0-9]/, score: 1 }, 
-	  { regex: /[!@#$%^&*(),.?":{}|<>]/, score: 1 }, 
-	  { regex: /.{8,}/, score: 1 }, 
+		{ regex: /[A-Z]/, score: 1 },
+		{ regex: /[a-z]/, score: 1 },
+		{ regex: /[0-9]/, score: 1 },
+		{ regex: /[!@#$%^&*(),.?":{}|<>]/, score: 1 },
+		{ regex: /.{8,}/, score: 1 },
 	];
-  
+
 	let score = 0;
-  
+
 	criteria.forEach((criterion) => {
-	  if (criterion.regex.test(password)) {
-		score += criterion.score;
-	  }
+		if (criterion.regex.test(password)) {
+			score += criterion.score;
+		}
 	});
-  
+
 	return score;
-  };
-  
-  const PasswordStrengthMeter = ({ password }) => {
+};
+
+const PasswordStrengthMeter = ({ password }) => {
 	const [strength, setStrength] = useState(0);
 	const [strengthLabel, setStrengthLabel] = useState('');
 	const [strengthColor, setStrengthColor] = useState('');
-  
+
 	useEffect(() => {
-	  const strengthScore = passwordStrength(password);
-  
-	  setStrength(strengthScore);
-  
-	  if (strengthScore <= 1) {
-		setStrengthLabel('Weak');
-		setStrengthColor('red');
-	  } else if (strengthScore === 2) {
-		setStrengthLabel('Fair');
-		setStrengthColor('orange');
-	  } else if (strengthScore === 3) {
-		setStrengthLabel('Good');
-		setStrengthColor('yellow');
-	  } else if (strengthScore >= 4) {
-		setStrengthLabel('Strong');
-		setStrengthColor('green');
-	  }
+		const strengthScore = passwordStrength(password);
+
+		setStrength(strengthScore);
+
+		if (strengthScore <= 1) {
+			setStrengthLabel('Weak');
+			setStrengthColor('red');
+		} else if (strengthScore === 2) {
+			setStrengthLabel('Fair');
+			setStrengthColor('orange');
+		} else if (strengthScore === 3) {
+			setStrengthLabel('Good');
+			setStrengthColor('yellow');
+		} else if (strengthScore >= 4) {
+			setStrengthLabel('Strong');
+			setStrengthColor('green');
+		}
 	}, [password]);
-	if(password==""){return null}
+	if (password == "") { return null }
 	return (
-	  <div className="mt-2">
-		<div className="w-full bg-gray-200 rounded-full h-2.5">
-		  <div
-			className={`h-2.5 rounded-full ${strengthColor === 'red' && 'bg-red-500'} ${strengthColor === 'orange' && 'bg-orange-400'} ${strengthColor === 'yellow' && 'bg-yellow-400'} ${strengthColor === 'green' && 'bg-green-400'}`}
-			style={{ width: `${(strength / 5) * 100}%` }}
-		  ></div>
+		<div className="mt-2">
+			<div className="w-full bg-gray-200 rounded-full h-2.5">
+				<div
+					className={`h-2.5 rounded-full ${strengthColor === 'red' && 'bg-red-500'} ${strengthColor === 'orange' && 'bg-orange-400'} ${strengthColor === 'yellow' && 'bg-yellow-400'} ${strengthColor === 'green' && 'bg-green-400'}`}
+					style={{ width: `${(strength / 5) * 100}%` }}
+				></div>
+			</div>
+			<div className="mt-1 text-sm">
+				<span className={`font-semibold ${strengthColor === 'red' && 'text-red-500'} ${strengthColor === 'orange' && 'text-orange-500'} ${strengthColor === 'yellow' && 'text-yellow-500'} ${strengthColor === 'green' && 'text-green-500'}`}>
+					{strengthLabel}
+				</span>
+			</div>
 		</div>
-		<div className="mt-1 text-sm">
-		  <span className={`font-semibold ${strengthColor === 'red' && 'text-red-500'} ${strengthColor === 'orange' && 'text-orange-500'} ${strengthColor === 'yellow' && 'text-yellow-500'} ${strengthColor === 'green' && 'text-green-500'}`}>
-			{strengthLabel}
-		  </span>
-		</div>
-	  </div>
 	);
-  };
+};
 
 function Counter({ value, label }) {
 	const [count, setCount] = useState(0);
@@ -154,7 +154,7 @@ export default function Hero() {
 
 		setIsVerificationInProgress(true);
 		try {
-			
+
 			const response = await fetch(`${API_URL}/auth/email_verification`, {
 				method: 'POST',
 				headers: {
@@ -213,11 +213,11 @@ export default function Hero() {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (formData.password !== formData.confirmPassword && !isLogin) {
-			setPasswordsMatch(false); 
+			setPasswordsMatch(false);
 			return;
-		  }
-		  setPasswordsMatch(true); 
-		  setShowConfirmPassword(false)
+		}
+		setPasswordsMatch(true);
+		setShowConfirmPassword(false)
 		setShowVerificationStatus(false)
 		if (isLogin) {
 			console.log('login');
@@ -272,7 +272,7 @@ export default function Hero() {
 		}
 	};
 
-	const goLogin = ()=>{
+	const goLogin = () => {
 		setIsLogin(false)
 		setShowConfirmPassword(true)
 	}
@@ -292,8 +292,10 @@ export default function Hero() {
 								{isLogin ? 'Welcome Back!' : 'Start practising, for free!'}
 							</h2>
 							<button
-								onClick={() => {setIsLogin(!isLogin);
-									setShowConfirmPassword(false)}}
+								onClick={() => {
+									setIsLogin(!isLogin);
+									setShowConfirmPassword(false)
+								}}
 								className="text-[#FF5533] hover:underline text-sm"
 							>
 								{isLogin ? 'New user? Sign up' : 'Already have an account? Login'}
@@ -406,63 +408,63 @@ export default function Hero() {
 									)}
 									<div>
 
-									<label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-									<div className="flex items-center">
-										<input
-										id="email"
-										type="email"
-										placeholder="Enter Email"
-										className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-										value={formData.email}
-										onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-										required
-										/>
-										{
-											showEmailVerifyBtn && !isLogin && (
-												<button
-													type="button"
-													onClick={handleEmailVerification}
-													className="ml-2 py-2 px-4 text-sm font-medium text-white bg-orange-500 hover:bg-orange-700 rounded-md"
-													disabled={isVerificationInProgress}
+										<label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+										<div className="flex items-center">
+											<input
+												id="email"
+												type="email"
+												placeholder="Enter Email"
+												className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+												value={formData.email}
+												onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+												required
+											/>
+											{
+												showEmailVerifyBtn && !isLogin && (
+													<button
+														type="button"
+														onClick={handleEmailVerification}
+														className="ml-2 py-2 px-4 text-sm font-medium text-white bg-orange-500 hover:bg-orange-700 rounded-md"
+														disabled={isVerificationInProgress}
 													>
-													{isVerificationInProgress ? 'Verifying...' : 'Verify'}
-												</button>
-											)
-										}
-										{
-											isEmailVerified && showVerificationStatus &&(
-												<p className='font-bold rounded-md ml-4 text-green-400 p-2'>Verified</p>
-											)
-										}
-									</div>
+														{isVerificationInProgress ? 'Verifying...' : 'Verify'}
+													</button>
+												)
+											}
+											{
+												isEmailVerified && showVerificationStatus && (
+													<p className='font-bold rounded-md ml-4 text-green-400 p-2'>Verified</p>
+												)
+											}
+										</div>
 									</div>
 
 									{showOtp && (
-									<>
-										<div>
-										<label htmlFor="otp" className="block text-sm font-medium text-gray-700">Enter OTP</label>
-										<input
-											id="otp"
-											type="text"
-											placeholder="Enter OTP"
-											className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-											value={formData.otp}
-											onChange={(e) => setFormData({ ...formData, otp: e.target.value })}
-											required
-										/>
-										</div>
-										<button
-										type="button"
-										onClick={handleOtpVerification}
-										className="mt-4 py-2 px-4 text-sm font-medium text-white bg-orange-500 hover:bg-orange-700 rounded-md"
-										>
-										Verify OTP
-										</button>
-									</>
+										<>
+											<div>
+												<label htmlFor="otp" className="block text-sm font-medium text-gray-700">Enter OTP</label>
+												<input
+													id="otp"
+													type="text"
+													placeholder="Enter OTP"
+													className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+													value={formData.otp}
+													onChange={(e) => setFormData({ ...formData, otp: e.target.value })}
+													required
+												/>
+											</div>
+											<button
+												type="button"
+												onClick={handleOtpVerification}
+												className="mt-4 py-2 px-4 text-sm font-medium text-white bg-orange-500 hover:bg-orange-700 rounded-md"
+											>
+												Verify OTP
+											</button>
+										</>
 									)}
 
 									<label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-										<div className="relative">
+									<div className="relative">
 										<input
 											id="password"
 											type={passwordVisible ? 'text' : 'password'}
@@ -477,52 +479,46 @@ export default function Hero() {
 											onClick={() => setPasswordVisible(!passwordVisible)}
 											className="absolute inset-y-0 right-3 flex items-center"
 										>
-											{passwordVisible?  <FaRegEyeSlash /> : <FaRegEye />}
+											{passwordVisible ? <FaRegEyeSlash /> : <FaRegEye />}
 										</button>
-										
-										</div>
-										
-							
+									</div>
 									{showConfirmPassword && (
 										<>
-										<PasswordStrengthMeter password={formData.password} />
-										<div>
-										<label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm Password</label>
-										<div className="relative">
-										<input
-											id="confirmPassword"
-											type={confirmPasswordVisible ? 'text' : 'password'}
-											className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-											value={formData.confirmPassword}
-											onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-											required
-										/>
-										<button
-											type="button"
-											onClick={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
-											className="absolute inset-y-0 right-3 flex items-center"
-										>
-											{confirmPasswordVisible?  <FaRegEyeSlash /> : <FaRegEye />}
-										</button>
-										
-										</div>
-										
-									</div>
-									</>
+											<PasswordStrengthMeter password={formData.password} />
+											<div>
+												<label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm Password</label>
+												<div className="relative">
+													<input
+														id="confirmPassword"
+														type={confirmPasswordVisible ? 'text' : 'password'}
+														className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+														value={formData.confirmPassword}
+														onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+														required
+													/>
+													<button
+														type="button"
+														onClick={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
+														className="absolute inset-y-0 right-3 flex items-center"
+													>
+														{confirmPasswordVisible ? <FaRegEyeSlash /> : <FaRegEye />}
+													</button>
+												</div>
+											</div>
+										</>
 									)}
-									
-									
+
 									{!passwordsMatch && !isLogin && (
 										<p className="text-red-500 text-sm mt-2">Passwords do not match.</p>
 									)}
 									<button
-									type="submit"
-									className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${(!isEmailVerified && !isLogin)? 'bg-gray-400 cursor-not-allowed': 'bg-orange-500 hover:bg-orange-700 cursor-pointer'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
-									disabled={!isEmailVerified && !isLogin} 
-									
+										type="submit"
+										className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${(!isEmailVerified && !isLogin) ? 'bg-gray-400 cursor-not-allowed' : 'bg-orange-500 hover:bg-orange-700 cursor-pointer'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
+										disabled={!isEmailVerified && !isLogin}
+
 									>
-									{isLogin ? 'Sign In' : 'Sign Up'}
-									
+										{isLogin ? 'Sign In' : 'Sign Up'}
+
 									</button>
 									{isLogin && (
 											<button
@@ -538,6 +534,7 @@ export default function Hero() {
 										)
 										}
 								</form>
+								<a href='/forgot-password' className='text-blue-500 hover:text-blue-700 transition duration-300 ease-in-out'>Forgot Password?</a>
 							</motion.div>
 						</AnimatePresence>
 					</motion.div>
