@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FiArrowLeft, FiCheck, FiCircle, FiEye, FiSearch } from "react-icons/fi";
 import { FaCirclePlay } from "react-icons/fa6";
-import { OutlineButton } from '../components/ui/OutlineButton'
+import { OutlineButton } from '../components/ui/OutlineButton';
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { API_URL } from "../shared/api";
@@ -96,7 +96,6 @@ export default function PYQList() {
 
         const pyqData = pyqResponse.data.questionPapers;
 
-
         const userResponse = await fetch(`https://boardly-be.vercel.app/solve/markPaperDone`, {
           method: "POST",
           headers: {
@@ -105,15 +104,13 @@ export default function PYQList() {
           },
           body: JSON.stringify({
             oid: "undefined",
-            subject: "undefined"
+            subject: "undefined",
           }),
         });
 
         const userData = await userResponse.json();
 
         const papersAttempted = userData.userData.papersAttempted;
-
-        // console.log("papersAttempted", papersAttempted);
 
         // Map data and include status based on papersAttempted
         const mappedData = pyqData.map((paper) => ({
@@ -124,6 +121,7 @@ export default function PYQList() {
           hasTopperSolution: Boolean(paper.topperSolution),
           hasVideoSolution: Boolean(paper.videoSolution),
           videoUrl: paper.videoSolution || null,
+          tag: paper.year === "2024" ? "Free" : ["2017", "2016", "2015"].includes(paper.year) ? "Coming Soon" : "Subscription Required",
         }));
 
         setPyqData(mappedData);
@@ -137,15 +135,29 @@ export default function PYQList() {
     fetchData();
   }, [subject]);
 
-
-  const handleTopperSolutionClick = (year) => {
-    navigate(`/subject/${subject}/pyq/${year}/topper-solution`);
+  const handleTopperSolutionClick = (item) => {
+    if (item.tag === "Coming Soon") {
+      alert(`Coming soon on ${item.id === "2017" ? '8th Jan' : item.id === "2016" ? '9th Jan' : '10th Jan'}`);
+    } else {
+      navigate(`/subject/${subject}/pyq/${item.id}/topper-solution`);
+    }
   };
 
-  const handleVideoClick = (year) => {
-    // setCurrentVideoUrl(videoUrl);
-    // setShowVideo(true);
-    navigate(`/subject/${subject}/pyq/${year}/topper-solution`);
+  const handleVideoClick = (item) => {
+    if (item.tag === "Coming Soon") {
+      alert(`Coming soon on ${item.year === 2017 ? '8th Jan' : item.year === 2016 ? '9th Jan' : '10th Jan'}`);
+    } else {
+      setCurrentVideoUrl(item.videoUrl);
+      setShowVideo(true);
+    }
+  };
+
+  const handleAttemptClick = (item) => {
+    if (item.tag === "Coming Soon") {
+      alert(`Coming soon on ${item.id === "2017" ? '8th Jan' : item.id === "2016" ? '9th Jan' : '10th Jan'}`);
+    } else {
+      navigate(`/subject/${subject}/pyq/${item.id}/attempt`);
+    }
   };
 
   const handlePYQClick = (id) => {
@@ -198,13 +210,14 @@ export default function PYQList() {
         </select>
       </div>
 
-      <div className="hidden md:grid grid-cols-7 gap-4 px-4 py-2 text-sm font-medium text-gray-500 border-b">
+      <div className="hidden md:grid grid-cols-8 gap-4 px-4 py-2 text-sm font-medium text-gray-500 border-b">
         <div>Status</div>
         <div className="col-span-2">Title</div>
         <div>Attempt</div>
         <div>Topper Solution</div>
         <div>Difficulty</div>
         <div>Video Solution</div>
+        <div>Tag</div>
       </div>
 
       <div className="space-y-2 overflow-y-auto max-h-[65vh] mt-2">
@@ -214,7 +227,7 @@ export default function PYQList() {
           </div>
         ) : (filteredData.map((item) => (
           <div key={item.id} className="bg-white rounded-lg shadow-sm">
-            <div className="grid grid-cols-4 md:grid-cols-7 gap-4 items-center px-4 py-3">
+            <div className="grid grid-cols-5 md:grid-cols-8 gap-4 items-center px-4 py-3">
               <div className="flex items-center">
                 {item.status === "completed" ? (
                   <div className="h-6 w-6 rounded-full bg-green-100 flex items-center justify-center">
@@ -230,30 +243,10 @@ export default function PYQList() {
                 </span>
                 <span className="text-gray-600"> {item.title}</span>
               </div>
-
-              <div
-                className="col-span-1 md:col-span-1 md:hidden flex items-center justify-end md:justify-between"
-              >
-                <div
-                  style={{
-                    width: "12px",
-                    height: "12px",
-                    borderRadius: "50%",
-                    backgroundColor: item.difficulty === "Easy" ? "green" :
-                      item.difficulty === "Medium" ? "orange" :
-                        "red",
-                    marginRight: "8px",
-                  }}
-                  title={item.difficulty} // Optional tooltip for accessibility
-                ></div>
-              </div>
-
-              {/* HIDDEN DIV TO ADJUST COLS FOR MOBILE VIEW */}
-              <div className="md:hidden"></div>
               <div className={`md:block ${selectedPYQ === item.id ? '' : 'hidden'}`}>
                 <OutlineButton
                   variant="green"
-                  onClick={() => navigate(`/subject/${subject}/pyq/${item.id}/attempt`)}
+                  onClick={() => handleAttemptClick(item)}
                 >
                   Attempt
                 </OutlineButton>
@@ -261,7 +254,7 @@ export default function PYQList() {
 
               <div className={`md:flex md:justify-center  ${selectedPYQ === item.id ? 'flex justify-end' : 'hidden'} `}>
                 <button
-                  onClick={() => handleTopperSolutionClick(item.id)}
+                  onClick={() => handleTopperSolutionClick(item)}
                   className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                   title="View Topper Solution"
                 >
@@ -277,13 +270,17 @@ export default function PYQList() {
               <div className={`${selectedPYQ === item.id ? 'flex justify-end' : 'hidden'}  md:flex md:justify-center`}>
                 {item.hasVideoSolution && (
                   <button
-                    onClick={() => handleVideoClick(item.id)}
+                    onClick={() => handleTopperSolutionClick(item)}
                     className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                     title="Watch Video Solution"
                   >
                     <FaCirclePlay className="h-5 w-5 text-orange-500 hover:text-orange-600" />
                   </button>
                 )}
+              </div>
+
+              <div className="text-sm text-gray-700 col-span-1 md:col-span-1">
+                {item.tag}
               </div>
             </div>
           </div>

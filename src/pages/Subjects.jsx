@@ -1,10 +1,14 @@
 import { Button } from "../components/ui/Button";
+import scienceIcon from "../assets/science.svg";
+import socialScienceIcon from "../assets/sst.svg";
+import hindiIcon from "../assets/hindi.svg";
 import physicsIcon from "../assets/physics.svg";
 import chemistryIcon from "../assets/chemisty.svg";
 import mathIcon from "../assets/math.svg";
 import englishIcon from "../assets/english.svg";
 import biologyIcon from "../assets/biology.svg";
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../context/AuthContext";
 
 function SubjectCard({ title, imageSrc }) {
   const navigate = useNavigate();
@@ -31,28 +35,26 @@ function SubjectCard({ title, imageSrc }) {
 }
 
 export default function Subjects() {
-  const subjects = [
-    {
-      title: "Physics",
-      imageSrc: physicsIcon
-    },
-    {
-      title: "Chemistry",
-      imageSrc: chemistryIcon
-    },
-    {
-      title: "Mathematics",
-      imageSrc: mathIcon
-    },
-    {
-      title: "English",
-      imageSrc: englishIcon
-    },
-    {
-      title: "Biology",
-      imageSrc: biologyIcon
-    }
-  ]
+  const { currentUser } = useAuth();
+	console.log(currentUser);
+  const userClass = currentUser.userClass;
+
+  // Define subjects based on class
+  const subjects = userClass === "10"
+    ? [
+        { title: "Science", imageSrc: scienceIcon },
+        { title: "Social Science", imageSrc: socialScienceIcon },
+				{ title: "Mathematics", imageSrc: mathIcon },
+        { title: "Hindi", imageSrc: hindiIcon },
+				{ title: "English", imageSrc: englishIcon },
+      ]
+    : [
+        { title: "Physics", imageSrc: physicsIcon },
+        { title: "Chemistry", imageSrc: chemistryIcon },
+        { title: "Mathematics", imageSrc: mathIcon },
+        { title: "English", imageSrc: englishIcon },
+        { title: "Biology", imageSrc: biologyIcon },
+      ];
 
   return (
     <div className="p-6 bg-[#F6F8FC] min-h-[90vh]">
@@ -69,4 +71,3 @@ export default function Subjects() {
     </div>
   )
 }
-

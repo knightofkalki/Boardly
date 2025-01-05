@@ -29,6 +29,7 @@ export default function MentorBooking() {
     return dates;
   };
 
+
   const formatDate = (date) => {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -59,6 +60,11 @@ export default function MentorBooking() {
     });
   };
 
+  const [bookedSlots, setBookedSlots] = useState([]);
+
+
+  
+
   useEffect(() => {
     async function fetchMentors() {
       try {
@@ -82,6 +88,30 @@ export default function MentorBooking() {
     fetchMentors();
   }, []);
 
+  useEffect(() => {
+    async function fetchBookedSlots() {
+      if (!selectedMentor) return;
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(`${API_URL}/slot/?mentorID=${selectedMentor}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch booked slots");
+        }
+        const data = await response.json();
+        console.log("Fetched booked slots:", data); // Debug log
+        console.log("Selected Mentor:", selectedMentor);
+        setBookedSlots(data);
+      } catch (error) {
+        console.error("Error fetching booked slots:", error);
+      }
+    }
+    fetchBookedSlots();
+  }, [selectedMentor]);
+  
   useEffect(() => {
     async function fetchSlots() {
       if (!selectedMentor) return;
@@ -238,6 +268,27 @@ export default function MentorBooking() {
             ))}
           </div>
         </div>
+
+        {bookedSlots.length > 0 && (
+            <div className="space-y-4">
+                <h2 className="text-xl font-semibold text-gray-900">
+                  Booked Slots for Mentor: <span className="text-orange-600">{mentors.find(mentor => mentor._id === selectedMentor)?.name}</span>
+                </h2>
+                <div className="grid grid-cols-2 gap-4">
+                    {bookedSlots.map((slot) => (
+                        <div
+                            key={slot._id}
+                            className="p-4 border rounded-lg bg-orange-100 text-orange-600"
+                        >
+                            <div className="text-sm font-medium">{slot.slotTiming}</div>
+                            <div className="text-xs text-gray-600">
+                                {new Date(slot.slotDate).toLocaleDateString()}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+          )}
 
         {showSlots && (
           <div className="space-y-4">

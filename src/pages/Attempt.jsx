@@ -20,6 +20,9 @@ export default function Attempt() {
   const timerKey = `${subject}-${year}-timer`;
   const sectionsKey = `${subject}-${year}-sections`;
 
+	// const token = localStorage.getItem('token');
+	// console.log("token", token);
+
   const markQuestionAsDone = async (oid, subject, questionIndex) => {
     try {
       const token = localStorage.getItem('token');
@@ -50,6 +53,8 @@ export default function Attempt() {
 
           setOid(response.data.data.questions._id);
 
+					console.log("subjectData", subjectData);
+
           if (subjectData) {
             const sections = [
               {
@@ -59,9 +64,12 @@ export default function Attempt() {
                   id: i + 1,
                   text: q.question,
                   status: 'unanswered',
+									options: q.options,
                 })),
               },
             ];
+
+						console.log("sections", sections);
 
             setQuizSections(sections);
             localStorage.setItem(sectionsKey, JSON.stringify(sections));
@@ -174,47 +182,72 @@ export default function Attempt() {
       {showPlansPopup && <PlansPopup onClose={() => setShowPlansPopup(false)} />}
 
       <main className="flex-1 p-6 overflow-y-auto">
-        {quizSections
-          .find((s) => s.id === currentSection)
-          ?.questions.map((question) => {
-            const parts = question.text.split(/\sor\s/i);
-            return (
-              <motion.div
-                id={`question-${question.id}`}
-                key={question.id}
-                className="rounded-lg bg-white p-6 shadow-sm mb-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                <h2 className="mb-4 text-xl font-semibold">Question {question.id}</h2>
-                {question.text}
-                <div className="flex flex-wrap gap-4">
+			{
+  quizSections
+    .find((s) => s.id === currentSection)
+    ?.questions.map((question) => {
+      const imageRegex = /(https?:\/\/[^\s]+?\.(png|jpeg|jpg))/gi;
+      const questionTextWithImage = question.text.replace(
+        imageRegex,
+        (url) => `<img src="${url}" alt="Question Image" class="my-4" />`
+      );
+
+      return (
+        <motion.div
+          id={`question-${question.id}`}
+          key={question.id}
+          className="rounded-lg bg-white p-6 shadow-sm mb-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <h2 className="mb-4 text-xl font-semibold">Question {question.id}</h2>
+          <p className="mb-4" dangerouslySetInnerHTML={{ __html: questionTextWithImage }}></p>
+          
+          {question.options && Object.keys(question.options).length > 0 && (
+            <div className="mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+                {Object.entries(question.options).map(([key, value]) => (
                   <motion.button
+                    key={key}
+                    className="w-full text-left rounded-md p-4 cursor-default"
                     onClick={() => updateQuestionStatus(question.id, 'answered')}
-                    className={`rounded-md px-8 py-2 ${question.status === 'answered'
-                      ? 'bg-green-600 text-white'
-                      : 'border border-green-600 text-green-600'
-                      }`}
                   >
-                    Mark as Done
+                    <strong className="mr-2">{key}:</strong> {value}
                   </motion.button>
-                  <motion.button
-                    onClick={() => updateQuestionStatus(question.id, 'flagged')}
-                    className={`rounded-md px-8 py-2 ${question.status === 'flagged'
-                      ? 'bg-red-600 text-white'
-                      : 'border border-red-600 text-red-600'
-                      }`}
-                  >
-                    Flag Question
-                  </motion.button>
-                </div>
-              </motion.div>
-            );
-          })}
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-wrap gap-4">
+            <motion.button
+              onClick={() => updateQuestionStatus(question.id, 'answered')}
+              className={`rounded-md px-8 py-2 ${
+                question.status === 'answered'
+                  ? 'bg-green-600 text-white'
+                  : 'border border-green-600 text-green-600'
+              }`}
+            >
+              Mark as Done
+            </motion.button>
+            <motion.button
+              onClick={() => updateQuestionStatus(question.id, 'flagged')}
+              className={`rounded-md px-8 py-2 ${
+                question.status === 'flagged'
+                  ? 'bg-red-600 text-white'
+                  : 'border border-red-600 text-red-600'
+              }`}
+            >
+              Flag Question
+            </motion.button>
+          </div>
+        </motion.div>
+      );
+    })}
 
       </main>
 
-      <aside className="w-full md:w-64 p-6 bg-gray-50 sticky top-0 md:h-screen overflow-y-auto bottom-0 text-center flex flex-col items-center">
+      <aside className="w-full md:w-64 p-6 bg-gray-50 md:sticky top-0 md:h-screen overflow-y-auto bottom-0 text-center flex flex-col items-center">
         <h3 className="font-semibold mb-4">Time Left:</h3>
         <div className="sticky w-min h-min z-10 rounded-full px-4 py-2 text-black font-extrabold text-2xl mb-2">
           {formatTime(timeLeft)}

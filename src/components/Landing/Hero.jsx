@@ -6,6 +6,7 @@ import { API_URL } from "../../shared/api";
 import { useNavigate } from 'react-router-dom';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 
+
 const passwordStrength = (password) => {
 	const criteria = [
 		{ regex: /[A-Z]/, score: 1 },
@@ -472,6 +473,7 @@ export default function Hero() {
 											onChange={(e) => setFormData({ ...formData, password: e.target.value })}
 											required
 										/>
+										
 										<button
 											type="button"
 											onClick={() => setPasswordVisible(!passwordVisible)}
@@ -518,6 +520,19 @@ export default function Hero() {
 										{isLogin ? 'Sign In' : 'Sign Up'}
 
 									</button>
+									{isLogin && (
+											<button
+												type="button"
+												className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-orange-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 text-right block`}
+
+												onClick={() => {
+													navigate('/forgot-password');
+												}}
+											>
+												Forgotten your password?
+											</button>
+										)
+										}
 								</form>
 								<a href='/forgot-password' className='text-blue-500 hover:text-blue-700 transition duration-300 ease-in-out'>Forgot Password?</a>
 							</motion.div>
