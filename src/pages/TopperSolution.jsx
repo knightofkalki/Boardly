@@ -33,7 +33,7 @@ const TopperSolution = () => {
           },
         });
         const data = response.data;
-
+        console.log(data);
         const mappedData = data.subject.questions.map((question) => ({
           id: question.qid,
           question: question.question,
@@ -43,7 +43,7 @@ const TopperSolution = () => {
           videoUrl: question.videoSolution || null,
         }));
 
-				console.log("mappedData", mappedData);
+        console.log("mappedData", mappedData);
 
         setQuestions(mappedData);
 
@@ -93,14 +93,26 @@ const TopperSolution = () => {
 
   const getEmbedUrl = (url) => {
     try {
+      let embedUrl = '';
+      let timestamp = '';
+
+      if (url.includes('t=')) {
+        timestamp = url.split('t=')[1].split('&')[0];
+      }
+
       if (url.includes('youtu.be')) {
         const id = url.split('youtu.be/')[1].split('?')[0];
-        return `https://www.youtube.com/embed/${id}`;
+        embedUrl = `https://www.youtube.com/embed/${id}`;
       } else if (url.includes('youtube.com')) {
         const id = url.split('v=')[1].split('&')[0];
-        return `https://www.youtube.com/embed/${id}`;
+        embedUrl = `https://www.youtube.com/embed/${id}`;
       }
-      return url;
+
+      if (timestamp) {
+        embedUrl += `?start=${timestamp}`;
+      }
+
+      return embedUrl;
     } catch (error) {
       console.error('Error parsing YouTube URL:', error);
       return url;
@@ -108,15 +120,15 @@ const TopperSolution = () => {
   };
 
   const renderTextWithImages = (text) => {
-		const imageRegex = /(https?:\/\/[^\s]+?\.(png|jpeg|jpg))/gi;
-		return text.replace(
-			imageRegex,
-			(url) =>
-				`<img src="${url}" alt="Embedded Image" class="my-4 max-w-full h-auto rounded-lg" />`
-		);
-	};
-	
-	
+    const imageRegex = /(https?:\/\/[^\s]+?\.(png|jpeg|jpg))/gi;
+    return text.replace(
+      imageRegex,
+      (url) =>
+        `<img src="${url}" alt="Embedded Image" class="my-4 max-w-full h-auto rounded-lg" />`
+    );
+  };
+
+
   const VideoPopup = ({ videoUrl, onClose }) => (
     <motion.div
       initial={{ opacity: 0 }}
@@ -178,89 +190,88 @@ const TopperSolution = () => {
       ) : (
         <div className="space-y-4">
           {questions.map((item) => (
-  <div key={item.id} className="border rounded-lg overflow-hidden shadow-lg">
-    <button
-      onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
-      className="w-full text-left p-6 bg-gray-50 hover:bg-gray-100 transition-colors focus:outline-none"
-    >
-      <div className="flex justify-between items-start">
-        <div className="space-y-2">
-          <h3 className="text-lg font-medium">Question {item.id}</h3>
-          <div
-            className="text-gray-800"
-            dangerouslySetInnerHTML={{
-              __html: renderTextWithImages(item.question),
-            }}
-          />
-        </div>
-        <svg
-          className={`w-5 h-5 transform transition-transform ${
-            expandedId === item.id ? 'rotate-180' : ''
-          }`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-      </div>
-    </button>
-
-    <AnimatePresence>
-      {expandedId === item.id && (
-        <motion.div
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: 'auto', opacity: 1 }}
-          exit={{ height: 0, opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="border-t px-6 py-4 bg-white space-y-4">
-            <div>
-              <h4 className="font-medium text-gray-800 mb-2">Answer</h4>
-              <div
-                className="text-gray-700"
-                dangerouslySetInnerHTML={{
-                  __html: renderTextWithImages(item.answer),
-                }}
-              />
-            </div>
-
-            {item.hasVideoSolution && (
+            <div key={item.id} className="border rounded-lg overflow-hidden shadow-lg">
               <button
-                onClick={() => handleVideoClick(item.videoUrl)}
-                className="flex items-center justify-center px-4 py-2 border 
+                onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
+                className="w-full text-left p-6 bg-gray-50 hover:bg-gray-100 transition-colors focus:outline-none"
+              >
+                <div className="flex justify-between items-start">
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-medium">Question {item.id}</h3>
+                    <div
+                      className="text-gray-800"
+                      dangerouslySetInnerHTML={{
+                        __html: renderTextWithImages(item.question),
+                      }}
+                    />
+                  </div>
+                  <svg
+                    className={`w-5 h-5 transform transition-transform ${expandedId === item.id ? 'rotate-180' : ''
+                      }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
+              </button>
+
+              <AnimatePresence>
+                {expandedId === item.id && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="border-t px-6 py-4 bg-white space-y-4">
+                      <div>
+                        <h4 className="font-medium text-gray-800 mb-2">Answer</h4>
+                        <div
+                          className="text-gray-700"
+                          dangerouslySetInnerHTML={{
+                            __html: renderTextWithImages(item.answer),
+                          }}
+                        />
+                      </div>
+
+                      {item.hasVideoSolution && (
+                        <button
+                          onClick={() => handleVideoClick(item.videoUrl)}
+                          className="flex items-center justify-center px-4 py-2 border 
                 border-[#F85B2C] rounded-md text-sm font-medium text-[#F85B2C] 
                 bg-white hover:bg-orange-50 focus:outline-none"
-              >
-                <svg
-                  className="w-5 h-5 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                  />
-                </svg>
-                Video Solution
-              </button>
-            )}
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  </div>
-))}
+                        >
+                          <svg
+                            className="w-5 h-5 mr-2"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                            />
+                          </svg>
+                          Video Solution
+                        </button>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
 
         </div>
       )}
