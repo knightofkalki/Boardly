@@ -365,6 +365,7 @@ export default function Hero() {
 															value="12th"
 															checked={formData.class === '12th'}
 															onChange={(e) => setFormData({ ...formData, class: e.target.value })}
+															disabled
 														/>
 														<span className="ml-2">Class 12th</span>
 													</label>
