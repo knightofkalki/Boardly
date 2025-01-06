@@ -6,11 +6,11 @@ const currentDate = new Date();
 
 const Progress = () => {
   const [subjectData, setSubjectData] = useState([
-    { id: 1, subject: 'Physics', fraction: '0/10' },
+    { id: 1, subject: 'Science', fraction: '0/10' },
     { id: 2, subject: 'Mathematics', fraction: '0/10' },
-    { id: 3, subject: 'Chemistry', fraction: '0/10' },
+    { id: 3, subject: 'Social Science', fraction: '0/10' },
     { id: 4, subject: 'English', fraction: '0/10' },
-    { id: 5, subject: 'Biology', fraction: '0/10' },
+    { id: 5, subject: 'Hindi', fraction: '0/10' },
   ]);
 
   useEffect(() => {
@@ -33,22 +33,22 @@ const Progress = () => {
         if (data.userData && data.userData.papersAttempted) {
           const papersAttempted = data.userData.papersAttempted;
 
-					console.log(papersAttempted);
+          console.log(papersAttempted);
 
           // Update fractions for each subject
           const updatedSubjectData = subjectData.map((subject) => {
-						const count = papersAttempted.filter((paper) => {
-							const year = parseInt(paper.substring(0, 4)); // Extract the first 4 characters as a number
-							return paper.includes(subject.subject) && 
-										 [2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025].includes(year);
-						}).length;
-					
-						return {
-							...subject,
-							fraction: `${count}/10`, // Total papers set to 10
-						};
-					});
-					
+            const count = papersAttempted.filter((paper) => {
+              const year = parseInt(paper.substring(0, 4)); // Extract the first 4 characters as a number
+              return paper.includes(subject.subject) &&
+                [2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025].includes(year);
+            }).length;
+
+            return {
+              ...subject,
+              fraction: `${count}/10`, // Total papers set to 10
+            };
+          });
+
 
           setSubjectData(updatedSubjectData);
         }
