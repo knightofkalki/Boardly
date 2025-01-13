@@ -1,26 +1,4 @@
-import placeholder from '../../assets/hero.svg' 
-const testimonials = [
-  {
-    text: "Lorem Ipsum courses we have? lorem ipsum Loremdorigh vodfiv idfjbvid dfjbvlsdjfvb sjdfvisjdbfvkjsdfivs] sidjfisi isjdbfisbfdi sidjfbsijbdf isdjfbsijdfisdf sedjfhsojdhf sjdbfsjdfljs sdjfbsijfdsu sjdfsihjf ssdjhgfso sdjf",
-    name: "Aaron Dessner",
-    image: placeholder
-  },
-  {
-    text: "Lorem Ipsum courses we have? lorem ipsum Loremdorigh vodfiv idfjbvid dfjbvlsdjfvb sjdfvisjdbfvkjsdfivs] sidjfisi isjdbfisbfdi sidjfbsijbdf isdjfbsijdfisdf sedjfhsojdhf sjdbfsjdfljs sdjfbsijfdsu sjdfsihjf ssdjhgfso sdjf",
-    name: "Kesh Werawil",
-    image: placeholder
-  },
-  {
-    text: "The structured approach and comprehensive study materials helped me excel in my exams. The mentors were always there to guide me through difficult concepts.",
-    name: "Sarah Johnson",
-    image: placeholder
-  },
-  {
-    text: "The practice tests and detailed solutions really helped me understand where I needed to improve. I saw a significant improvement in my scores.",
-    name: "Michael Chen",
-    image: placeholder
-  }
-]
+import testimonials from "../../data/testimonials.json";
 
 export default function Testimonials() {
   return (
