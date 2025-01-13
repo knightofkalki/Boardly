@@ -226,7 +226,7 @@ export default function ChapterQuestions() {
       {loading ? (
         <p className="text-center text-gray-500">Loading questions...</p>
       ) : error ? (
-        <p className="text-center text-red-500">{error}</p>
+        <p className="text-center text-gray-500">Coming on 20th January!</p>
       ) : (
         <div className="grid gap-6 lg:grid-cols-[1fr,300px]">
           <div className="space-y-6">
