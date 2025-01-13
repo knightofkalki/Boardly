@@ -68,7 +68,7 @@ export default function SubjectContent() {
       description: "Old competence level question with latest format.",
       buttonText: "Solve",
       icon: FiHelpCircle,
-      onClick: () => setPopupMessage("Coming soon on 1st Jan"),
+      onClick: () => setPopupMessage("Coming soon on 25th Jan"),
     },
   ];
 
