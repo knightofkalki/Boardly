@@ -17,10 +17,9 @@ export const RecommendedSection = () => {
   const [activeTab, setActiveTab] = useState('practice'); // Default tab is "Practice"
 
   const topics = [
-    { title: 'Electric Charges and Fields', subject: 'Physics' },
-    { title: 'Electromagnetic Waves', subject: 'Physics' },
-    { title: 'Probability and Statistics', subject: 'Mathematics' },
-    { title: 'Thermodynamics', subject: 'Chemistry' }
+    { title: 'PYQ 2023', subject: 'Science' },
+    { title: 'PYQ 2024', subject: 'Mathematics' },
+    { title: 'PYQ 2024', subject: 'Social Science' },
   ];
 
   const mockTestContent = (
@@ -45,7 +44,7 @@ export const RecommendedSection = () => {
   );
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
@@ -56,21 +55,19 @@ export const RecommendedSection = () => {
           <h2 className="text-lg font-semibold text-gray-800">Recommended For You</h2>
           <div className="space-x-2">
             <button
-              className={`px-4 py-1.5 rounded-full text-sm transition-colors ${
-                activeTab === 'practice'
-                  ? 'bg-orange-500 text-white hover:bg-orange-600'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
+              className={`px-4 py-1.5 rounded-full text-sm transition-colors ${activeTab === 'practice'
+                ? 'bg-orange-500 text-white hover:bg-orange-600'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
               onClick={() => setActiveTab('practice')}
             >
               Practice
             </button>
             <button
-              className={`px-4 py-1.5 rounded-full text-sm transition-colors ${
-                activeTab === 'mockTest'
-                  ? 'bg-orange-500 text-white hover:bg-orange-600'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
+              className={`px-4 py-1.5 rounded-full text-sm transition-colors ${activeTab === 'mockTest'
+                ? 'bg-orange-500 text-white hover:bg-orange-600'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
               onClick={() => setActiveTab('mockTest')}
             >
               Mock Test

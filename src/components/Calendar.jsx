@@ -44,7 +44,7 @@ export function Calendar() {
       <div className="flex items-center gap-2 mb-4">
         <Flame className="w-4 h-4 text-orange-500" />
         <span className="font-semibold text-sm">{currentMonth}</span>
-        <span className="text-xs text-gray-500">days left: {daysLeft}</span>
+        <span className="text-xs text-gray-500">{daysLeft} days left this month</span>
       </div>
       <div className="grid grid-cols-7 sm:grid-cols-4 xs:grid-cols-3 gap-1">
         {days.map((day) => {
