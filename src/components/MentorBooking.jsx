@@ -29,7 +29,6 @@ export default function MentorBooking() {
     return dates;
   };
 
-
   const formatDate = (date) => {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -61,9 +60,6 @@ export default function MentorBooking() {
   };
 
   const [bookedSlots, setBookedSlots] = useState([]);
-
-
-
 
   useEffect(() => {
     async function fetchMentors() {
