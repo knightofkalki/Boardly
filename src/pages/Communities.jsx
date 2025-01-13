@@ -1,7 +1,10 @@
-import { motion } from "framer-motion"
-import { Megaphone, MessageCircle, Airplay } from 'lucide-react'
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Megaphone, MessageCircle, Airplay } from 'lucide-react';
 
 export default function Communities() {
+  const [showPopup, setShowPopup] = useState(false);
+
   const cards = [
     {
       title: "Boardly announcements",
@@ -9,7 +12,7 @@ export default function Communities() {
       icon: Megaphone,
       action: "join",
       delay: 0,
-      whatsappLink: "https://chat.whatsapp.com/"
+      whatsappLink: "https://www.whatsapp.com/channel/0029VaxInp22v1IsY11OBL0W"
     },
     {
       title: "Boardly Discussion",
@@ -25,9 +28,14 @@ export default function Communities() {
       icon: Airplay,
       action: "Explore",
       delay: 0.4,
-      whatsappLink: "https://chat.whatsapp.com/"
+      whatsappLink: ""
     },
-  ]
+  ];
+
+  const handleBroadcastClick = () => {
+    setShowPopup(true);
+    setTimeout(() => setShowPopup(false), 3000); // Hide the popup after 3 seconds
+  };
 
   return (
     <div className="p-6 bg-[#F6F8FC] min-h-[90vh]">
@@ -67,20 +75,40 @@ export default function Communities() {
               <h3 className="mb-3 text-xl font-semibold text-gray-800">{card.title}</h3>
               <p className="mb-8 text-gray-600">{card.description}</p>
 
-              <motion.a
-                href={card.whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center justify-center rounded-full bg-orange-500 px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
-              >
-                {card.action.charAt(0).toUpperCase() + card.action.slice(1)}
-              </motion.a>
+              {card.title === "Boardly Broadcast" ? (
+                <motion.button
+                  onClick={handleBroadcastClick}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-flex items-center justify-center rounded-full bg-orange-500 px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                >
+                  {card.action.charAt(0).toUpperCase() + card.action.slice(1)}
+                </motion.button>
+              ) : (
+                <motion.a
+                  href={card.whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-flex items-center justify-center rounded-full bg-orange-500 px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                >
+                  {card.action.charAt(0).toUpperCase() + card.action.slice(1)}
+                </motion.a>
+              )}
             </motion.div>
           ))}
         </div>
       </motion.div>
+
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">Coming Soon</h2>
+            <p>Boardly Broadcast will be available soon. Stay tuned!</p>
+          </div>
+        </div>
+      )}
     </div>
-  )
+  );
 }
