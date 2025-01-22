@@ -137,7 +137,6 @@ export default function Hero() {
 		phone: '',
 		class: '10th',
 		password: '',
-		gender: '',
 	});
 	const [isEmailVerified, setIsEmailVerified] = useState(false);
 	const [isVerificationInProgress, setIsVerificationInProgress] = useState(false)
@@ -238,12 +237,10 @@ export default function Hero() {
 
 			const signupData = {
 				name: formData.fullName,
-				gender: formData.gender,
 				email: formData.email,
 				password: formData.password,
 				phone: formData.phone,
 				userClass: apiUserClass,
-				institute: formData.coaching || 'N/A',
 			};
 
 			try {
@@ -365,46 +362,11 @@ export default function Hero() {
 															value="12th"
 															checked={formData.class === '12th'}
 															onChange={(e) => setFormData({ ...formData, class: e.target.value })}
-															disabled
 														/>
 														<span className="ml-2">Class 12th</span>
 													</label>
 												</div>
 											</div>
-											{!isLogin && (
-												<>
-													<div>
-														<label htmlFor="gender" className="block text-sm font-medium text-gray-700">Gender</label>
-														<select
-															id="gender"
-															className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-															value={formData.gender}
-															onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-															required
-														>
-															<option value="">Select Gender</option>
-															<option value="male">Male</option>
-															<option value="female">Female</option>
-															<option value="other">Other</option>
-														</select>
-													</div>
-													<div>
-														<label htmlFor="coaching" className="block text-sm font-medium text-gray-700">Select Coaching</label>
-														<select
-															id="coaching"
-															className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-															value={formData.coaching}
-															onChange={(e) => setFormData({ ...formData, coaching: e.target.value })}
-															required
-														>
-															<option value="">Select your coaching</option>
-															<option value="coaching1">Coaching 1</option>
-															<option value="coaching2">Coaching 2</option>
-															<option value="coaching3">Coaching 3</option>
-														</select>
-													</div>
-												</>
-											)}
 										</>
 									)}
 									<div>
