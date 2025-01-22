@@ -6,6 +6,17 @@ import { motion } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { IoIosAdd } from "react-icons/io";
+import menuItems from "../data/menu-items.json";
+
+const iconMap = {
+    AiOutlineHome,
+    AiOutlineTeam,
+    FaChalkboardTeacher,
+    FaListUl,
+    IoBookOutline,
+    BsCashCoin,
+    IoIosAdd
+};
 
 const SidebarItem = ({ icon: Icon, label, isActive, onClick }) => {
     return (
@@ -29,44 +40,40 @@ export const Sidebar = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const menuItems = [
-        { icon: AiOutlineHome, path: '/', label: 'Home', roles: ['student', 'mentor'] },
-        { icon: IoBookOutline, path: '/subjects', label: 'Subjects', roles: ['student'] },
-        { icon: AiOutlineTeam, path: '/communities', label: 'Communities', roles: ['student'] },
-        { icon: FaChalkboardTeacher, path: '/mentorship', label: 'Mentorship', roles: ['student'] },
-        { icon: BsCashCoin, path: '/subscriptions', label: 'Subscriptions', roles: ['student'] },
-        { icon: IoIosAdd, path: '/slot/add', label: 'Add Slot', roles: ['mentor'] },
-        { icon: FaListUl, path: '/slot/', label: 'Slots', roles: ['mentor'] },
-    ];
-
     const filteredMenuItems = menuItems.filter(item => item.roles.includes(currentUser.type));
 
     return (
         <>
             {/* Sidebar for larger screens */}
             <div className="hidden md:flex fixed left-0 top-16 h-[calc(100%-4rem)] w-16 bg-white shadow-lg flex-col items-center py-4 space-y-6">
-                {filteredMenuItems.map((item, index) => (
-                    <SidebarItem
-                        key={index}
-                        icon={item.icon}
-                        label={item.label}
-                        isActive={location.pathname === item.path}
-                        onClick={() => navigate(item.path)}
-                    />
-                ))}
+                {filteredMenuItems.map((item, index) => {
+                    const Icon = iconMap[item.icon];
+                    return (
+                        <SidebarItem
+                            key={index}
+                            icon={Icon}
+                            label={item.label}
+                            isActive={location.pathname === item.path}
+                            onClick={() => navigate(item.path)}
+                        />
+                    );
+                })}
             </div>
 
             {/* Bottom bar for mobile screens */}
             <div className="fixed bottom-0 left-0 w-full bg-white shadow-lg flex justify-around items-center py-2 md:hidden z-40">
-                {filteredMenuItems.map((item, index) => (
-                    <SidebarItem
-                        key={index}
-                        icon={item.icon}
-                        label={item.label}
-                        isActive={location.pathname === item.path}
-                        onClick={() => navigate(item.path)}
-                    />
-                ))}
+                {filteredMenuItems.map((item, index) => {
+                    const Icon = iconMap[item.icon];
+                    return (
+                        <SidebarItem
+                            key={index}
+                            icon={Icon}
+                            label={item.label}
+                            isActive={location.pathname === item.path}
+                            onClick={() => navigate(item.path)}
+                        />
+                    );
+                })}
             </div>
         </>
     );

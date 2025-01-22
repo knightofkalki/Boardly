@@ -3,12 +3,24 @@ import scienceIcon from "../assets/science.svg";
 import socialScienceIcon from "../assets/sst.svg";
 import hindiIcon from "../assets/hindi.svg";
 import physicsIcon from "../assets/physics.svg";
-import chemistryIcon from "../assets/chemisty.svg";
+import chemistryIcon from "../assets/chemistry.svg";
 import mathIcon from "../assets/math.svg";
 import englishIcon from "../assets/english.svg";
 import biologyIcon from "../assets/biology.svg";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../context/AuthContext";
+import subs from "../data/subjects.json";
+
+const imageMap = {
+  scienceIcon,
+  socialScienceIcon,
+  hindiIcon,
+  physicsIcon,
+  chemistryIcon,
+  mathIcon,
+  englishIcon,
+  biologyIcon
+};
 
 function SubjectCard({ title, imageSrc }) {
   const navigate = useNavigate();
@@ -18,12 +30,12 @@ function SubjectCard({ title, imageSrc }) {
       <div className="flex flex-col h-full">
         <h3 className="text-xl font-medium text-gray-700 mb-2">{title}</h3>
         <div className="flex justify-between items-end mt-auto">
-          <Button onClick={() => navigate(`/subject/${title}`)}>
+          <Button onClick={() => navigate(`/subject/${title}/pyq`)} style={{ background: "rgb(249 115 22 / var(--tw-bg-opacity, 1))" }}>
             Select
           </Button>
           <div className="w-24 h-24 relative">
             <img
-              src={imageSrc}
+              src={imageMap[imageSrc]}
               alt={`${title} illustration`}
               className="w-full h-full object-contain"
             />
@@ -36,25 +48,12 @@ function SubjectCard({ title, imageSrc }) {
 
 export default function Subjects() {
   const { currentUser } = useAuth();
-	console.log(currentUser);
+  console.log(currentUser);
   const userClass = currentUser.userClass;
 
   // Define subjects based on class
   const subjects = userClass === "10"
-    ? [
-        { title: "Science", imageSrc: scienceIcon },
-        { title: "Social Science", imageSrc: socialScienceIcon },
-				{ title: "Mathematics", imageSrc: mathIcon },
-        { title: "Hindi", imageSrc: hindiIcon },
-				{ title: "English", imageSrc: englishIcon },
-      ]
-    : [
-        { title: "Physics", imageSrc: physicsIcon },
-        { title: "Chemistry", imageSrc: chemistryIcon },
-        { title: "Mathematics", imageSrc: mathIcon },
-        { title: "English", imageSrc: englishIcon },
-        { title: "Biology", imageSrc: biologyIcon },
-      ];
+    ? subs[10] : subs[12];
 
   return (
     <div className="p-6 bg-[#F6F8FC] min-h-[90vh]">
