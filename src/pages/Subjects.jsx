@@ -30,7 +30,7 @@ function SubjectCard({ title, imageSrc }) {
       <div className="flex flex-col h-full">
         <h3 className="text-xl font-medium text-gray-700 mb-2">{title}</h3>
         <div className="flex justify-between items-end mt-auto">
-          <Button onClick={() => navigate(`/subject/${title}/pyq`)}>
+          <Button onClick={() => navigate(`/subject/${title}/pyq`)} style={{ background: "rgb(249 115 22 / var(--tw-bg-opacity, 1))" }}>
             Select
           </Button>
           <div className="w-24 h-24 relative">

@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import PlansPopup from '../components/PlansPopup';
 import Progress from '../components/Progress';
 import { ContinueLearning } from '../components/ContinueLearning';
-import { ActionCards } from '../components/ActionCards';
 import { RecommendedSection } from '../components/RecommendedSection';
 import { UpcomingEvents } from '../components/UpcomingEvents';
 import { API_URL } from "../shared/api";
@@ -11,6 +10,7 @@ import { Calendar } from '../components/Calendar';
 import { useAuth } from '../context/AuthContext';
 import MentorSlotAdd from '../components/mentor/SlotAdd';
 import MentorSlotList from '../components/mentor/SlotList';
+import HeroSubjects from "../components/HeroSubjects";
 
 const getAuthToken = () => `Bearer ${localStorage.getItem('token')}`;
 
@@ -70,7 +70,7 @@ export const Home = () => {
                     </div>
                 </div>
                 <div className="mt-4 md:mt-6">
-                    <ActionCards />
+                    <HeroSubjects />
                 </div>
                 <div className="mt-4 md:mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                     <div className="md:col-span-2">
