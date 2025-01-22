@@ -28,6 +28,7 @@ export function Navbar() {
                 },
             });
             const data = await response.json();
+
             if (response.ok) {
                 setNotifications(data.notifications || []);
             } else {
@@ -40,7 +41,7 @@ export function Navbar() {
 
     const clearNotifications = async () => {
         try {
-            const response = await fetch(`https://your-api-domain/notification/${currentUser.email}`, {
+            const response = await fetch(`${API_URL}/notification/${currentUser.email}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${currentUser.token}`,
