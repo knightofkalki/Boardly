@@ -5,7 +5,7 @@ import HeroImage from "../../assets/hero.svg"
 import { API_URL } from "../../shared/api";
 import { useNavigate } from 'react-router-dom';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
-
+import VideoSection from "./VideoSection";
 
 const passwordStrength = (password) => {
 	const criteria = [
@@ -276,6 +276,7 @@ export default function Hero() {
 	return (
 		<div className="relative min-h-screen">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+				<VideoSection />
 				<div className="grid lg:grid-cols-2 gap-12 items-center">
 					<motion.div
 						initial={{ opacity: 0, x: -20 }}
