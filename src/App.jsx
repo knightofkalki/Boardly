@@ -26,7 +26,7 @@ import Upload from "./pages/Upload";
 import Subscriptions from "./pages/Subscriptions";
 import ForgotPassword from "./components/Landing/ForgotPassword";
 import ResetPassword from "./components/Landing/ResetPassword";
-import Demo from "./pages/Demo";
+import Demo from "./pages/Demo/main";
 
 const ProtectedRoute = ({ children, hideSidebar = false, roles = [] }) => {
   const { currentUser, isAuthenticated } = useAuth();
