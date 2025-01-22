@@ -1,0 +1,46 @@
+{
+    "10": [
+        {
+            "title": "Science",
+            "imageSrc": "scienceIcon"
+        },
+        {
+            "title": "Social Science",
+            "imageSrc": "socialScienceIcon"
+        },
+        {
+            "title": "Mathematics",
+            "imageSrc": "mathIcon"
+        },
+        {
+            "title": "Hindi",
+            "imageSrc": "hindiIcon"
+        },
+        {
+            "title": "English",
+            "imageSrc": "englishIcon"
+        }
+    ],
+    "12": [
+        {
+            "title": "Physics",
+            "imageSrc": "physicsIcon"
+        },
+        {
+            "title": "Chemistry",
+            "imageSrc": "chemistryIcon"
+        },
+        {
+            "title": "Mathematics",
+            "imageSrc": "mathIcon"
+        },
+        {
+            "title": "English",
+            "imageSrc": "englishIcon"
+        },
+        {
+            "title": "Biology",
+            "imageSrc": "biologyIcon"
+        }
+    ]
+}

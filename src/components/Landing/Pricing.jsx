@@ -10,45 +10,18 @@ const pricingTiers = [
       { text: "Sample Paper", value: "5", available: true },
       { text: "Topic Wise Questions", value: "", available: false },
       { text: "Toppers Solution", value: "", available: false },
-      { text: "Mentorship Session", value: "", available: false },
-      { text: "Paper Evaluation", value: "", available: false },
+      { text: "Video Solutions", value: "", available: false },
     ]
   },
   {
-    name: "Silver",
-    price: 149,
-    description: "Try Our Basic Plan",
+    name: "Plus",
+    price: 99,
+    description: "Go Plus",
     features: [
       { text: "Sample Paper", value: "50", available: true },
       { text: "Topic Wise Questions", value: "", available: true },
       { text: "Toppers Solution", value: "", available: true },
-      { text: "Mentorship Session", value: "1", available: true },
-      { text: "Paper Evaluation", value: "", available: false },
-    ]
-  },
-  {
-    name: "Gold",
-    price: 249,
-    description: "Try Gold and get",
-    features: [
-      { text: "Sample Paper", value: "50", available: true },
-      { text: "Topic Wise Questions", value: "", available: true },
-      { text: "Toppers Solution", value: "", available: true },
-      { text: "Mentorship Session", value: "5", available: true },
-      { text: "Paper Evaluation", value: "1", available: true },
-    ],
-    isRecommended: true
-  },
-  {
-    name: "Platinum",
-    price: 499,
-    description: "Try Platinum and Get",
-    features: [
-      { text: "Sample Paper", value: "50", available: true },
-      { text: "Topic Wise Questions", value: "", available: true },
-      { text: "Toppers Solution", value: "", available: true },
-      { text: "Mentorship Session", value: "5", available: true },
-      { text: "Paper Evaluation", value: "10", available: true },
+      { text: "Video Solutions", value: "1", available: true },
     ]
   }
 ]
