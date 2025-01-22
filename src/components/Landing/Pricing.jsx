@@ -1,30 +1,6 @@
-import { motion } from 'framer-motion'
-import { Check, X } from 'lucide-react'
-
-const pricingTiers = [
-  {
-    name: "Free",
-    price: 0,
-    description: "Try Boardly For Free",
-    features: [
-      { text: "Sample Paper", value: "5", available: true },
-      { text: "Topic Wise Questions", value: "", available: false },
-      { text: "Toppers Solution", value: "", available: false },
-      { text: "Video Solutions", value: "", available: false },
-    ]
-  },
-  {
-    name: "Plus",
-    price: 99,
-    description: "Go Plus",
-    features: [
-      { text: "Sample Paper", value: "50", available: true },
-      { text: "Topic Wise Questions", value: "", available: true },
-      { text: "Toppers Solution", value: "", available: true },
-      { text: "Video Solutions", value: "1", available: true },
-    ]
-  }
-]
+import { motion } from 'framer-motion';
+import { Check, X } from 'lucide-react';
+import pricingTiers from '../../data/plans.json';
 
 const containerVariants = {
   hidden: { opacity: 0 },
