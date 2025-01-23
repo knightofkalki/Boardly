@@ -5,7 +5,7 @@ import Counters from "./Counters/Counters";
 
 const HeroTop = () => {
   return (
-    <div className="flex flex-col justify-center items-center" style={{ minHeight: "90vh" }}>
+    <div className="flex flex-col justify-center items-center" style={{ minHeight: "90vh", gap: "90px" }}>
       <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between">
           {/* Intro component on the left */}
