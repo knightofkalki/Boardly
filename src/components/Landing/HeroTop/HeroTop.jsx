@@ -1,6 +1,6 @@
 import React from 'react';
 import Intro from './Intro/Intro';
-import Splash from "./Splash/Splash";
+import Splash from "../../../assets/landing/hero/splash/splash.svg";
 
 const HeroTop = () => {
   return (
@@ -14,7 +14,7 @@ const HeroTop = () => {
 
           {/* Video Section on the right */}
           <div className="lg:w-1/2 w-full lg:pl-8 mt-8 lg:mt-0">
-            <Splash />
+            <img src={Splash} alt="Splash" className="w-full" />
           </div>
         </div>
       </div>
