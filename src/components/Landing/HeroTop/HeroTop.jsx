@@ -1,10 +1,11 @@
 import React from 'react';
 import Intro from './Intro/Intro';
 import Splash from "../../../assets/landing/hero/splash/splash.svg";
+import Counters from "./Counters/Counters";
 
 const HeroTop = () => {
   return (
-    <div className="flex flex-col justify-center items-center" style={{ minHeight: "60vh" }}>
+    <div className="flex flex-col justify-center items-center" style={{ minHeight: "90vh" }}>
       <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between">
           {/* Intro component on the left */}
@@ -17,7 +18,9 @@ const HeroTop = () => {
             <img src={Splash} alt="Splash" className="w-full" />
           </div>
         </div>
+
       </div>
+      <Counters />
     </div>
   );
 };
