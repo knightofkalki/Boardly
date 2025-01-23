@@ -1,14 +1,14 @@
 import React from 'react';
-import HeroSection from './HeroTop'; // Ensure HeroSection is imported
+import Intro from './Intro/Intro';
 
-const VideoSection = () => {
+const HeroTop = () => {
   return (
     <div className="flex flex-col justify-center items-center" style={{ minHeight: "90vh" }}>
       <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between">
-          {/* HeroSection component on the left */}
+          {/* Intro component on the left */}
           <div className="lg:w-1/2 w-full lg:pr-8">
-            <HeroSection />
+            <Intro />
           </div>
 
           {/* Video Section on the right */}
@@ -30,4 +30,4 @@ const VideoSection = () => {
   );
 };
 
-export default VideoSection;
+export default HeroTop;

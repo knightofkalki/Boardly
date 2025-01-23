@@ -1,6 +1,6 @@
 import React from 'react';
 
-const HeroSection = () => {
+const Intro = () => {
   return (
     <div className="flex flex-col justify-center lg:justify-start lg:text-left lg:w-full mt-12">
       <h1 className="text-3xl lg:text-5xl font-bold text-orange-500">
@@ -29,4 +29,4 @@ const HeroSection = () => {
   );
 };
 
-export default HeroSection;
+export default Intro;
