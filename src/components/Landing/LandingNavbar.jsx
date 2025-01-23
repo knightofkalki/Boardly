@@ -27,7 +27,7 @@ export function LandingNavbar() {
 					<div className="flex justify-between h-[4.5rem]">
 						<div className="flex-shrink-0 flex items-center">
 							<span
-								className="text-[#F14A16] mooli-regular text-[42px] w-[291px] h-[93px] font-normal leading-[64px] flex items-center text-center z-50 ml-8"
+								className="text-[#F14A16] mooli-regular text-[42px] h-[93px] font-normal leading-[64px] flex items-center text-center z-50 ml-8"
 								style={{ cursor: 'default' }}
 							>
 								<img src={Banner} alt="Boardly" />
@@ -46,10 +46,10 @@ export function LandingNavbar() {
 							) : (
 								<>
 									<button className="px-4 py-2 text-gray-600 hover:text-gray-800">
-										About Us
+										About
 									</button>
 									<a href="/contact" className="px-4 py-2 text-gray-600 hover:text-gray-800">
-										Contact Us
+										Contact
 									</a>
 								</>
 							)}
