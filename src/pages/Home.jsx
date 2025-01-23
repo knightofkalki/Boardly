@@ -31,7 +31,6 @@ export const Home = () => {
             const subscriptionData = await response.json();
 
             if (response.ok) {
-                // Show popup if the user is on the free plan or has no active subscription
                 if (!subscriptionData.isActive || subscriptionData.currentPlan === 'Free') {
                     setShowPopup(true);
                 }
@@ -56,29 +55,16 @@ export const Home = () => {
                     <PlansPopup onClose={() => setShowPopup(false)} />
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                    <div className="md:col-span-1">
-                        <Progress />
-                        {/* <ContinueLearning /> */}
-                    </div>
-                    <div>
-                        {/* <div className='h-[50vh]'> */}
-                        <Calendar />
-                        {/* </div> */}
-                    </div>
-                    <div>
-                        <ContinueLearning />
-                    </div>
+                    <Progress />
+                    <Calendar />
+                    <ContinueLearning />
                 </div>
                 <div className="mt-4 md:mt-6">
                     <HeroSubjects />
                 </div>
                 <div className="mt-4 md:mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                    <div className="md:col-span-2">
-                        <RecommendedSection />
-                    </div>
-                    <div>
-                        <UpcomingEvents />
-                    </div>
+                    <RecommendedSection />
+                    <UpcomingEvents />
                 </div>
             </div>
         );
