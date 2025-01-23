@@ -1,0 +1,26 @@
+{
+    "name": "Boardly",
+    "short_name": "Boardly",
+    "description": "Boardly hai, ho jaigega!",
+    "start_url": "/",
+    "display": "fullscreen",
+    "background_color": "#FFFFFF",
+    "theme_color": "#FFFFFF",
+    "icons": [
+        {
+            "src": "/icons/icon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-32x32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-64x64.png",
+            "sizes": "64x64",
+            "type": "image/png"
+        }
+    ]
+}
