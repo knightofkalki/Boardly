@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { API_URL } from "../shared/api";
 import plans from "../data/plans.json";
-import Loader from "./Loader";
 import { motion } from 'framer-motion'
 import { Check, X } from 'lucide-react'
 import Confetti from 'react-confetti'
@@ -9,6 +8,7 @@ import Confetti from 'react-confetti'
 const getAuthToken = () => `Bearer ${localStorage.getItem('token')}`;
 
 const SubscriptionComponent = () => {
+    const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY;
     const [subscription, setSubscription] = useState(null);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
@@ -99,7 +99,7 @@ const SubscriptionComponent = () => {
 
             if (response.ok) {
                 const options = {
-                    key: "rzp_test_uMTEc94d3O7Ez6",
+                    key: razorpayKey,
                     amount: planPrice * 100,
                     currency: "INR",
                     name: "Boardly.in",

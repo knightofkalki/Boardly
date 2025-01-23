@@ -8,6 +8,7 @@ import { Check, X } from 'lucide-react'
 const getAuthToken = () => `Bearer ${localStorage.getItem('token')}`;
 
 const PlansPopup = ({ onClose }) => {
+    const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY;
     const [subscription, setSubscription] = useState(null);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
@@ -95,7 +96,7 @@ const PlansPopup = ({ onClose }) => {
 
             if (response.ok) {
                 const options = {
-                    key: "rzp_test_uMTEc94d3O7Ez6",
+                    key: razorpayKey,
                     amount: planPrice * 100,
                     currency: "INR",
                     name: "Boardly.in",

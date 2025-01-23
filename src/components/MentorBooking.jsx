@@ -29,7 +29,6 @@ export default function MentorBooking() {
     return dates;
   };
 
-
   const formatDate = (date) => {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -61,9 +60,6 @@ export default function MentorBooking() {
   };
 
   const [bookedSlots, setBookedSlots] = useState([]);
-
-
-  
 
   useEffect(() => {
     async function fetchMentors() {
@@ -111,7 +107,7 @@ export default function MentorBooking() {
     }
     fetchBookedSlots();
   }, [selectedMentor]);
-  
+
   useEffect(() => {
     async function fetchSlots() {
       if (!selectedMentor) return;
@@ -210,7 +206,7 @@ export default function MentorBooking() {
       <div className="mx-auto max-w-7xl space-y-8">
 
         <div className="space-y-4">
-          <h1 className="text-2xl font-bold text-gray-900">Choose mentor</h1>
+          <ul style={{ "display": "flex", "flexDirection": "row", "gap": "10px", "alignItems": "end" }}><h1 className="text-2xl font-bold text-gray-900">Choose mentor</h1><p className="text-gray-600" style={{ "paddingBottom": "2px" }}>Start from 20th January</p></ul>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
             <input
@@ -268,27 +264,6 @@ export default function MentorBooking() {
             ))}
           </div>
         </div>
-
-        {bookedSlots.length > 0 && (
-            <div className="space-y-4">
-                <h2 className="text-xl font-semibold text-gray-900">
-                  Booked Slots for Mentor: <span className="text-orange-600">{mentors.find(mentor => mentor._id === selectedMentor)?.name}</span>
-                </h2>
-                <div className="grid grid-cols-2 gap-4">
-                    {bookedSlots.map((slot) => (
-                        <div
-                            key={slot._id}
-                            className="p-4 border rounded-lg bg-orange-100 text-orange-600"
-                        >
-                            <div className="text-sm font-medium">{slot.slotTiming}</div>
-                            <div className="text-xs text-gray-600">
-                                {new Date(slot.slotDate).toLocaleDateString()}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-          )}
 
         {showSlots && (
           <div className="space-y-4">

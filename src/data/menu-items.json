@@ -1,0 +1,51 @@
+[
+    {
+        "icon": "AiOutlineHome",
+        "path": "/",
+        "label": "Home",
+        "roles": [
+            "student",
+            "mentor"
+        ]
+    },
+    {
+        "icon": "IoBookOutline",
+        "path": "/subjects",
+        "label": "Subjects",
+        "roles": [
+            "student"
+        ]
+    },
+    {
+        "icon": "AiOutlineTeam",
+        "path": "/communities",
+        "label": "Communities",
+        "roles": [
+            "student"
+        ]
+    },
+    {
+        "icon": "BsCashCoin",
+        "path": "/subscriptions",
+        "label": "Subscriptions",
+        "roles": [
+            "student"
+        ]
+    },
+    {
+        "icon": "IoIosAdd",
+        "path": "/slot/add",
+        "label": "Add Slot",
+        "roles": [
+            "mentor"
+        ]
+    },
+    {
+        "icon": "FaListUl",
+        "path": "/slot/",
+        "label": "Slots",
+        "roles": [
+            "mentor"
+        ]
+    }
+]

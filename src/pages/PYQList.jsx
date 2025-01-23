@@ -137,7 +137,7 @@ export default function PYQList() {
 
   const handleTopperSolutionClick = (item) => {
     if (item.tag === "Coming Soon") {
-      alert(`Coming soon on ${item.id === "2017" ? '8th Jan' : item.id === "2016" ? '9th Jan' : '10th Jan'}`);
+      alert(`Coming soon on ${item.id === "2017" ? '20th Jan' : item.id === "2016" ? '20th Jan' : '20th Jan'}`);
     } else {
       navigate(`/subject/${subject}/pyq/${item.id}/topper-solution`);
     }
@@ -145,7 +145,7 @@ export default function PYQList() {
 
   const handleVideoClick = (item) => {
     if (item.tag === "Coming Soon") {
-      alert(`Coming soon on ${item.year === 2017 ? '8th Jan' : item.year === 2016 ? '9th Jan' : '10th Jan'}`);
+      alert(`Coming soon on ${item.year === 2017 ? '20th Jan' : item.year === 2016 ? '20th Jan' : '20th Jan'}`);
     } else {
       setCurrentVideoUrl(item.videoUrl);
       setShowVideo(true);
@@ -154,7 +154,7 @@ export default function PYQList() {
 
   const handleAttemptClick = (item) => {
     if (item.tag === "Coming Soon") {
-      alert(`Coming soon on ${item.id === "2017" ? '8th Jan' : item.id === "2016" ? '9th Jan' : '10th Jan'}`);
+      alert(`Coming soon on ${item.id === "2017" ? '20th Jan' : item.id === "2016" ? '20th Jan' : '20th Jan'}`);
     } else {
       navigate(`/subject/${subject}/pyq/${item.id}/attempt`);
     }
@@ -174,7 +174,7 @@ export default function PYQList() {
     <div className="max-w-5xl mx-auto p-4 sm:p-6">
       <div className="flex items-center gap-4 mb-8">
         <button
-          onClick={() => navigate(`/subject/${subject}`)}
+          onClick={() => navigate(`/subjects`)}
           className="p-2 hover:bg-gray-100 rounded-full"
         >
           <FiArrowLeft className="h-5 w-5" />

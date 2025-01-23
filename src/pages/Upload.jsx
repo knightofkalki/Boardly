@@ -112,8 +112,9 @@ function Upload() {
               >
                 <FiArrowLeft className="h-7 w-7" />
               </button>
-              Choose your paper for evaluation
+              Choose your paper for Evaluation
             </h2>
+
           </div>
 
           {loading ? (
@@ -152,6 +153,7 @@ function Upload() {
                             </option>
                           ))}
                         </select>
+                        <p>Coming on 20th January</p>
                       </div>
                     </td>
                     <td className="p-10 capitalize text-lg font-semibold">

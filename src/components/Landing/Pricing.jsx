@@ -1,57 +1,6 @@
-import { motion } from 'framer-motion'
-import { Check, X } from 'lucide-react'
-
-const pricingTiers = [
-  {
-    name: "Free",
-    price: 0,
-    description: "Try Boardly For Free",
-    features: [
-      { text: "Sample Paper", value: "5", available: true },
-      { text: "Topic Wise Questions", value: "", available: false },
-      { text: "Toppers Solution", value: "", available: false },
-      { text: "Mentorship Session", value: "", available: false },
-      { text: "Paper Evaluation", value: "", available: false },
-    ]
-  },
-  {
-    name: "Silver",
-    price: 149,
-    description: "Try Our Basic Plan",
-    features: [
-      { text: "Sample Paper", value: "50", available: true },
-      { text: "Topic Wise Questions", value: "", available: true },
-      { text: "Toppers Solution", value: "", available: true },
-      { text: "Mentorship Session", value: "1", available: true },
-      { text: "Paper Evaluation", value: "", available: false },
-    ]
-  },
-  {
-    name: "Gold",
-    price: 249,
-    description: "Try Gold and get",
-    features: [
-      { text: "Sample Paper", value: "50", available: true },
-      { text: "Topic Wise Questions", value: "", available: true },
-      { text: "Toppers Solution", value: "", available: true },
-      { text: "Mentorship Session", value: "5", available: true },
-      { text: "Paper Evaluation", value: "1", available: true },
-    ],
-    isRecommended: true
-  },
-  {
-    name: "Platinum",
-    price: 499,
-    description: "Try Platinum and Get",
-    features: [
-      { text: "Sample Paper", value: "50", available: true },
-      { text: "Topic Wise Questions", value: "", available: true },
-      { text: "Toppers Solution", value: "", available: true },
-      { text: "Mentorship Session", value: "5", available: true },
-      { text: "Paper Evaluation", value: "10", available: true },
-    ]
-  }
-]
+import { motion } from 'framer-motion';
+import { Check, X } from 'lucide-react';
+import pricingTiers from '../../data/plans.json';
 
 const containerVariants = {
   hidden: { opacity: 0 },
