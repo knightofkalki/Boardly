@@ -142,11 +142,6 @@ export function Navbar() {
                                             Class: {currentUser.userClass}
                                         </button>
                                     </div>
-                                    <div>
-                                        <button className="py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
-                                            Institute: {currentUser.institute}
-                                        </button>
-                                    </div>
                                 </div>
                                 <div>
                                     <button
