@@ -269,6 +269,17 @@ export default function Hero() {
 		<div className="relative min-h-screen">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 				<HeroTop />
+				<motion.div
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.5, delay: 0.2 }}
+					className="mt-16 bg-[#FFE5D9] rounded-3xl p-8 grid grid-cols-2 lg:grid-cols-4 gap-8"
+				>
+					<Counter value={100} label="Sample papers" />
+					<Counter value={3000} label="Topic-Wise Questions" />
+					<Counter value={1000} label="Students Enrolled" />
+					<Counter value={100} label="Mentors Support" />
+				</motion.div>
 				<div className="grid lg:grid-cols-2 gap-12 items-center">
 					<motion.div
 						initial={{ opacity: 0, x: -20 }}
@@ -483,17 +494,7 @@ export default function Hero() {
 						/>
 					</motion.div>
 				</div>
-				<motion.div
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.5, delay: 0.2 }}
-					className="mt-16 bg-[#FFE5D9] rounded-3xl p-8 grid grid-cols-2 lg:grid-cols-4 gap-8"
-				>
-					<Counter value={100} label="Sample papers" />
-					<Counter value={3000} label="Topic-Wise Questions" />
-					<Counter value={1000} label="Students Enrolled" />
-					<Counter value={100} label="Mentors Support" />
-				</motion.div>
+
 			</div>
 		</div>
 	);

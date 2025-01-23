@@ -4,7 +4,7 @@ import Splash from "../../../assets/landing/hero/splash/splash.svg";
 
 const HeroTop = () => {
   return (
-    <div className="flex flex-col justify-center items-center" style={{ minHeight: "90vh" }}>
+    <div className="flex flex-col justify-center items-center" style={{ minHeight: "60vh" }}>
       <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between">
           {/* Intro component on the left */}
