@@ -26,7 +26,8 @@ import Upload from "./pages/Upload";
 import Subscriptions from "./pages/Subscriptions";
 import ForgotPassword from "./components/Landing/ForgotPassword";
 import ResetPassword from "./components/Landing/ResetPassword";
-import Demo from "./pages/Demo";
+import Demo from "./pages/Demo/main";
+import DemoPYQList from "./pages/Demo/PYQList";
 
 const ProtectedRoute = ({ children, hideSidebar = false, roles = [] }) => {
   const { currentUser, isAuthenticated } = useAuth();
@@ -57,7 +58,10 @@ export default function App() {
         <div className="min-h-screen">
           <Routes>
             <Route path="/landing" element={<LandingPage />} />
-            <Route path="/demo" element={<Demo />} />
+            <Route path="/demo/:class" element={<Demo />} />
+            <Route path="/demo/:class/:subject/pyq" element={
+              <DemoPYQList />
+            } />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/auth/reset-password/:token" element={<ResetPassword />} />
             <Route path="/contact" element={<Contact />} />

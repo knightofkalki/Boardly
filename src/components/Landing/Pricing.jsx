@@ -48,7 +48,8 @@ export default function Pricing() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
+          className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 "
+          style={{ "maxWidth": "60%", "margin": "auto" }}
         >
           {pricingTiers.map((tier) => (
             <motion.div
