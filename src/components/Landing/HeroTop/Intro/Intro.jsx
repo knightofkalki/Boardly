@@ -1,4 +1,5 @@
 import React from 'react';
+import StartStudying from "./StartStudying/StartStudying";
 
 const Intro = () => {
   return (
@@ -25,6 +26,8 @@ const Intro = () => {
           CLASS 12
         </button>
       </div>
+      <br />
+      <StartStudying />
     </div>
   );
 };
