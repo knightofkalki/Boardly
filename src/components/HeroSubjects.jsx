@@ -48,7 +48,6 @@ function SubjectCard({ title, imageSrc }) {
 
 export default function Subjects() {
     const { currentUser } = useAuth();
-    console.log(currentUser);
     const userClass = currentUser.userClass;
 
     // Define subjects based on class

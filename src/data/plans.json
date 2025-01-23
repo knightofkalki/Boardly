@@ -5,7 +5,7 @@
         "description": "Try Boardly For Free",
         "features": [
             {
-                "text": "Sample Paper",
+                "text": "PYQs",
                 "value": "5",
                 "available": true
             },
@@ -15,12 +15,12 @@
                 "available": false
             },
             {
-                "text": "Toppers Solution",
+                "text": "Video Solution",
                 "value": "",
                 "available": false
             },
             {
-                "text": "Video Solution",
+                "text": "Toppers Solution",
                 "value": "",
                 "available": false
             }
@@ -33,7 +33,7 @@
         "description": "Try our Plus plan",
         "features": [
             {
-                "text": "Sample Paper",
+                "text": "PYQs",
                 "value": "50",
                 "available": true
             },
@@ -43,13 +43,13 @@
                 "available": true
             },
             {
-                "text": "Toppers Solution",
+                "text": "Video Solution",
                 "value": "",
                 "available": true
             },
             {
-                "text": "Video Solution",
-                "value": "1",
+                "text": "Toppers Solution",
+                "value": "",
                 "available": true
             }
         ]

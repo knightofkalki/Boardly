@@ -1,23 +1,24 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 import { SubjectCircle } from './SubjectCircle';
-
-const currentDate = new Date();
+import subs from "../data/subjects.json";
+import { API_URL } from "../shared/api";
 
 const Progress = () => {
-  const [subjectData, setSubjectData] = useState([
-    { id: 1, subject: 'Science', fraction: '0/10' },
-    { id: 2, subject: 'Mathematics', fraction: '0/10' },
-    { id: 3, subject: 'Social Science', fraction: '0/10' },
-    { id: 4, subject: 'English', fraction: '0/10' },
-    { id: 5, subject: 'Hindi', fraction: '0/10' },
-  ]);
+  const { currentUser } = useAuth();
+  const userClass = currentUser.userClass;
+  const subjects = userClass === "10" ? subs[10] : subs[12];
+
+  const [subjectData, setSubjectData] = useState(subjects.map(subject => ({
+    ...subject,
+    fraction: '0/10'
+  })));
 
   useEffect(() => {
     async function fetchPapersAttempted() {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`https://boardly-be.vercel.app/solve/markPaperDone`, {
+        const response = await fetch(`${API_URL}/solve/markPaperDone`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -36,10 +37,10 @@ const Progress = () => {
           console.log(papersAttempted);
 
           // Update fractions for each subject
-          const updatedSubjectData = subjectData.map((subject) => {
+          const updatedSubjectData = subjects.map((subject) => {
             const count = papersAttempted.filter((paper) => {
               const year = parseInt(paper.substring(0, 4)); // Extract the first 4 characters as a number
-              return paper.includes(subject.subject) &&
+              return paper.includes(subject.title) &&
                 [2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025].includes(year);
             }).length;
 
@@ -49,7 +50,6 @@ const Progress = () => {
             };
           });
 
-
           setSubjectData(updatedSubjectData);
         }
       } catch (error) {
@@ -58,7 +58,7 @@ const Progress = () => {
     }
 
     fetchPapersAttempted();
-  }, []);
+  }, [subjects]);
 
   return (
     <div className="bg-white rounded-xl p-6 shadow-[0_0_20px_rgba(0,0,0,0.1)] h-full">
@@ -67,7 +67,10 @@ const Progress = () => {
           <h3 className="text-lg font-semibold mb-4">Progress</h3>
           <div className="flex flex-wrap gap-4 justify-center">
             {subjectData.map((item) => (
-              <SubjectCircle key={item.id} {...item} />
+              <div key={item.title} className="flex flex-col items-center">
+                <SubjectCircle {...item} />
+                <p>{item.title}</p>
+              </div>
             ))}
           </div>
         </div>
