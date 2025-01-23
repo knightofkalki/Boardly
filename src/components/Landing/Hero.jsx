@@ -211,7 +211,7 @@ export default function Hero() {
 		<div className="relative min-h-screen">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 				<HeroTop />
-				<div className="grid lg:grid-cols-2 gap-12 items-center">
+				<div id='start' className="grid lg:grid-cols-2 gap-12 items-center">
 					<motion.div
 						initial={{ opacity: 0, x: -20 }}
 						animate={{ opacity: 1, x: 0 }}
