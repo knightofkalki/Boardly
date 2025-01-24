@@ -59,7 +59,7 @@ export default function App() {
           <Routes>
             <Route path="/landing" element={<LandingPage />} />
             <Route path="/demo/:class" element={<Demo />} />
-            <Route path="/demo/:class/:subject/pyq" element={
+            <Route path="/demo/:class/:subject" element={
               <DemoPYQList />
             } />
             <Route path="/forgot-password" element={<ForgotPassword />} />
