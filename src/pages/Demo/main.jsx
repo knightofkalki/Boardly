@@ -9,6 +9,7 @@ import englishIcon from "../../assets/english.svg";
 import biologyIcon from "../../assets/biology.svg";
 import { useNavigate, useLocation } from 'react-router-dom';
 import subs from "../../data/subjects.json";
+import { LandingNavbar } from '../../components/Landing/LandingNavbar';
 
 const imageMap = {
     scienceIcon,
@@ -56,16 +57,20 @@ export default function Subjects() {
         ? subs[10] : subs[12];
 
     return (
-        <div className="p-6 bg-[#F6F8FC] min-h-[90vh]">
-            <h1 className="text-3xl font-bold text-gray-800 mb-8">Choose Subjects</h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
-                {subjects.map((subject) => (
-                    <SubjectCard
-                        key={subject.title}
-                        title={subject.title}
-                        imageSrc={subject.imageSrc}
-                    />
-                ))}
+        <div className="min-h-screen bg-gray-50">
+            <LandingNavbar />
+            <br />
+            <div className="p-6 bg-[#F6F8FC] min-h-[90vh]">
+                <h1 className="text-3xl font-bold text-gray-800 mb-8">Choose Subjects</h1>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
+                    {subjects.map((subject) => (
+                        <SubjectCard
+                            key={subject.title}
+                            title={subject.title}
+                            imageSrc={subject.imageSrc}
+                        />
+                    ))}
+                </div>
             </div>
         </div>
     )
