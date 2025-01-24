@@ -1,0 +1,17 @@
+@keyframes moveLeftRight {
+    0% {
+        transform: translateX(0);
+    }
+
+    70% {
+        transform: translateX(-50px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.svgAnimation {
+    animation: moveLeftRight 5s infinite;
+}

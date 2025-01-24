@@ -5,7 +5,7 @@ import HeroImage from "../../assets/hero.svg"
 import { API_URL } from "../../shared/api";
 import { useNavigate } from 'react-router-dom';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
-import VideoSection from "./VideoSection";
+import HeroTop from "./HeroTop/HeroTop";
 
 const passwordStrength = (password) => {
 	const criteria = [
@@ -68,64 +68,6 @@ const PasswordStrengthMeter = ({ password }) => {
 		</div>
 	);
 };
-
-function Counter({ value, label }) {
-	const [count, setCount] = useState(0);
-	const [hasAnimated, setHasAnimated] = useState(false); // Prevent re-triggering animation
-	const startAnimation = useCallback(() => {
-		if (hasAnimated) return; // Avoid multiple triggers
-		setHasAnimated(true);
-
-		const duration = 1000; // Animation duration in milliseconds
-		const frames = duration / 16; // Approximate frames at 60 FPS
-		const increment = value / frames; // Increment per frame
-		let current = 0;
-
-		const animate = () => {
-			current += increment;
-			if (current >= value) {
-				setCount(value); // Set final value and stop animation
-				return;
-			}
-			setCount(Math.round(current)); // Update count
-			requestAnimationFrame(animate);
-		};
-
-		requestAnimationFrame(animate); // Start animation
-	}, [hasAnimated, value]);
-
-	const ref = useRef(null);
-
-	useEffect(() => {
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				if (entry.isIntersecting) {
-					startAnimation();
-				}
-			},
-			{ threshold: 0.5 } // Adjust the threshold for when the animation should start
-		);
-
-		const currentRef = ref.current;
-		if (currentRef) {
-			observer.observe(currentRef);
-		}
-
-		return () => {
-			if (currentRef) {
-				observer.unobserve(currentRef);
-			}
-		};
-	}, [hasAnimated, startAnimation]); // Ensure effect depends on the `hasAnimated` flag
-
-	return (
-		<div ref={ref} className="text-center">
-			<span className="text-4xl font-bold text-gray-800">{count}+</span>
-			<p className="mt-2 text-gray-600">{label}</p>
-		</div>
-	);
-}
-
 
 export default function Hero() {
 	const [isLogin, setIsLogin] = useState(false);
@@ -268,8 +210,8 @@ export default function Hero() {
 	return (
 		<div className="relative min-h-screen">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-				<VideoSection />
-				<div className="grid lg:grid-cols-2 gap-12 items-center">
+				<HeroTop />
+				<div id='start' className="grid lg:grid-cols-2 gap-12 items-center">
 					<motion.div
 						initial={{ opacity: 0, x: -20 }}
 						animate={{ opacity: 1, x: 0 }}
@@ -483,17 +425,7 @@ export default function Hero() {
 						/>
 					</motion.div>
 				</div>
-				<motion.div
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.5, delay: 0.2 }}
-					className="mt-16 bg-[#FFE5D9] rounded-3xl p-8 grid grid-cols-2 lg:grid-cols-4 gap-8"
-				>
-					<Counter value={100} label="Sample papers" />
-					<Counter value={3000} label="Topic-Wise Questions" />
-					<Counter value={1000} label="Students Enrolled" />
-					<Counter value={100} label="Mentors Support" />
-				</motion.div>
+
 			</div>
 		</div>
 	);

@@ -1,11 +1,5 @@
-import { motion } from "framer-motion"
-
-const partners = [
-  { name: 'Microsoft', logo: 'https://www.microsoft.com/favicon.ico' },
-  { name: 'Google', logo: 'https://www.google.com/favicon.ico' },
-  { name: 'Apple', logo: 'https://www.apple.com/favicon.ico' },
-  { name: 'Amazon', logo: 'https://www.amazon.com/favicon.ico' }
-];
+import { motion } from "framer-motion";
+import partners from "../../data/partners.json";
 
 export function Partners() {
   return (
@@ -19,12 +13,12 @@ export function Partners() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: index * 0.1 }}
             whileHover={{ scale: 1.1 }}
-            className="w-32 h-32 flex items-center justify-center p-6 rounded-full shadow-sm" 
+            className="w-32 h-32 flex items-center justify-center p-6 rounded-full"
           >
-            <img 
-              src={partner.logo} 
+            <img
+              src={partner.logo}
               alt={partner.name}
-              className="w-16 h-16 object-contain" 
+              className="w-16 h-16 object-contain"
             />
           </motion.div>
         ))}
