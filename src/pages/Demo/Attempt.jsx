@@ -181,7 +181,7 @@ export default function Attempt() {
         ))}
         <div className="mt-6 text-sm text-gray-600">
           You are using a free plan. To view papers from previous years, please{' '}
-          <a href="/#get-started" className="text-blue-600 underline">
+          <a href="/landing" className="text-blue-600 underline">
             create an account
           </a>.
         </div>
