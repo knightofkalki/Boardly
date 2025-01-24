@@ -20,10 +20,10 @@ const Intro = () => {
       <div className="mt-6 space-x-4">
         <button className="bg-gradient-to-r from-orange-400 to-orange-600 text-white px-6 py-2 rounded-md shadow-lg transform transition-transform hover:scale-105"
           style={{ boxShadow: "0 0 10px 2.5px rgba(255, 115, 0, .5)" }}
-          onClick={() => window.location.href = '/demo/10/2024/pyq'}>
+          onClick={() => window.location.href = '/demo/10/'}>
           CLASS 10
         </button>
-        <button className="bg-gradient-to-r from-orange-400 to-orange-600 text-white px-6 py-2 rounded-md shadow-lg transform transition-transform hover:scale-105" onClick={() => window.location.href = '/demo/12/2024/pyq'}
+        <button className="bg-gradient-to-r from-orange-400 to-orange-600 text-white px-6 py-2 rounded-md shadow-lg transform transition-transform hover:scale-105" onClick={() => window.location.href = '/demo/12'}
           style={{ boxShadow: "0 0 10px 2.5px rgba(255, 115, 0, .5)" }}>
           CLASS 12
         </button>
