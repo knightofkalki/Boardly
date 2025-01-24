@@ -15,7 +15,8 @@ const HeroTop = () => {
             </div>
 
             {/* Video Section on the right */}
-            <div className="lg:w-1/2 w-full lg:pl-8 mt-8 lg:mt-0">
+            <div className="lg:w-1/2 w-full lg:pl-8 mt-8 lg:mt-0"
+              style={{ alignSelf: "center" }}>
               <img src={Splash} alt="Splash" className="w-full" />
             </div>
           </div>
