@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Attempt() {
-  const [currentSection, setCurrentSection] = useState('A');
+  const [currentSection] = useState('A');
   const [quizSections, setQuizSections] = useState([]);
   const [timeLeft, setTimeLeft] = useState(10800);
-  const navigate = useNavigate();
   const { subject } = useParams();
   const userClass = window.location.pathname.split('/')[2];
 
@@ -86,10 +85,6 @@ export default function Attempt() {
     );
   };
 
-  const handleFinalSubmit = () => {
-    navigate(`/subject/${subject}/pyq`);
-  };
-
   return (
     <div className="flex flex-col md:flex-row min-h-screen relative md:px-10 lg:px-20 xl:px-40">
       <main className="flex-1 p-6 overflow-y-auto">
@@ -133,8 +128,8 @@ export default function Attempt() {
                   <motion.button
                     onClick={() => updateQuestionStatus(question.id, 'answered')}
                     className={`rounded-md px-8 py-2 ${question.status === 'answered'
-                        ? 'bg-green-600 text-white'
-                        : 'border border-green-600 text-green-600'
+                      ? 'bg-green-600 text-white'
+                      : 'border border-green-600 text-green-600'
                       }`}
                   >
                     Mark as Done
@@ -142,8 +137,8 @@ export default function Attempt() {
                   <motion.button
                     onClick={() => updateQuestionStatus(question.id, 'flagged')}
                     className={`rounded-md px-8 py-2 ${question.status === 'flagged'
-                        ? 'bg-red-600 text-white'
-                        : 'border border-red-600 text-red-600'
+                      ? 'bg-red-600 text-white'
+                      : 'border border-red-600 text-red-600'
                       }`}
                   >
                     Flag Question
@@ -172,10 +167,10 @@ export default function Attempt() {
                       .scrollIntoView({ behavior: 'smooth', block: 'start' })
                   }
                   className={`h-8 w-8 rounded-full ${question.status === 'answered'
-                      ? 'bg-green-600 text-white'
-                      : question.status === 'flagged'
-                        ? 'bg-red-600 text-white'
-                        : 'bg-gray-200 text-gray-800'
+                    ? 'bg-green-600 text-white'
+                    : question.status === 'flagged'
+                      ? 'bg-red-600 text-white'
+                      : 'bg-gray-200 text-gray-800'
                     }`}
                 >
                   {question.id}
@@ -184,13 +179,6 @@ export default function Attempt() {
             </div>
           </div>
         ))}
-        <motion.button
-          onClick={handleFinalSubmit}
-          className="rounded-md bg-green-600 px-6 py-3 text-white shadow-lg md:bottom-8 md:right-8"
-          whileHover={{ scale: 1.1 }}
-        >
-          Submit Exam
-        </motion.button>
       </aside>
     </div>
   );
