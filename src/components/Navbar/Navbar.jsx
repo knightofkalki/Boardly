@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { Bell } from "lucide-react";
-import ProfileIcon from "../assets/profile.svg";
-import { useAuth } from "../context/AuthContext";
-import Banner from "../assets/banner.svg";
-import { Link } from "react-router-dom";
-import { API_URL } from "../shared/api";
+import ProfileIcon from "../../assets/profile.svg";
+import { useAuth } from "../../context/AuthContext";
+import Banner from "./Banner/Banner";
+import { API_URL } from "../../shared/api";
 
 export function Navbar() {
     const [isNotificationOpen, setNotificationOpen] = useState(false);
@@ -85,11 +84,7 @@ export function Navbar() {
         <nav className="bg-white shadow-lg h-16 sticky top-0 z-50">
             <div className="mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 relative">
-                    <div className="flex items-center">
-                        <Link to="/">
-                            <img src={Banner} alt="Boardly" />
-                        </Link>
-                    </div>
+                    <Banner />
                     <div className="flex items-center relative">
                         <button
                             onClick={toggleNotification}

@@ -1,0 +1,30 @@
+[
+    {
+        "tag": "Updated Questions",
+        "title": "10+ Year PYQ'S",
+        "description": "Access a comprehensive archive of past CBSE exam questions spanning over two decades. These questions have been meticulously reformatted to align with the latest CBSE exam patterns, ensuring students practice with the most relevant and updated material.",
+        "image": "Pyq",
+        "icon": "📚"
+    },
+    {
+        "tag": "Solution",
+        "title": "Toppers Solution",
+        "description": "Gain insights from the best! Each question comes with detailed solutions provided by past toppers, available in both text and video formats. This dual approach ensures better conceptual clarity and understanding of the ideal way to answer questions.",
+        "image": "Topper",
+        "icon": "🎯"
+    },
+    {
+        "tag": "Feedbacks",
+        "title": "Paper Evaluation",
+        "description": "Simulate the real exam experience with mock tests and get expert evaluation on your answers. Receive constructive feedback and actionable tips to improve your performance and perfect your exam strategy.",
+        "image": "Eval",
+        "icon": "📝"
+    },
+    {
+        "tag": "Mentorship",
+        "title": "Dedicated Mentors",
+        "description": "Navigate your preparation journey with guidance from experts. Our mentorship programs connect you with seasoned educators and professionals who offer personalized advice, study plans, and motivation to keep you on track for success.",
+        "image": "Mentor",
+        "icon": "👥"
+    }
+]

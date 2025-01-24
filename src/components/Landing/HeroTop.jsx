@@ -18,10 +18,10 @@ const HeroSection = () => {
       </p>
       <div className="mt-6 space-x-4">
         <button className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600"
-          onClick={() => window.location.href = '/demo/10/'}>
+          onClick={() => window.location.href = '/demo/10/2024/pyq'}>
           CLASS 10
         </button>
-        <button className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600" onClick={() => window.location.href = '/demo/12'}>
+        <button className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600" onClick={() => window.location.href = '/demo/12/2024/pyq'}>
           CLASS 12
         </button>
       </div>
