@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FiArrowLeft, FiCheck, FiCircle, FiEye, FiSearch } from "react-icons/fi";
+import { FiArrowLeft, FiLock, FiEye, FiSearch } from "react-icons/fi";
 import { FaCirclePlay } from "react-icons/fa6";
 import { OutlineButton } from '../../components/ui/OutlineButton';
-import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { API_URL } from "../../shared/api";
 
@@ -13,67 +12,11 @@ const difficultyColors = {
   Hard: "text-red-500",
 };
 
-const VideoPopup = ({ videoUrl, onClose }) => {
-  const getEmbedUrl = (url) => {
-    try {
-      if (url.includes("youtu.be")) {
-        const id = url.split("youtu.be/")[1].split("?")[0];
-        return `https://www.youtube.com/embed/${id}`;
-      } else if (url.includes("youtube.com")) {
-        const id = url.split("v=")[1].split("&")[0];
-        return `https://www.youtube.com/embed/${id}`;
-      }
-      return url;
-    } catch (error) {
-      console.error("Error parsing YouTube URL:", error);
-      return url;
-    }
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ scale: 0.95 }}
-        animate={{ scale: 1 }}
-        exit={{ scale: 0.95 }}
-        className="bg-white rounded-lg p-4 w-full max-w-3xl relative"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          onClick={onClose}
-          className="absolute -top-10 right-0 text-white hover:text-gray-200"
-        >
-          Close
-        </button>
-        <div className="relative pb-[56.25%] h-0">
-          <iframe
-            className="absolute top-0 left-0 w-full h-full"
-            src={getEmbedUrl(videoUrl)}
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-};
-
 export default function PYQList() {
   const [pyqData, setPyqData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [showVideo, setShowVideo] = useState(false);
-  const [currentVideoUrl, setCurrentVideoUrl] = useState("");
-  const [selectedPYQ, setSelectedPYQ] = useState(null);
   const navigate = useNavigate();
   const { subject } = useParams();
 
@@ -81,32 +24,19 @@ export default function PYQList() {
     const fetchData = async () => {
       try {
         const userClass = window.location.pathname.split('/')[2];
-
         setLoading(true);
 
-        // Fetch PYQ data
-        const pyqResponse = await axios.get(`${API_URL}/free/year-wise-questions/${userClass}/2024`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const currentYear = new Date().getFullYear();
+        const years = Array.from({ length: 12 }, (_, i) => currentYear - i);
 
-        const pyqData = pyqResponse.data.data.questions.subjects.find(s => s.subjectName.toLowerCase() === subject.toLowerCase());
-
-        if (!pyqData) {
-          console.error("Subject not found in API response");
-          setLoading(false);
-          return;
-        }
-
-        const mappedData = pyqData.questions.map((question) => ({
-          id: question.qid,
-          title: question.title,
-          difficulty: question.difficulty,
-          hasTopperSolution: false,
-          hasVideoSolution: false,
-          videoUrl: null,
-          tag: "Free",
+        const mappedData = years.map(year => ({
+          id: year.toString(),
+          title: `${subject.charAt(0).toUpperCase() + subject.slice(1)} ${year} PYQ`,
+          difficulty: "Medium",
+          hasTopperSolution: year === currentYear,
+          hasVideoSolution: year === currentYear,
+          videoUrl: year === currentYear ? "/video-solution" : null,
+          tag: year === currentYear ? "Free" : "Locked",
         }));
 
         setPyqData(mappedData);
@@ -120,34 +50,21 @@ export default function PYQList() {
     fetchData();
   }, [subject]);
 
-  const handleTopperSolutionClick = (item) => {
-    if (item.tag === "Coming Soon") {
-      alert(`Coming soon on ${item.id === "2017" ? '20th Jan' : item.id === "2016" ? '20th Jan' : '20th Jan'}`);
+  const handleAttemptClick = (item) => {
+    if (item.tag === "Free") {
+      const userClass = window.location.pathname.split('/')[2];
+      navigate(`/demo/${userClass}/${subject}/pyq`);
     } else {
-      navigate(`/subject/${subject}/pyq/${item.id}/topper-solution`);
+      alert("Please create an account to access this content.");
     }
   };
 
   const handleVideoClick = (item) => {
-    if (item.tag === "Coming Soon") {
-      alert(`Coming soon on ${item.year === 2017 ? '20th Jan' : item.year === 2016 ? '20th Jan' : '20th Jan'}`);
+    if (item.tag === "Free") {
+      navigate(item.videoUrl);
     } else {
-      setCurrentVideoUrl(item.videoUrl);
-      setShowVideo(true);
+      alert("Please create an account to access this content.");
     }
-  };
-
-  const handleAttemptClick = (item) => {
-    if (item.tag === "Coming Soon") {
-      alert(`Coming soon on ${item.id === "2017" ? '20th Jan' : item.id === "2016" ? '20th Jan' : '20th Jan'}`);
-    } else {
-      const userClass = window.location.pathname.split('/')[2];
-      navigate(`/demo/${userClass}/${subject}/pyq`);
-    }
-  };
-
-  const handlePYQClick = (id) => {
-    setSelectedPYQ(selectedPYQ === id ? null : id);
   };
 
   const filteredData = pyqData.filter((item) => {
@@ -196,14 +113,12 @@ export default function PYQList() {
         </select>
       </div>
 
-      <div className="hidden md:grid grid-cols-8 gap-4 px-4 py-2 text-sm font-medium text-gray-500 border-b">
-        <div>Status</div>
+      <div className="hidden md:grid grid-cols-6 gap-4 px-4 py-2 text-sm font-medium text-gray-500 border-b">
         <div className="col-span-2">Title</div>
         <div>Attempt</div>
         <div>Topper Solution</div>
-        <div>Difficulty</div>
         <div>Video Solution</div>
-        <div>Tag</div>
+        <div>Status</div>
       </div>
 
       <div className="space-y-2 overflow-y-auto max-h-[65vh] mt-2">
@@ -213,59 +128,45 @@ export default function PYQList() {
           </div>
         ) : (filteredData.map((item) => (
           <div key={item.id} className="bg-white rounded-lg shadow-sm">
-            <div className="grid grid-cols-5 md:grid-cols-8 gap-4 items-center px-4 py-3">
-              <div className="flex items-center">
-                {item.status === "completed" ? (
-                  <div className="h-6 w-6 rounded-full bg-green-100 flex items-center justify-center">
-                    <FiCheck className="h-4 w-4 text-green-600" />
-                  </div>
-                ) : (
-                  <FiCircle className="h-6 w-6 text-gray-300" />
-                )}
+            <div className="grid grid-cols-6 gap-4 items-center px-4 py-3">
+              <div className="col-span-2">
+                <span className="font-medium text-gray-900">{item.title}</span>
               </div>
-              <div className="col-span-2 md:col-span-2 md:hover:cursor-default hover:cursor-pointer" onClick={() => { handlePYQClick(item.id) }}>
-                <span className="font-medium text-gray-900">
-                  {subject.charAt(0).toUpperCase() + subject.slice(1)}
-                </span>
-                <span className="text-gray-600"> {item.title}</span>
-              </div>
-              <div className={`md:block ${selectedPYQ === item.id ? '' : 'hidden'}`}>
+              <div>
                 <OutlineButton
-                  variant="green"
+                  variant={item.tag === "Free" ? "green" : "gray"}
                   onClick={() => handleAttemptClick(item)}
                 >
-                  Attempt
+                  {item.tag === "Free" ? "Attempt" : <FiLock />}
                 </OutlineButton>
               </div>
-
-              <div className={`md:flex md:justify-center  ${selectedPYQ === item.id ? 'flex justify-end' : 'hidden'} `}>
-                <button
-                  onClick={() => handleTopperSolutionClick(item)}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                  title="View Topper Solution"
-                >
-                  <FiEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
-                </button>
-              </div>
-
-              <div className="col-span-2 md:col-span-1 hidden md:flex items-center justify-end md:justify-between">
-                <span className={`${difficultyColors[item.difficulty]} mr-2 md:mr-0`}>
-                  {item.difficulty}
-                </span>
-              </div>
-              <div className={`${selectedPYQ === item.id ? 'flex justify-end' : 'hidden'}  md:flex md:justify-center`}>
-                {item.hasVideoSolution && (
+              <div className="flex justify-center">
+                {item.hasTopperSolution ? (
                   <button
-                    onClick={() => handleTopperSolutionClick(item)}
+                    onClick={() => handleAttemptClick(item)}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    title="View Topper Solution"
+                  >
+                    <FiEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                  </button>
+                ) : (
+                  <FiLock className="h-5 w-5 text-gray-400" />
+                )}
+              </div>
+              <div className="flex justify-center">
+                {item.hasVideoSolution ? (
+                  <button
+                    onClick={() => handleVideoClick(item)}
                     className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                     title="Watch Video Solution"
                   >
                     <FaCirclePlay className="h-5 w-5 text-orange-500 hover:text-orange-600" />
                   </button>
+                ) : (
+                  <FiLock className="h-5 w-5 text-gray-400" />
                 )}
               </div>
-
-              <div className="text-sm text-gray-700 col-span-1 md:col-span-1">
+              <div className="text-sm text-gray-700">
                 {item.tag}
               </div>
             </div>
@@ -273,15 +174,6 @@ export default function PYQList() {
         ))
         )}
       </div>
-
-      <AnimatePresence>
-        {showVideo && (
-          <VideoPopup
-            videoUrl={currentVideoUrl}
-            onClose={() => setShowVideo(false)}
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 }
