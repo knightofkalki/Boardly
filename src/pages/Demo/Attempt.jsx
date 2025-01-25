@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { LandingNavbar } from '../../components/Landing/LandingNavbar';
+import { API_URL } from '../../shared/api';
 
 export default function Attempt() {
   const [currentSection] = useState('A');
@@ -15,7 +16,7 @@ export default function Attempt() {
     const fetchQuestions = async () => {
       try {
         const response = await axios.get(
-          `https://boardly-be.vercel.app/free/year-wise-questions/${userClass}/2024`
+          `${API_URL}/free/year-wise-questions/${userClass}/2024`
         );
 
         if (response.data.success) {

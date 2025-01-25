@@ -27,6 +27,7 @@ import Subscriptions from "./pages/Subscriptions";
 import ForgotPassword from "./components/Landing/ForgotPassword";
 import ResetPassword from "./components/Landing/ResetPassword";
 import Demo from "./pages/Demo/main";
+import DemoPYQList from "./pages/Demo/PYQList";
 import DemoAttempt from "./pages/Demo/Attempt";
 
 const ProtectedRoute = ({ children, hideSidebar = false, roles = [] }) => {
@@ -60,6 +61,9 @@ export default function App() {
             <Route path="/landing" element={<LandingPage />} />
             <Route path="/demo/:class" element={<Demo />} />
             <Route path="/demo/:class/:subject" element={
+              <DemoPYQList />
+            } />
+            <Route path="/demo/:class/:subject/pyq" element={
               <DemoAttempt />
             } />
             <Route path="/forgot-password" element={<ForgotPassword />} />
