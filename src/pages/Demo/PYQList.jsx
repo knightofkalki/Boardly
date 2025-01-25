@@ -26,7 +26,7 @@ export default function PYQList() {
         const userClass = window.location.pathname.split('/')[2];
         setLoading(true);
 
-        const currentYear = new Date().getFullYear();
+        const currentYear = 2024;
         const years = Array.from({ length: 12 }, (_, i) => currentYear - i);
 
         const mappedData = years.map(year => ({
