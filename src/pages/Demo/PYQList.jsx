@@ -3,14 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { FiArrowLeft, FiLock, FiEye, FiSearch } from "react-icons/fi";
 import { FaCirclePlay } from "react-icons/fa6";
 import { OutlineButton } from '../../components/ui/OutlineButton';
-import axios from "axios";
-import { API_URL } from "../../shared/api";
-
-const difficultyColors = {
-  Easy: "text-green-600",
-  Medium: "text-orange-500",
-  Hard: "text-red-500",
-};
 
 export default function PYQList() {
   const [pyqData, setPyqData] = useState([]);
@@ -23,7 +15,6 @@ export default function PYQList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userClass = window.location.pathname.split('/')[2];
         setLoading(true);
 
         const currentYear = 2024;
