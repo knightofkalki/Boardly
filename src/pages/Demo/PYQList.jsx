@@ -19,6 +19,7 @@ export default function PYQList() {
 
         const currentYear = 2024;
         const years = Array.from({ length: 12 }, (_, i) => currentYear - i);
+        const userClass = window.location.pathname.split('/')[2];
 
         const mappedData = years.map(year => ({
           id: year.toString(),
@@ -26,7 +27,7 @@ export default function PYQList() {
           difficulty: "Medium",
           hasTopperSolution: year === currentYear,
           hasVideoSolution: year === currentYear,
-          videoUrl: year === currentYear ? "/video-solution" : null,
+          videoUrl: year === currentYear ? `/demo/${userClass}/${subject}/topper-solution` : null,
           tag: year === currentYear ? "Free" : "Locked",
         }));
 
