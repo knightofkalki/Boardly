@@ -51,6 +51,15 @@ export default function PYQList() {
     }
   };
 
+  const topperSolutionClick = (item) => {
+    if (item.tag === "Free") {
+      const userClass = window.location.pathname.split('/')[2];
+      navigate(`/demo/${userClass}/${subject}/topper-solution`);
+    } else {
+      alert("Please create an account to access this content.");
+    }
+  };
+
   const handleVideoClick = (item) => {
     if (item.tag === "Free") {
       navigate(item.videoUrl);
@@ -135,7 +144,7 @@ export default function PYQList() {
               <div className="flex justify-center">
                 {item.hasTopperSolution ? (
                   <button
-                    onClick={() => handleAttemptClick(item)}
+                    onClick={() => topperSolutionClick(item)}
                     className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                     title="View Topper Solution"
                   >
