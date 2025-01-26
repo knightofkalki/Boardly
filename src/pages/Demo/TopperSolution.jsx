@@ -50,6 +50,10 @@ const TopperSolution = () => {
     fetchData();
   }, [subject, year]);
 
+  const isMobile = () => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  };
+
   const handleVideoClick = (videoUrl) => {
     if (isMobile()) {
       const youtubeAppUrl = videoUrl.replace('https://youtu.be/', 'vnd.youtube://');
@@ -197,7 +201,6 @@ const TopperSolution = () => {
                   </svg>
                 </div>
               </button>
-
               <AnimatePresence>
                 {expandedId === item.id && (
                   <motion.div
