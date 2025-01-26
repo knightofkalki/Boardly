@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { LandingNavbar } from '../../components/Landing/LandingNavbar';
+import { API_URL } from '../../shared/api';
 
 export default function Attempt() {
   const [currentSection] = useState('A');
@@ -15,11 +16,11 @@ export default function Attempt() {
     const fetchQuestions = async () => {
       try {
         const response = await axios.get(
-          `https://boardly-be.vercel.app/free/year-wise-questions/${userClass}/2024`
+          `${API_URL}/free/year-wise-questions/${userClass}/2024`
         );
 
         if (response.data.success) {
-          const subjectData = response.data.data.questions.subjects.find(
+          const subjectData = response.data.data.subjects.find(
             (subj) => subj.subjectName.toLowerCase() === subject.toLowerCase()
           );
 
@@ -32,7 +33,11 @@ export default function Attempt() {
                   id: i + 1,
                   text: q.question,
                   status: 'unanswered',
-                  options: q.options,
+                  title: q.title,
+                  timeRequired: q.timeRequired,
+                  difficulty: q.difficulty,
+                  answer: q.answer,
+                  hint: q.hint,
                 })),
               },
             ];
@@ -94,63 +99,41 @@ export default function Attempt() {
         <main className="flex-1 p-6 overflow-y-auto">
           {quizSections
             .find((s) => s.id === currentSection)
-            ?.questions.map((question) => {
-              const imageRegex = /(https?:\/\/[^\s]+?\.(png|jpeg|jpg))/gi;
-              const questionTextWithImage = question.text.replace(
-                imageRegex,
-                (url) => `<img src="${url}" alt="Question Image" class="my-4" />`
-              );
+            ?.questions.map((question) => (
+              <motion.div
+                id={`question-${question.id}`}
+                key={question.id}
+                className="rounded-lg bg-white p-6 shadow-sm mb-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <h2 className="mb-4 text-xl font-semibold">{question.title}</h2>
+                <p className="mb-4">Time Required: {question.timeRequired} minutes</p>
+                <p className="mb-4">Difficulty: {question.difficulty}</p>
+                <img src={question.text} alt="Question" className="my-4 max-w-full h-auto" />
 
-              return (
-                <motion.div
-                  id={`question-${question.id}`}
-                  key={question.id}
-                  className="rounded-lg bg-white p-6 shadow-sm mb-4"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
-                  <h2 className="mb-4 text-xl font-semibold">Question {question.id}</h2>
-                  <p className="mb-4" dangerouslySetInnerHTML={{ __html: questionTextWithImage }}></p>
-
-                  {question.options && Object.keys(question.options).length > 0 && (
-                    <div className="mb-6">
-                      <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-                        {Object.entries(question.options).map(([key, value]) => (
-                          <motion.button
-                            key={key}
-                            className="w-full text-left rounded-md p-4 cursor-default"
-                            onClick={() => updateQuestionStatus(question.id, 'answered')}
-                          >
-                            <strong className="mr-2">{key}:</strong> {value}
-                          </motion.button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex flex-wrap gap-4">
-                    <motion.button
-                      onClick={() => updateQuestionStatus(question.id, 'answered')}
-                      className={`rounded-md px-8 py-2 ${question.status === 'answered'
-                        ? 'bg-green-600 text-white'
-                        : 'border border-green-600 text-green-600'
-                        }`}
-                    >
-                      Mark as Done
-                    </motion.button>
-                    <motion.button
-                      onClick={() => updateQuestionStatus(question.id, 'flagged')}
-                      className={`rounded-md px-8 py-2 ${question.status === 'flagged'
-                        ? 'bg-red-600 text-white'
-                        : 'border border-red-600 text-red-600'
-                        }`}
-                    >
-                      Flag Question
-                    </motion.button>
-                  </div>
-                </motion.div>
-              );
-            })}
+                <div className="flex flex-wrap gap-4 mt-4">
+                  <motion.button
+                    onClick={() => updateQuestionStatus(question.id, 'answered')}
+                    className={`rounded-md px-8 py-2 ${question.status === 'answered'
+                      ? 'bg-green-600 text-white'
+                      : 'border border-green-600 text-green-600'
+                      }`}
+                  >
+                    Mark as Done
+                  </motion.button>
+                  <motion.button
+                    onClick={() => updateQuestionStatus(question.id, 'flagged')}
+                    className={`rounded-md px-8 py-2 ${question.status === 'flagged'
+                      ? 'bg-red-600 text-white'
+                      : 'border border-red-600 text-red-600'
+                      }`}
+                  >
+                    Flag Question
+                  </motion.button>
+                </div>
+              </motion.div>
+            ))}
         </main>
 
         <aside className="w-full md:w-64 p-6 bg-gray-50 md:sticky top-0 md:h-screen overflow-y-auto bottom-0 text-center flex flex-col items-center">
