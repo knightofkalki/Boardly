@@ -50,31 +50,9 @@ const TopperSolution = () => {
     fetchData();
   }, [subject, year]);
 
-  const isMobile = () => {
-    return window.matchMedia('(pointer: coarse)').matches;
-  };
-
   const handleVideoClick = (videoUrl) => {
-    if (isMobile()) {
-      const youtubeAppUrl = videoUrl.replace('https://youtu.be/', 'vnd.youtube://');
-      const youtubePlayStoreUrl = 'https://play.google.com/store/apps/details?id=com.google.android.youtube';
-      const youtubeAppStoreUrl = 'https://apps.apple.com/app/youtube/id544007664';
-
-      window.location.href = youtubeAppUrl;
-      setTimeout(() => {
-        if (document.hidden) {
-          return;
-        }
-        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-          window.location.href = youtubeAppStoreUrl;
-        } else if (/Android/i.test(navigator.userAgent)) {
-          window.location.href = youtubePlayStoreUrl;
-        }
-      }, 2500);
-    } else {
-      setCurrentVideoUrl(videoUrl);
-      setShowVideo(true);
-    }
+    setCurrentVideoUrl(videoUrl);
+    setShowVideo(true);
   };
 
   const getEmbedUrl = (url) => {
