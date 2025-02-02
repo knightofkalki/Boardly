@@ -51,7 +51,7 @@ const TopperSolution = () => {
   }, [subject, year]);
 
   const isMobile = () => {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    return window.matchMedia('(pointer: coarse)').matches;
   };
 
   const handleVideoClick = (videoUrl) => {
@@ -79,23 +79,28 @@ const TopperSolution = () => {
 
   const getEmbedUrl = (url) => {
     try {
-      let embedUrl = '';
-      let timestamp = '';
+      const parsedUrl = new URL(url);
+      let videoId = '';
+      let timestamp = parsedUrl.searchParams.get('t') || '';
 
-      if (url.includes('t=')) {
-        timestamp = url.split('t=')[1].split('&')[0];
+      if (parsedUrl.hostname.includes('youtu.be')) {
+        videoId = parsedUrl.pathname.split('/')[1];
+      } else if (parsedUrl.pathname.includes('/live/')) {
+        videoId = parsedUrl.pathname.split('/live/')[1];
+      } else if (parsedUrl.pathname.includes('/embed/')) {
+        videoId = parsedUrl.pathname.split('/embed/')[1];
+      } else if (parsedUrl.pathname.includes('/shorts/')) {
+        videoId = parsedUrl.pathname.split('/shorts/')[1];
+      } else {
+        videoId = parsedUrl.searchParams.get('v') || parsedUrl.pathname.split('/').pop();
       }
 
-      if (url.includes('youtu.be')) {
-        const id = url.split('youtu.be/')[1].split('?')[0];
-        embedUrl = `https://www.youtube.com/embed/${id}`;
-      } else if (url.includes('youtube.com')) {
-        const id = url.split('v=')[1].split('&')[0];
-        embedUrl = `https://www.youtube.com/embed/${id}`;
-      }
+      if (!videoId) return url;
 
+      let embedUrl = `https://www.youtube.com/embed/${videoId.split('?')[0]}`;
+      
       if (timestamp) {
-        embedUrl += `?start=${timestamp}`;
+        embedUrl += `?start=${timestamp.split('s')[0]}`;
       }
 
       return embedUrl;
@@ -165,7 +170,6 @@ const TopperSolution = () => {
           <h2 className="text-xl text-gray-600 font-medium">Solutions</h2>
         </div>
       </div>
-
       {loading ? (
         <div className="flex items-center justify-center">
           <div className="animate-spin rounded-full h-16 mt-12 w-16 border-t-4 border-orange-500 border-opacity-75"></div>
