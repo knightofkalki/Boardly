@@ -65,6 +65,11 @@
             "sizes": "1280x687",
             "type": "image/png",
             "form_factor": "wide"
+        },
+        {
+            "src": "/screenshots/screenshot-3.png",
+            "sizes": "713x1278",
+            "type": "image/png"
         }
     ]
 }
