@@ -5,7 +5,7 @@
     "start_url": "/",
     "display": "fullscreen",
     "background_color": "#FFFFFF",
-    "theme_color": "#FFFFFF",
+    "theme_color": "#f97316",
     "icons": [
         {
             "src": "/icons/icon-16x16.png",
