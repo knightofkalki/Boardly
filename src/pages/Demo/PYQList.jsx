@@ -119,7 +119,7 @@ export default function PYQList() {
         <div>Attempt</div>
         <div>Topper Solution</div>
         <div>Video Solution</div>
-        <div>Status</div>
+        <div className="hidden md:block">Status</div>
       </div>
 
       <div className="space-y-2 overflow-y-auto max-h-[65vh] mt-2">
@@ -129,7 +129,7 @@ export default function PYQList() {
           </div>
         ) : (filteredData.map((item) => (
           <div key={item.id} className="bg-white rounded-lg shadow-sm">
-            <div className="grid grid-cols-6 gap-4 items-center px-4 py-3">
+            <div className="grid grid-cols-5 md:grid-cols-6 gap-4 items-center px-4 py-3">
               <div className="col-span-2">
                 <span className="font-medium text-gray-900">{item.title}</span>
               </div>
@@ -138,7 +138,7 @@ export default function PYQList() {
                   variant={item.tag === "Free" ? "green" : "gray"}
                   onClick={() => handleAttemptClick(item)}
                 >
-                  {item.tag === "Free" ? "Attempt" : <FiLock />}
+                  {item.tag === "Free" ? ">" : <FiLock />}
                 </OutlineButton>
               </div>
               <div className="flex justify-center">
@@ -167,13 +167,13 @@ export default function PYQList() {
                   <FiLock className="h-5 w-5 text-gray-400" />
                 )}
               </div>
-              <div className="text-sm text-gray-700">
+              <div className="text-sm text-gray-700 hidden md:block">
                 {item.tag}
               </div>
             </div>
           </div>
-        ))
-        )}
+        )))
+        }
       </div>
     </div>
   );
