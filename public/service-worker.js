@@ -14,7 +14,8 @@ const CORE_ASSETS = [
   "/icons/icon-128x128.png",
   "/icons/icon-192x192.png",
   "/icons/icon-256x256.png",
-  "/icons/icon-512x512.png"
+  "/icons/icon-512x512.png",
+  "/src/assets/banner.svg"
 ];
 
 async function cacheCoreAssets() {
@@ -23,18 +24,26 @@ async function cacheCoreAssets() {
 }
 
 async function dynamicCaching(request) {
-  const cache = await caches.open(CACHE_NAME);
-
-  try {
-    const response = await fetch(request);
-    const responseClone = response.clone();
-    await cache.put(request, responseClone);
-    return response;
-  } catch (error) {
-    console.error("Dynamic caching failed:", error);
-    return caches.match(request);
+    const cache = await caches.open(CACHE_NAME);
+  
+    try {
+      const response = await fetch(request);
+      const responseClone = response.clone();
+      await cache.put(request, responseClone);
+      return response;
+    } catch (error) {
+      console.error("Dynamic caching failed:", error);
+      const cachedResponse = await caches.match(request);
+      if (cachedResponse) {
+        return cachedResponse;
+      } else {
+        return new Response("Network error occurred and no cached response available.", {
+          status: 503,
+          statusText: "Service Unavailable"
+        });
+      }
+    }
   }
-}
 
 self.addEventListener("install", (event) => {
   event.waitUntil(cacheCoreAssets());
