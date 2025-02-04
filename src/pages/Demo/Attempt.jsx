@@ -20,7 +20,7 @@ export default function Attempt() {
         );
 
         if (response.data.success) {
-          const subjectData = response.data.data.subjects.find(
+          const subjectData = response.data.data.questions.subjects.find(
             (subj) => subj.subjectName.toLowerCase() === subject.toLowerCase()
           );
 
@@ -29,8 +29,8 @@ export default function Attempt() {
               {
                 id: 'A',
                 title: 'Section A',
-                questions: subjectData.questions.map((q, i) => ({
-                  id: i + 1,
+                questions: subjectData.questions.map((q) => ({
+                  id: q._id,
                   text: q.question,
                   status: 'unanswered',
                   title: q.title,
@@ -110,7 +110,9 @@ export default function Attempt() {
                 <h2 className="mb-4 text-xl font-semibold">{question.title}</h2>
                 <p className="mb-4">Time Required: {question.timeRequired} minutes</p>
                 <p className="mb-4">Difficulty: {question.difficulty}</p>
-                <img src={question.text} alt="Question" className="my-4 max-w-full h-auto" />
+                {question.text.split(', ').map((imgUrl, index) => (
+                  <img key={index} src={imgUrl} alt={`Question ${index + 1}`} className="my-4 max-w-full h-auto" />
+                ))}
 
                 <div className="flex flex-wrap gap-4 mt-4">
                   <motion.button
@@ -142,30 +144,32 @@ export default function Attempt() {
             {formatTime(timeLeft)}
           </div>
           {quizSections.map((section) => (
-            <div key={section.id} className="mb-4">
-              <h4 className="font-medium text-gray-700 mb-2">{section.title}</h4>
-              <div className="grid grid-cols-5 gap-8">
-                {section.questions.map((question) => (
-                  <motion.button
-                    key={question.id}
-                    onClick={() =>
-                      document
-                        .getElementById(`question-${question.id}`)
-                        .scrollIntoView({ behavior: 'smooth', block: 'start' })
-                    }
-                    className={`h-8 w-8 rounded-full ${question.status === 'answered'
-                      ? 'bg-green-600 text-white'
-                      : question.status === 'flagged'
-                        ? 'bg-red-600 text-white'
-                        : 'bg-gray-200 text-gray-800'
-                      }`}
-                  >
-                    {question.id}
-                  </motion.button>
-                ))}
-              </div>
-            </div>
-          ))}
+  <div key={section.id} className="mb-4">
+    <h4 className="font-medium text-gray-700 mb-2">{section.title}</h4>
+    <div className="grid grid-cols-5 gap-2">
+      {section.questions.map((question, index) => (
+        <motion.button
+          key={question.id}
+          onClick={() =>
+            document
+              .getElementById(`question-${question.id}`)
+              .scrollIntoView({ behavior: 'smooth', block: 'start' })
+          }
+          className={`h-8 w-8 rounded-full ${
+            question.status === 'answered'
+              ? 'bg-green-600 text-white'
+              : question.status === 'flagged'
+              ? 'bg-red-600 text-white'
+              : 'bg-gray-200 text-gray-800'
+          }`}
+        >
+          {index + 1}
+        </motion.button>
+      ))}
+    </div>
+  </div>
+))}
+
           <div className="mt-6 text-sm text-gray-600">
             You are using a free plan. To view papers from previous years, please{' '}
             <a href="/landing" className="text-blue-600 underline">
