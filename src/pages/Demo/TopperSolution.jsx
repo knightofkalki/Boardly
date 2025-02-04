@@ -20,18 +20,17 @@ const TopperSolution = () => {
       try {
         const userClass = window.location.pathname.split('/')[2];
         setLoading(true);
-        const response = await axios.get(`${API_URL}/free/year-wise-questions/${userClass}/${year}`, {
+        const response = await axios.get(`${API_URL}/free/topper-answer/${userClass}/${year}/${subject}`, {
           headers: {
             'Content-Type': 'application/json',
           },
         });
         const data = response.data;
-        const subjectData = data.data.subjects.find(s => s.subjectName.toLowerCase() === subject.toLowerCase());
-        if (subjectData) {
-          const mappedData = subjectData.questions.map((question) => ({
+        if (data && data.subject && data.subject.questions) {
+          const mappedData = data.subject.questions.map((question) => ({
             id: question.qid,
             question: question.question,
-            answer: question.answer,
+            answer: question.topperSolution,
             hasVideoSolution: Boolean(question.videoSolution),
             videoUrl: question.videoSolution || null,
           }));
@@ -86,6 +85,13 @@ const TopperSolution = () => {
       console.error('Error parsing YouTube URL:', error);
       return url;
     }
+  };
+
+  const renderAnswer = (answer) => {
+    if (answer.startsWith('http')) {
+      return <img src={answer} alt="Answer" className="my-4 max-w-full h-auto rounded-lg" />;
+    }
+    return <div className="text-gray-700">{answer}</div>;
   };
 
   const renderTextWithImages = (text) => {
@@ -194,7 +200,7 @@ const TopperSolution = () => {
                     <div className="border-t px-6 py-4 bg-white space-y-4">
                       <div>
                         <h4 className="font-medium text-gray-800 mb-2">Answer</h4>
-                        <div className="text-gray-700">{item.answer}</div>
+                        {renderAnswer(item.answer)}
                       </div>
                       {item.hasVideoSolution && (
                         <button
